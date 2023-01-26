@@ -89,7 +89,7 @@ public class EditSprint implements Command {
 		reader.addCompleter(dateCompleter);
 
 		reader.setPrompt(ColorCodes.BLUE + "\ndue date:\n" + ColorCodes.YELLOW
-				+ "(hit Tab to see examples)\n(optional: leave it blank for unchange, or unset to unset)\n"
+				+ "(hit Tab to see examples)\n(optional: leave it blank for unchanged, or unset to unset)\n"
 				+ ColorCodes.RESET + "current value: " + DateService.getDateAsString(s.dueDate) + "\n");
 
 		while ((line = reader.readLine()) != null) {
@@ -152,7 +152,7 @@ public class EditSprint implements Command {
 		reader.addCompleter(dateCompleter);
 
 		reader.setPrompt(ColorCodes.BLUE + "\nstartDate date:\n" + ColorCodes.YELLOW
-				+ "(hit Tab to see examples)\n(optional: leave it blank for unchange, or unset to unset)\n"
+				+ "(hit Tab to see examples)\n(optional: leave it blank for unchanged, or unset to unset)\n"
 				+ ColorCodes.RESET + "current value: " + DateService.getDateAsString(s.startDate) + "\n");
 
 		while ((line = reader.readLine()) != null) {

@@ -43,7 +43,7 @@ public class MoveSprintToRelease implements Command {
 			return false;
 		}
 
-		// remove it from geneic list in project
+		// remove it from 	generic list in project
 		project.sprints.remove(s);
 
 		// add it to release
