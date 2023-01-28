@@ -100,7 +100,7 @@ public abstract class View {
 
 				String words[] = line.split("\\s+");
 
-				if (checkIfUnivesalCommand(words)) {
+				if (checkIfUniversalCommand(words)) {
 					continue;
 				}
 
@@ -114,7 +114,7 @@ public abstract class View {
 		}
 	}
 
-	private boolean checkIfUnivesalCommand(String[] words) throws IOException {
+	private boolean checkIfUniversalCommand(String[] words) throws IOException {
 
 		if (words.length == 1) {
 			if (words[0].equals("clear")) {

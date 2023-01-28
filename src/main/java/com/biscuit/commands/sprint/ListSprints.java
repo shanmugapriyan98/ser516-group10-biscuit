@@ -40,9 +40,9 @@ public class ListSprints implements Command {
 	}
 
 
-	public ListSprints(Project porject, String title, boolean isFilter, String filterBy, boolean isSort, String sortBy) {
+	public ListSprints(Project project, String title, boolean isFilter, String filterBy, boolean isSort, String sortBy) {
 		super();
-		this.project = porject;
+		this.project = project;
 		this.title = title;
 		this.isFilter = isFilter;
 		this.filterBy = filterBy.toLowerCase();

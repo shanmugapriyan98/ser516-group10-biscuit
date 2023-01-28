@@ -47,7 +47,7 @@ public class Finder {
 			List<UserStory> userStories = new ArrayList<>();
 			List<Sprint> plannedSprints;
 
-			// go thru unplanned sprints
+			// go through unplanned sprints
 			for (Sprint s : p.sprints) {
 				userStories.addAll(s.userStories);
 			}
@@ -99,7 +99,7 @@ public class Finder {
 			List<String> userStoriesNames = new ArrayList<>();
 			List<Sprint> plannedSprints;
 
-			// go thru unplanned sprints
+			// go through unplanned sprints
 			for (Sprint s : p.sprints) {
 				userStoriesNames.addAll(s.userStories.stream().map(us -> us.title).collect(Collectors.toList()));
 			}

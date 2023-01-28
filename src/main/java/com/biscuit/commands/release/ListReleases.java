@@ -38,9 +38,9 @@ public class ListReleases implements Command {
 	}
 
 
-	public ListReleases(Project porject, String title, boolean isFilter, String filterBy, boolean isSort, String sortBy) {
+	public ListReleases(Project project, String title, boolean isFilter, String filterBy, boolean isSort, String sortBy) {
 		super();
-		this.project = porject;
+		this.project = project;
 		this.title = title;
 		this.isFilter = isFilter;
 		this.filterBy = filterBy.toLowerCase();

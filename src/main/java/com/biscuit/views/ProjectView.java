@@ -138,7 +138,7 @@ public class ProjectView extends View {
 						return false;
 					}
 
-					UserStroryView usv = new UserStroryView(this, us);
+					UserStoryView usv = new UserStoryView(this, us);
 					usv.view();
 					return true;
 				}

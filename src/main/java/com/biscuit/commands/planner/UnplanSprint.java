@@ -41,7 +41,7 @@ public class UnplanSprint implements Command {
 			return false;
 		}
 
-		// add it to geneic list in project
+		// add it to generic list in project
 		project.sprints.add(s);
 
 		// remove it from release

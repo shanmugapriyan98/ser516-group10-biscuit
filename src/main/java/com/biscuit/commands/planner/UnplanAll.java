@@ -74,7 +74,7 @@ public class UnplanAll implements Command {
 			for (Iterator<Sprint> sItr = r.sprints.iterator(); sItr.hasNext();) {
 				Sprint s = sItr.next();
 
-				// add it to geneic list in project
+				// add it to generic list in project
 				project.sprints.add(s);
 
 				// remove it from release

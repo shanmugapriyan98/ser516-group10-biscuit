@@ -206,7 +206,7 @@ public class AddSprint implements Command {
 
 	private void setVelocity() throws IOException {
 		String line;
-		reader.setPrompt(ColorCodes.BLUE + "veloctiy: " + ColorCodes.RESET);
+		reader.setPrompt(ColorCodes.BLUE + "velocity: " + ColorCodes.RESET);
 
 		while ((line = reader.readLine()) != null) {
 			line = line.trim();
