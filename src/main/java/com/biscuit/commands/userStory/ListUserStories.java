@@ -117,11 +117,11 @@ public class ListUserStories implements Command {
 
 		at.addRule();
 		if (!this.title.isEmpty()) {
-			at.addRow(null, null, null, null, null, null, null, null, this.title).setAlignment(new char[] { 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c' });
+			at.addRow(null, null, null, null, null, null, null, null, this.title, null).setAlignment(new char[] { 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'l'});
 			at.addRule();
 		}
-		at.addRow("Title", "Description", "State", "Business Value", "Initiated Date", "Planned Date", "Due Date", "Tasks #", "Points")
-				.setAlignment(new char[] { 'l', 'l', 'c', 'c', 'c', 'c', 'c', 'c', 'c' });
+		at.addRow("Title", "Description", "State", "Business Value", "Initiated Date", "Planned Date", "Due Date", "Tasks #", "Points", "Comments")
+				.setAlignment(new char[] { 'l', 'l', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'l'});
 
 		if (userStories.size() == 0) {
 			String message;
@@ -131,19 +131,19 @@ public class ListUserStories implements Command {
 				message = "No results";
 			}
 			at.addRule();
-			at.addRow(null, null, null, null, null, null, null, null, message);
+			at.addRow(null, null, null, null, null, null, null, null, message, null);
 		} else {
 			for (UserStory us : userStories) {
 				at.addRule();
 
 				at.addRow(us.title, us.description, us.state, us.businessValue, DateService.getDateAsString(us.initiatedDate),
-						DateService.getDateAsString(us.plannedDate), DateService.getDateAsString(us.dueDate), us.tasks.size(), us.points)
-						.setAlignment(new char[] { 'l', 'l', 'c', 'c', 'c', 'c', 'c', 'c', 'c' });
+						DateService.getDateAsString(us.plannedDate), DateService.getDateAsString(us.dueDate), us.tasks.size(), us.points, us.comments)
+						.setAlignment(new char[] { 'l', 'l', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'l'});
 			} // for
 		}
 
 		at.addRule();
-		at.addRow(null, null, null, null, null, null, null, null, "Total: " + userStories.size());
+		at.addRow(null, null, null, null, null, null, null, null, "Total: " + userStories.size(), null);
 		at.addRule();
 
 		V2_AsciiTableRenderer rend = new V2_AsciiTableRenderer();
@@ -237,6 +237,7 @@ public class ListUserStories implements Command {
 		tableString = tableString.replaceFirst("Due Date", ColorCodes.BLUE + "Due Date" + ColorCodes.RESET);
 		tableString = tableString.replaceFirst("Tasks #", ColorCodes.BLUE + "Tasks #" + ColorCodes.RESET);
 		tableString = tableString.replaceFirst("Points", ColorCodes.BLUE + "Points" + ColorCodes.RESET);
+		tableString = tableString.replaceFirst("Comments", ColorCodes.BLUE + "Comments" + ColorCodes.RESET);
 		return tableString.replaceAll("MUST_HAVE", ColorCodes.YELLOW + "MUST_HAVE" + ColorCodes.RESET);
 	}
 

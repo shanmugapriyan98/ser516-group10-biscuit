@@ -46,6 +46,7 @@ public class AddUserStoryToSprint implements Command {
 		userStory.initiatedDate = new Date();
 		userStory.plannedDate = new Date(0);
 		userStory.dueDate = new Date(0);
+		userStory.comments = null;
 
 		reader.setPrompt(prompt);
 
