@@ -14,7 +14,7 @@ public class Project {
 	public Backlog backlog = new Backlog();
 	public List<Release> releases = new ArrayList<>();
 	public List<Sprint> sprints = new ArrayList<>();
-
+	public List<Epic> epics = new ArrayList<>();
 
 	public void save() {
 		ModelHelper.save(this, name);
@@ -52,6 +52,12 @@ public class Project {
 		}
 	}
 
+	// private void updateEpicReferences(List<Epic> epics) {
+	// 	for (Epic e : epics) {
+	// 		e.project = this;
+	// 		updateUserStoryReferences(e.userStories);
+	// 	}
+	// }
 
 	private void updateUserStoryReferences(List<UserStory> userStories) {
 		for (UserStory us : userStories) {
@@ -79,6 +85,11 @@ public class Project {
 
 	public void addSprint(Sprint s) {
 		sprints.add(s);
+	}
+
+
+	public void addEpic(Epic e) {
+		epics.add(e);
 	}
 
 

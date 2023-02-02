@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import com.biscuit.models.Backlog;
 import com.biscuit.models.Dashboard;
+import com.biscuit.models.Epic;
 import com.biscuit.models.Project;
 import com.biscuit.models.Release;
 import com.biscuit.models.Sprint;
@@ -232,6 +233,32 @@ public class Finder {
 		}
 
 	}
+
+	public static class Epics {
+
+		public static List<Epic> getAll(Project p) {
+			List<Epic> epics = new ArrayList<>();
+
+			
+
+			return epics;
+		}
+
+		public static List<String> getAllNames(Project p) {
+			List<String> all = new ArrayList<>();
+			
+			return all;
+		}
+		
+		public static Epic find(Project p, String name) {
+			return getAll(p).stream().filter(s -> s.name.equals(name)).findAny().orElse(null);
+		}
+
+
+
+
+	}
+
 
 	public static class Tasks {
 

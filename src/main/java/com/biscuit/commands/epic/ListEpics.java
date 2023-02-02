@@ -74,7 +74,7 @@ public class ListEpics implements Command {
 
 		at.addRule();
 		if (!this.title.isEmpty()) {
-			at.addRow(null, this.title).setAlignment(new char[] { 'c', 'c', 'c', 'c', 'c', 'c', 'c' });
+			at.addRow(null, this.title).setAlignment(new char[] { 'c', 'c' });
 			at.addRule();
 		}
 		at.addRow("Name", "Description")
@@ -88,7 +88,7 @@ public class ListEpics implements Command {
 				message = "No results";
 			}
 			at.addRule();
-			at.addRow(null, null, null, null, null, null, message);
+			at.addRow(null, message);
 		} else {
 			for (Epic e : epics) {
 				at.addRule();
@@ -98,7 +98,7 @@ public class ListEpics implements Command {
 		}
 
 		at.addRule();
-		at.addRow(null, null, null, null, null, null, "Total: " + epics.size());
+		at.addRow(null, "Total: " + epics.size());
 		at.addRule();
 
 		V2_AsciiTableRenderer rend = new V2_AsciiTableRenderer();

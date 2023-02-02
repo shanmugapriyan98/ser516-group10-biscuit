@@ -13,6 +13,7 @@ import com.biscuit.commands.planner.UnplanSprint;
 import com.biscuit.commands.planner.UnplanUserStory;
 import com.biscuit.commands.release.ListReleases;
 import com.biscuit.commands.sprint.ListSprints;
+import com.biscuit.commands.epic.ListEpics;
 import com.biscuit.commands.userStory.ListUserStories;
 import com.biscuit.factories.PlannerCompleterFactory;
 import com.biscuit.models.Project;
@@ -61,6 +62,9 @@ public class PlannerView extends View {
 		} else if (words[0].equals("sprints")) {
 			(new ListSprints(project, "Sprints")).execute();
 			return true;
+		} else if (words[0].equals("epics")) {
+			(new ListEpics(project, "Epics")).execute();
+			return true;
 		} else if (words[0].equals("backlog")) {
 			(new ListUserStories(project.backlog, "Backlog (User Stories)")).execute();
 			return true;
@@ -85,6 +89,9 @@ public class PlannerView extends View {
 				return true;
 			} else if (words[1].equals("sprints")) {
 				(new ListSprints(project, "Sprints")).execute();
+				return true;
+			} else if (words[0].equals("epics")) {
+				(new ListEpics(project, "Epics")).execute();
 				return true;
 			} else if (words[1].equals("backlog")) {
 				(new ListUserStories(project.backlog, "Backlog (User Stories)")).execute();
