@@ -34,7 +34,6 @@
             <artifactId>okhttp</artifactId>
             <version>4.2.2</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.json/json -->
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
