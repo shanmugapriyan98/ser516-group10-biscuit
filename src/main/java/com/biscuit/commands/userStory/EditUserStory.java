@@ -368,7 +368,6 @@ public class EditUserStory implements Command {
 		String line;
 		String prompt = ColorCodes.BLUE + "comments: " + ColorCodes.YELLOW + "(\\q to end writing) "
 				+ ColorCodes.RESET;
-//		String preload = userStory.comments.get(-1).replace("\n", "<newline>").replace("!", "<exclamation-mark>");
 
 		reader.resetPromptLine(prompt, "", 0);
 		reader.print("\r");
