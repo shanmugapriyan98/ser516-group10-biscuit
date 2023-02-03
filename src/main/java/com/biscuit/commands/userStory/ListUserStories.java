@@ -117,11 +117,11 @@ public class ListUserStories implements Command {
 
 		at.addRule();
 		if (!this.title.isEmpty()) {
-			at.addRow(null, null, null, null, null, null, null, null, this.title, null).setAlignment(new char[] { 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'l'});
+			at.addRow(null, null, null, null, null, null, null, null, null, this.title).setAlignment(new char[] { 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c'});
 			at.addRule();
 		}
 		at.addRow("Title", "Description", "State", "Business Value", "Initiated Date", "Planned Date", "Due Date", "Tasks #", "Points", "Comments")
-				.setAlignment(new char[] { 'l', 'l', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'l'});
+				.setAlignment(new char[] { 'l', 'l', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c'});
 
 		if (userStories.size() == 0) {
 			String message;
@@ -131,19 +131,19 @@ public class ListUserStories implements Command {
 				message = "No results";
 			}
 			at.addRule();
-			at.addRow(null, null, null, null, null, null, null, null, message, null);
+			at.addRow(null, null, null, null, null, null, null, null, null, message);
 		} else {
 			for (UserStory us : userStories) {
 				at.addRule();
 
 				at.addRow(us.title, us.description, us.state, us.businessValue, DateService.getDateAsString(us.initiatedDate),
 						DateService.getDateAsString(us.plannedDate), DateService.getDateAsString(us.dueDate), us.tasks.size(), us.points, us.comments)
-						.setAlignment(new char[] { 'l', 'l', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'l'});
+						.setAlignment(new char[] { 'l', 'l', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c'});
 			} // for
 		}
 
 		at.addRule();
-		at.addRow(null, null, null, null, null, null, null, null, "Total: " + userStories.size(), null);
+		at.addRow(null, null, null, null, null, null, null, null, null, "Total: " + userStories.size());
 		at.addRule();
 
 		V2_AsciiTableRenderer rend = new V2_AsciiTableRenderer();
