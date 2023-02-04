@@ -5,17 +5,11 @@ import java.util.List;
 
 import com.biscuit.commands.epic.AddEpic;
 import com.biscuit.commands.epic.ListEpics;
-import com.biscuit.commands.help.SprintsHelp;
-import com.biscuit.commands.sprint.AddSprint;
-import com.biscuit.commands.sprint.ListSprints;
+import com.biscuit.commands.help.EpicsHelp;
 import com.biscuit.factories.EpicsCompleterFactory;
-import com.biscuit.factories.SprintsCompleterFactory;
 import com.biscuit.models.Epic;
 import com.biscuit.models.Project;
-import com.biscuit.models.Release;
-import com.biscuit.models.Sprint;
 import com.biscuit.models.services.Finder.Epics;
-import com.biscuit.models.services.Finder.Sprints;
 
 import jline.console.completer.Completer;
 
@@ -53,7 +47,7 @@ public class EpicsView extends View {
 			(new ListEpics(project, "Epics")).execute();
 			return true;
 		} else if (words[0].equals("help")) {
-			return (new SprintsHelp()).execute();
+			return (new EpicsHelp()).execute();
 		}
 
 		return false;

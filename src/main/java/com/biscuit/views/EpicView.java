@@ -3,23 +3,11 @@ package com.biscuit.views;
 import java.io.IOException;
 import java.util.List;
 
-import com.biscuit.commands.epic.ListEpics;
-import com.biscuit.commands.help.SprintHelp;
-import com.biscuit.commands.help.EpicHelp;
-import com.biscuit.commands.sprint.ChangeStatusSprint;
-import com.biscuit.commands.sprint.EditSprint;
-import com.biscuit.commands.sprint.ShowSprint;
 import com.biscuit.commands.epic.EditEpic;
 import com.biscuit.commands.epic.ShowEpic;
-import com.biscuit.commands.userStory.AddUserStoryToSprint;
-import com.biscuit.commands.userStory.ListUserStories;
+import com.biscuit.commands.help.EpicHelp;
 import com.biscuit.factories.EpicCompleterFactory;
-import com.biscuit.factories.SprintCompleterFactory;
 import com.biscuit.models.Epic;
-import com.biscuit.models.Sprint;
-import com.biscuit.models.UserStory;
-import com.biscuit.models.enums.Status;
-import com.biscuit.models.services.Finder.UserStories;
 
 import jline.console.completer.Completer;
 
