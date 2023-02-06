@@ -6,6 +6,7 @@ import java.util.List;
 import com.biscuit.commands.help.SprintHelp;
 import com.biscuit.commands.sprint.ChangeStatusSprint;
 import com.biscuit.commands.sprint.EditSprint;
+import com.biscuit.commands.sprint.ReviewDashboard;
 import com.biscuit.commands.sprint.ShowSprint;
 import com.biscuit.commands.userStory.AddUserStoryToSprint;
 import com.biscuit.commands.userStory.ListUserStories;
@@ -92,6 +93,11 @@ public class SprintView extends View {
 
 				UserStoryView usv = new UserStoryView(this, us);
 				usv.view();
+				return true;
+			}
+		} else if (words[0].equals("review")) {
+			if (words[1].equals("dashboard")) {
+				(new ReviewDashboard(reader, sprint, sprint.name + " Review")).execute();
 				return true;
 			}
 		}
