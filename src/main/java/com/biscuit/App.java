@@ -17,20 +17,22 @@ public class App {
 	}
 
 
-	private static void initialize() {
+	private static void initialize(){
 
-		Dashboard.setInstance(Dashboard.load());
-
-		if (Dashboard.getInstance() == null) {
-			Dashboard.setInstance(new Dashboard());
+		try {
+			Login.setInstance(new Login());
+			System.out.println("Welcome:"+Login.getInstance().fullName);
+			Dashboard.setInstance(Dashboard.load());
+			if (Dashboard.getInstance() == null) {
+				Dashboard.setInstance(new Dashboard());
+			}
+			Dashboard.getInstance().save();
+			//		test();
+			DashboardView dbv = new DashboardView();
+			dbv.view();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
-
-		Dashboard.getInstance().save();
-
-//		test();
-
-		DashboardView dbv = new DashboardView();
-		dbv.view();
 
 	}
 
