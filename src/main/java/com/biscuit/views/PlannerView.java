@@ -1,27 +1,20 @@
 package com.biscuit.views;
 
-import java.io.IOException;
-import java.util.List;
-
+import com.biscuit.commands.epic.ListEpics;
 import com.biscuit.commands.help.PlannerHelp;
-import com.biscuit.commands.planner.MoveSprintToRelease;
-import com.biscuit.commands.planner.MoveUserStoryToSprint;
-import com.biscuit.commands.planner.ShowPlan;
-import com.biscuit.commands.planner.ShowPlanDetails;
-import com.biscuit.commands.planner.UnplanAll;
-import com.biscuit.commands.planner.UnplanSprint;
-import com.biscuit.commands.planner.UnplanUserStory;
+import com.biscuit.commands.planner.*;
 import com.biscuit.commands.release.ListReleases;
 import com.biscuit.commands.sprint.ListSprints;
-import com.biscuit.commands.epic.ListEpics;
 import com.biscuit.commands.userStory.ListUserStories;
 import com.biscuit.factories.PlannerCompleterFactory;
 import com.biscuit.models.Project;
 import com.biscuit.models.services.Finder.Releases;
 import com.biscuit.models.services.Finder.Sprints;
 import com.biscuit.models.services.Finder.UserStories;
-
 import jline.console.completer.Completer;
+
+import java.io.IOException;
+import java.util.List;
 
 public class PlannerView extends View {
 
@@ -166,9 +159,25 @@ public class PlannerView extends View {
 				} else {
 					return false;
 				}
+			} /*else if (Epics.getAllNames(project).contains(words[3]) && UserStories.getAllNames(project.backlog).contains(words[1])){
+				if((new MoveUserStoryToEpic(reader, project, words[1], words[3]).execute())) {
+					System.out.println("here");
+					resetCompleters();
+					return true;
+				} else {
+					return false;
+				}
+			}*/
+			else if(words[2].equals("epic")  && UserStories.getAllNames(project.backlog).contains(words[1])){
+				if((new MoveUserStoryToEpic(reader, project, words[1], words[3]).execute())) {
+					resetCompleters();
+					return true;
+				} else {
+					return false;
+				}
 			}
+			System.out.println("out");
 		}
-
 		return false;
 	}
 }

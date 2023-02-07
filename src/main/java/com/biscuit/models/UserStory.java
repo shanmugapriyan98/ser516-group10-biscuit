@@ -4,17 +4,17 @@
 
 package com.biscuit.models;
 
+import com.biscuit.models.enums.BusinessValue;
+import com.biscuit.models.enums.Status;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.biscuit.models.enums.BusinessValue;
-import com.biscuit.models.enums.Status;
-
 public class UserStory {
 
 	public transient Project project;
-
+	public Epic epic = new Epic();
 	public String title;
 	public String description;
 	public Status state;
@@ -31,7 +31,7 @@ public class UserStory {
 	public List<Test> tests = new ArrayList<>();
 
 	static {
-		fields = new String[] { "title", "description", "state", "business_value", "initiated_date", "planned_date", "due_date", "tasks", "points" };
+		fields = new String[] { "title", "epic", "description", "state", "business_value", "initiated_date", "planned_date", "due_date", "tasks", "points" };
 	}
 
 
