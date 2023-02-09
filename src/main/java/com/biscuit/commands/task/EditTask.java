@@ -92,7 +92,7 @@ public class EditTask implements Command {
 		reader.addCompleter(dateCompleter);
 
 		reader.setPrompt(ColorCodes.BLUE + "\ndue date:\n" + ColorCodes.YELLOW
-				+ "(hit Tab to see examples)\n(optional: leave it blank for unchange, or unset to unset)\n"
+				+ "(hit Tab to see examples)\n(optional: leave it blank for unchanged, or unset to unset)\n"
 				+ ColorCodes.RESET + "current value: " + DateService.getDateAsString(t.dueDate) + "\n");
 
 		while ((line = reader.readLine()) != null) {
@@ -155,7 +155,7 @@ public class EditTask implements Command {
 		reader.addCompleter(dateCompleter);
 
 		reader.setPrompt(ColorCodes.BLUE + "\nplanned date:\n" + ColorCodes.YELLOW
-				+ "(hit Tab to see examples)\n(optional: leave it blank for unchange, or unset to unset)\n"
+				+ "(hit Tab to see examples)\n(optional: leave it blank for unchanged, or unset to unset)\n"
 				+ ColorCodes.RESET + "current value: " + DateService.getDateAsString(t.plannedDate) + "\n");
 
 		while ((line = reader.readLine()) != null) {
@@ -218,7 +218,7 @@ public class EditTask implements Command {
 		reader.addCompleter(dateCompleter);
 
 		reader.setPrompt(ColorCodes.BLUE + "\ninitiated date:\n" + ColorCodes.YELLOW
-				+ "(hit Tab to see examples)\n(optional: leave it blank for unchange, or unset to unset)\n"
+				+ "(hit Tab to see examples)\n(optional: leave it blank for unchanged, or unset to unset)\n"
 				+ ColorCodes.RESET + "current value: " + DateService.getDateAsString(t.initiatedDate) + "\n");
 
 		while ((line = reader.readLine()) != null) {

@@ -45,6 +45,7 @@ public class EditUserStory implements Command {
 		setPlannedDate();
 		setDueDate();
 		setPoints();
+		setComments();
 
 		reader.setPrompt(prompt);
 
@@ -52,7 +53,6 @@ public class EditUserStory implements Command {
 
 		return true;
 	}
-
 
 	private void setPoints() throws IOException {
 
@@ -94,7 +94,7 @@ public class EditUserStory implements Command {
 		reader.addCompleter(dateCompleter);
 
 		reader.setPrompt(ColorCodes.BLUE + "\ndue date:\n" + ColorCodes.YELLOW
-				+ "(hit Tab to see examples)\n(optional: leave it blank for unchange, or unset to unset)\n"
+				+ "(hit Tab to see examples)\n(optional: leave it blank for unchanged, or unset to unset)\n"
 				+ ColorCodes.RESET + "current value: " + DateService.getDateAsString(userStory.dueDate) + "\n");
 
 		while ((line = reader.readLine()) != null) {
@@ -157,7 +157,7 @@ public class EditUserStory implements Command {
 		reader.addCompleter(dateCompleter);
 
 		reader.setPrompt(ColorCodes.BLUE + "\nplanned date:\n" + ColorCodes.YELLOW
-				+ "(hit Tab to see examples)\n(optional: leave it blank for unchange, or unset to unset)\n"
+				+ "(hit Tab to see examples)\n(optional: leave it blank for unchanged, or unset to unset)\n"
 				+ ColorCodes.RESET + "current value: " + DateService.getDateAsString(userStory.plannedDate) + "\n");
 
 		while ((line = reader.readLine()) != null) {
@@ -220,7 +220,7 @@ public class EditUserStory implements Command {
 		reader.addCompleter(dateCompleter);
 
 		reader.setPrompt(ColorCodes.BLUE + "\ninitiated date:\n" + ColorCodes.YELLOW
-				+ "(hit Tab to see examples)\n(optional: leave it blank for unchange, or unset to unset)\n"
+				+ "(hit Tab to see examples)\n(optional: leave it blank for unchanged, or unset to unset)\n"
 				+ ColorCodes.RESET + "current value: " + DateService.getDateAsString(userStory.initiatedDate) + "\n");
 
 		while ((line = reader.readLine()) != null) {
@@ -278,7 +278,7 @@ public class EditUserStory implements Command {
 
 		String prompt = ColorCodes.BLUE + "business value: " + ColorCodes.RESET;
 		String preload = userStory.businessValue.toString().toLowerCase();
-		String businussValue;
+		String businessValue;
 
 		Completer oldCompleter = (Completer) reader.getCompleters().toArray()[0];
 		Completer businessValuesCompleter = new ArgumentCompleter(new StringsCompleter(BusinessValue.values),
@@ -290,13 +290,13 @@ public class EditUserStory implements Command {
 		reader.resetPromptLine(prompt, preload, 0);
 		reader.print("\r");
 
-		businussValue = reader.readLine().trim();
-		while (!BusinessValue.values.contains(businussValue)) {
+		businessValue = reader.readLine().trim();
+		while (!BusinessValue.values.contains(businessValue)) {
 			System.out.println(ColorCodes.RED + "invalid business value, hit tab for auto-complete" + ColorCodes.RESET);
-			businussValue = reader.readLine().trim();
+			businessValue = reader.readLine().trim();
 		}
 
-		userStory.businessValue = BusinessValue.valueOf(businussValue.toUpperCase());
+		userStory.businessValue = BusinessValue.valueOf(businessValue.toUpperCase());
 
 		reader.removeCompleter(businessValuesCompleter);
 		reader.addCompleter(oldCompleter);
@@ -362,5 +362,26 @@ public class EditUserStory implements Command {
 
 		userStory.title = reader.readLine();
 	}
+
+	private void setComments() throws IOException {
+		StringBuilder comment = new StringBuilder();
+		String line;
+		String prompt = ColorCodes.BLUE + "comments: " + ColorCodes.YELLOW + "(\\q to end writing) "
+				+ ColorCodes.RESET;
+
+		reader.resetPromptLine(prompt, "", 0);
+		reader.print("\r");
+
+		while ((line = reader.readLine()) != null) {
+			if (line.equals("\\q")) {
+				break;
+			}
+			comment.append(line).append("\n");
+			reader.setPrompt("");
+		}
+
+		userStory.comments.add(comment.toString().replace("<newline>", "\n").replace("<exclamation-mark>", "!"));
+	}
+
 
 }

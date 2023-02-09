@@ -17,12 +17,12 @@ import com.biscuit.models.services.Finder.Tasks;
 
 import jline.console.completer.Completer;
 
-public class UserStroryView extends View {
+public class UserStoryView extends View {
 
 	UserStory userStory = null;
 
 
-	public UserStroryView(View previousView, UserStory userStory) {
+	public UserStoryView(View previousView, UserStory userStory) {
 		super(previousView, userStory.title);
 		this.userStory = userStory;
 	}

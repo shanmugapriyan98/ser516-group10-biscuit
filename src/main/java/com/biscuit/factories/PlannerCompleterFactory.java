@@ -47,12 +47,12 @@ public class PlannerCompleterFactory {
 
 
 	private static List<String> getUnplanOptions(Project project) {
-		List<String> sprints_userstories_all = new ArrayList<>();
+		List<String> sprints_user_stories_all = new ArrayList<>();
 
-		sprints_userstories_all.addAll(Sprints.getPlannedNames(project));
-		sprints_userstories_all.addAll(UserStories.getPlannedNames(project));
-		sprints_userstories_all.add("all");
+		sprints_user_stories_all.addAll(Sprints.getPlannedNames(project));
+		sprints_user_stories_all.addAll(UserStories.getPlannedNames(project));
+		sprints_user_stories_all.add("all");
 
-		return sprints_userstories_all;
+		return sprints_user_stories_all;
 	}
 }

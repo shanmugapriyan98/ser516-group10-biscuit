@@ -83,7 +83,7 @@ public class BacklogView extends View {
 
 				us.project = backlog.project;
 
-				UserStroryView usv = new UserStroryView(this, us);
+				UserStoryView usv = new UserStoryView(this, us);
 				usv.view();
 				return true;
 			}
