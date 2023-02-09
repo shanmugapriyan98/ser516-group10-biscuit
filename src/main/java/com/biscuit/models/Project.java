@@ -52,12 +52,7 @@ public class Project {
 		}
 	}
 
-	// private void updateEpicReferences(List<Epic> epics) {
-	// 	for (Epic e : epics) {
-	// 		e.project = this;
-	// 		updateUserStoryReferences(e.userStories);
-	// 	}
-	// }
+	//TODO updateEpicReferences function
 
 	private void updateUserStoryReferences(List<UserStory> userStories) {
 		for (UserStory us : userStories) {
