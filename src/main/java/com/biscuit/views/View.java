@@ -111,6 +111,8 @@ public abstract class View {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -155,7 +157,7 @@ public abstract class View {
 		}
 	}
 
-	abstract boolean executeCommand(String[] words) throws IOException;
+	abstract boolean executeCommand(String[] words) throws Exception;
 
 	void addPromptViews() {
 		promptViews.add(name);
