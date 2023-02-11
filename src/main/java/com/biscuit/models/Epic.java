@@ -16,7 +16,7 @@ public class Epic {
     public String name;
     public String description;
 
-    public List<UserStory> userStories = new ArrayList<>();
+    public List<String> userStories = new ArrayList<>();
 
     public static String[] fields;
     public static String[] fieldsAsHeader;
@@ -26,7 +26,7 @@ public class Epic {
         fieldsAsHeader = new String[]{"Name", "Description", "User Stories"};
     }
 
-    public void addUserStory(UserStory userStory) {
+    public void addUserStory(String userStory) {
         this.userStories.add(userStory);
     }
 
