@@ -12,6 +12,7 @@ import com.biscuit.views.DashboardView;
 
 public class App {
 
+
 	public static void main(String[] args) {
 		initialize();
 	}
@@ -28,6 +29,7 @@ public class App {
 			}
 			Dashboard.getInstance().save();
 			//		test();
+			Login.getInstance().displayProjects();
 			DashboardView dbv = new DashboardView();
 			dbv.view();
 		} catch (Exception e) {
