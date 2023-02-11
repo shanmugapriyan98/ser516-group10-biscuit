@@ -11,8 +11,7 @@ import com.biscuit.models.Dashboard;
 import com.biscuit.views.DashboardView;
 
 public class App {
-
-
+	
 	public static void main(String[] args) {
 		initialize();
 	}
