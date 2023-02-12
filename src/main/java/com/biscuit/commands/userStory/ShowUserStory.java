@@ -1,12 +1,5 @@
 package com.biscuit.commands.userStory;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-
 import com.biscuit.ColorCodes;
 import com.biscuit.Login;
 import com.biscuit.commands.Command;
@@ -17,6 +10,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 
 public class ShowUserStory implements Command {
 
@@ -66,23 +62,24 @@ public class ShowUserStory implements Command {
 			setUserStoryData(response);
 		} catch (Exception exception){
 			exception.printStackTrace();
+			System.out.println("Error while fetching US details from Taiga. Please enter valid US number in project: " + project );
 		}
-
 	}
 
-	private static void setUserStoryData(Response response) throws IOException, ParseException {
+	public void setUserStoryData(Response response) throws Exception {
 		JSONObject jsonObject = new JSONObject(response.body().string());
 		UserStory userStory = new UserStory();
 		userStory.title = jsonObject.getString("subject");
 		userStory.description = jsonObject.getString("subject");
-		String status = jsonObject.getJSONObject("status_extra_info").getString("name");
-		userStory.state = Status.valueOf(status); // Enum and Taiga's US status should match
+
+		String status = jsonObject.getJSONObject("status_extra_info").getString("name").toUpperCase();
+		userStory.state = Status.valueOf(status); // Enum and Taiga's US status should match, else an exception will be thrown
+
 		userStory.initiatedDate = new SimpleDateFormat("yyyy-mm-dd").parse(jsonObject.getString("created_date"));
 		userStory.dueDate = new SimpleDateFormat("yyyy-mm-dd").parse(jsonObject.getString("due_date"));
 		userStory.plannedDate = new SimpleDateFormat("yyyy-mm-dd").parse(jsonObject.getString("due_date"));
 		userStory.points = jsonObject.getInt("total_points"); // Could be float in Taiga
-		userStory.tasks = new ArrayList<>((Collection) jsonObject.getJSONArray("tasks")); // This field is returned empty from Taiga
-		userStory.comments = Arrays.asList(jsonObject.getString("comment")); // This field is returned empty from Taiga
+		new ShowUserStory(userStory).execute();
 	}
 
 }
