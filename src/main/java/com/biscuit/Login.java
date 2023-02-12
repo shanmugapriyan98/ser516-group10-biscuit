@@ -70,7 +70,7 @@ public class Login {
         JSONObject jsonObject;
         System.out.println();
         request = new Request.Builder()
-                .url("https://api.taiga.io//api/v1/projects?member="+memberId)
+                .url("https://api.taiga.io/api/v1/projects?member="+memberId)
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Authorization", "Bearer "+authToken)
                 .get()
