@@ -16,8 +16,7 @@ public class AddProject implements Command {
 	Dashboard dashboard = Dashboard.getInstance();
 	Project project = new Project();
 	ConsoleReader reader = null;
-	Login login =  Login.getInstance();
-	String authToken = login.authToken;
+	String authToken = Login.getInstance().authToken;
 	private final OkHttpClient httpClient = new OkHttpClient();
 	public AddProject(ConsoleReader reader) throws Exception {
 		super();
