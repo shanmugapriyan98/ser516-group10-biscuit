@@ -14,13 +14,11 @@ public class AddEpic implements Command {
     Project project = null;
     Epic epic = new Epic();
 
-
     public AddEpic(ConsoleReader reader, Project project) {
         super();
         this.reader = reader;
         this.project = project;
     }
-
 
     public boolean execute() throws IOException {
         StringBuilder description = new StringBuilder();
@@ -42,7 +40,6 @@ public class AddEpic implements Command {
         return false;
     }
 
-
     private void setDescription(StringBuilder description) throws IOException {
         String line;
         reader.setPrompt(ColorCodes.BLUE + "\ndescription:\n" + ColorCodes.YELLOW + "(\\q to end writing)\n" + ColorCodes.RESET);
@@ -57,7 +54,6 @@ public class AddEpic implements Command {
 
         epic.description = description.toString();
     }
-
 
     private void setName() throws IOException {
         reader.setPrompt(ColorCodes.BLUE + "name: " + ColorCodes.RESET);

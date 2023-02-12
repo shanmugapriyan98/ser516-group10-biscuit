@@ -37,8 +37,7 @@ public class EditEpic implements Command {
     private void setDescription() throws IOException {
         StringBuilder description = new StringBuilder();
         String line;
-        String prompt = ColorCodes.BLUE + "description: " + ColorCodes.YELLOW + "(\\q to end writing) "
-                + ColorCodes.RESET;
+        String prompt = ColorCodes.BLUE + "description: " + ColorCodes.YELLOW + "(\\q to end writing) " + ColorCodes.RESET;
         String preload = e.description.replace("\n", "<newline>").replace("!", "<exclamation-mark>");
 
         reader.resetPromptLine(prompt, preload, 0);

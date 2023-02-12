@@ -15,7 +15,6 @@ public class ShowEpic implements Command {
         this.e = e;
     }
 
-
     @Override
     public boolean execute() throws IOException {
 

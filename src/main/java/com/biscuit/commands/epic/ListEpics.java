@@ -4,7 +4,6 @@ import com.biscuit.ColorCodes;
 import com.biscuit.commands.Command;
 import com.biscuit.models.Epic;
 import com.biscuit.models.Project;
-import com.biscuit.models.Release;
 import de.vandermeer.asciitable.v2.RenderedTable;
 import de.vandermeer.asciitable.v2.V2_AsciiTable;
 import de.vandermeer.asciitable.v2.render.V2_AsciiTableRenderer;
@@ -73,8 +72,7 @@ public class ListEpics implements Command {
             at.addRow(null, this.title).setAlignment(new char[]{'c', 'c'});
             at.addRule();
         }
-        at.addRow("Name", "Description")
-                .setAlignment(new char[]{'l', 'l'});
+        at.addRow("Name", "Description").setAlignment(new char[]{'l', 'l'});
 
         if (epics.size() == 0) {
             String message;
@@ -145,9 +143,7 @@ public class ListEpics implements Command {
 
 
     private void doFilter(List<Epic> epics) {
-        List<Epic> filtered = epics.stream()
-                .filter(r -> r.name.toLowerCase().contains(filterBy) || r.description.toLowerCase().contains(filterBy))
-                .collect(Collectors.toList());
+        List<Epic> filtered = epics.stream().filter(r -> r.name.toLowerCase().contains(filterBy) || r.description.toLowerCase().contains(filterBy)).collect(Collectors.toList());
         epics.clear();
         epics.addAll(filtered);
     }
