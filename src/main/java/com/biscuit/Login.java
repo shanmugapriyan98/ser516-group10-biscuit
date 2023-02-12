@@ -40,7 +40,7 @@ public class Login {
 
     }
 
-    public Login() throws Exception {
+    private Login() throws Exception {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter Username:");
         userName = scanner.next();
