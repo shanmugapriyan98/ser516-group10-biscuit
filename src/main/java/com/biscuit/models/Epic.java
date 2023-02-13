@@ -11,8 +11,6 @@ import java.util.List;
 public class Epic {
 
     public transient Project project;
-
-    // info
     public String name;
     public String description;
 
