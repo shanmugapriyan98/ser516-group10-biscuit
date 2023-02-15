@@ -6,7 +6,7 @@ import java.util.List;
 
 public enum Status {
 
-	CREATED(0), OPEN(1), PLANNED(2), UNPLANNED(3), IN_PROGRESS(4), IN_TESTING(5), DONE(6), OVERDUE(7), REMOVED(8);
+	CREATED(0), OPEN(1), PLANNED(2), UNPLANNED(3), IN_PROGRESS(4), IN_TESTING(5), DONE(6), OVERDUE(7), REMOVED(8), NEW(9);
 
 	private final int value;
 	public static List<String> values = new ArrayList<>(

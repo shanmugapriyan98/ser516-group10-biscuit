@@ -2,6 +2,7 @@ package com.biscuit.views;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import com.biscuit.commands.help.PlannerHelp;
 import com.biscuit.commands.planner.MoveSprintToRelease;
@@ -15,8 +16,10 @@ import com.biscuit.commands.release.ListReleases;
 import com.biscuit.commands.sprint.ListSprints;
 import com.biscuit.commands.epic.ListEpics;
 import com.biscuit.commands.userStory.ListUserStories;
+import com.biscuit.commands.userStory.ShowUserStory;
 import com.biscuit.factories.PlannerCompleterFactory;
 import com.biscuit.models.Project;
+import com.biscuit.models.UserStory;
 import com.biscuit.models.services.Finder.Releases;
 import com.biscuit.models.services.Finder.Sprints;
 import com.biscuit.models.services.Finder.UserStories;
@@ -41,7 +44,7 @@ public class PlannerView extends View {
 
 
 	@Override
-	boolean executeCommand(String[] words) throws IOException {
+	boolean executeCommand(String[] words) throws Exception {
 		if (words.length == 1) {
 			return execute1Keywords(words);
 		} else if (words.length == 2) {
@@ -82,7 +85,7 @@ public class PlannerView extends View {
 	}
 
 
-	private boolean execute2Keywords(String[] words) throws IOException {
+	private boolean execute2Keywords(String[] words) throws Exception {
 		if (words[0].equals("show")) {
 			if (words[1].equals("releases")) {
 				(new ListReleases(project, "Releases")).execute();
@@ -137,11 +140,18 @@ public class PlannerView extends View {
 	}
 
 
-	private boolean execute3Keywords(String[] words) throws IOException {
+	private boolean execute3Keywords(String[] words) throws Exception {
 		if (words[0].equals("show")) {
 			if (words[1].equals("plan")) {
 				if (words[2].equals("details")) {
 					(new ShowPlanDetails(project)).execute();
+					return true;
+				}
+			}
+		} else if (words[0].equals("view")) {
+			if (words[1].equals("user_story")) {
+				if (isNumeric(words[2])) {
+					(new ShowUserStory(new UserStory())).fetchUserStoryByNumber(project.name, Integer.parseInt(words[2]));
 					return true;
 				}
 			}
@@ -170,5 +180,14 @@ public class PlannerView extends View {
 		}
 
 		return false;
+	}
+
+	private Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
+
+	public boolean isNumeric(String strNum) {
+		if (strNum == null) {
+			return false;
+		}
+		return pattern.matcher(strNum).matches();
 	}
 }
