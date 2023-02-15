@@ -7,6 +7,7 @@ package com.biscuit.views;
 import java.io.IOException;
 import java.util.List;
 
+import com.biscuit.Login;
 import com.biscuit.commands.help.DashboardHelp;
 import com.biscuit.commands.project.AddProject;
 import com.biscuit.commands.project.EditProject;
@@ -98,6 +99,9 @@ public class DashboardView extends View {
 
 		} else if (words[0].equals("list")) {
 			// projects
+			Login.getInstance().getBackLogDataFromProject(words[1]);
+			displayBacklog();
+			return true;
 			// "filter", "sort"
 		} else if (words[1].equals("project")) {
 			if (words[0].equals("add")) {
@@ -122,6 +126,15 @@ public class DashboardView extends View {
 		}
 
 		return false;
+	}
+
+	public void displayBacklog(){
+		for(List<String> al: Login.getInstance().userStoriesList){
+			for(String s: al){
+				System.out.print(s+":");
+			}
+			System.out.println();
+		}
 	}
 
 }
