@@ -56,7 +56,7 @@ public class Release {
 	public List<Bug> bugs;
 	public List<Test> tests;
 
-	// Completed 0pt 0% ToDo 8pt
+	// Completed 0pt 0% TODO 8pt
 
 	/**
 	 * Array to store fields.
