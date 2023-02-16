@@ -33,7 +33,7 @@ public class Project {
 	 * List of sprints for project.
 	 */
 	public List<Sprint> sprints = new ArrayList<>();
-
+	public List<Epic> epics = new ArrayList<>();
 
 	/**
 	 * Save project.
@@ -89,6 +89,7 @@ public class Project {
 		}
 	}
 
+	//TODO updateEpicReferences function
 
 	/**
 	 * Update User Story References.
@@ -128,6 +129,11 @@ public class Project {
 	 */
 	public void addSprint(Sprint s) {
 		sprints.add(s);
+	}
+
+
+	public void addEpic(Epic e) {
+		epics.add(e);
 	}
 
 
