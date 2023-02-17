@@ -118,7 +118,6 @@ public class Login {
                 if(jsonObject.has("subject") && String.valueOf(jsonObject.get("milestone_name")).equals("null")){
                     userStoriesList.add(new ArrayList<>());
                     len = userStoriesList.size()-1;
-//                    System.out.println(jsonObject);
                     userStoriesList.get(len).add(String.valueOf(jsonObject.get("ref")));
                     userStoriesList.get(len).add((String) jsonObject.get("subject"));
                     userStoriesList.get(len).add(String.valueOf(jsonObject.get("total_points")));

@@ -98,11 +98,9 @@ public class DashboardView extends View {
 			return false;
 
 		} else if (words[0].equals("list")) {
-			// projects
 			Login.getInstance().getBackLogDataFromProject(words[1]);
 			displayBacklog();
 			return true;
-			// "filter", "sort"
 		} else if (words[1].equals("project")) {
 			if (words[0].equals("add")) {
 				(new AddProject(reader)).execute();
