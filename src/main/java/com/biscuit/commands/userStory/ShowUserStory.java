@@ -86,7 +86,6 @@ public class ShowUserStory implements Command {
 		UserStory userStory = new UserStory();
 		userStory.title = jsonObject.getString("subject");
 		userStory.description = jsonObject.getString("description");
-
 		String status = jsonObject.getJSONObject("status_extra_info").getString("name").toUpperCase();
 		userStory.state = Status.valueOf(status); // Enum and Taiga's US status should match, else an exception will be thrown
 
