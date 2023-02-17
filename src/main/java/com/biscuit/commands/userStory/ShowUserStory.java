@@ -76,9 +76,9 @@ public class ShowUserStory implements Command {
 			}
 			JSONObject jsonObject = new JSONObject(response.body().string());
 			setUserStoryData(jsonObject);
-		} catch (Exception exception){
+		} catch (Exception exception) {
 			exception.printStackTrace();
-			System.out.println("Error while fetching US details from Taiga. Please enter valid US number in project: " + project );
+			System.out.println("Error while fetching US details from Taiga. Please enter valid US number in project: " + project);
 		}
 	}
 
