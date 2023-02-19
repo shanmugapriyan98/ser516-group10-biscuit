@@ -53,10 +53,10 @@ public class ReviewDashboard implements Command {
 		Scanner sc = new Scanner(System.in);
 
 		System.out.println("Enter the sprint goal:  ");
-		sprGoal = sc.next();
+		sprGoal = sc.nextLine();
 		sprGoal = "Sprint Goal : "+ sprGoal;
 		System.out.println("Was the sprint goal achieved? Enter yes or no. : ");
-		wasSprGoalAchieved = sc.next();
+		wasSprGoalAchieved = sc.nextLine();
 		wasSprGoalAchieved = "Was the sprint goal achieved: "+ wasSprGoalAchieved;
 		System.out.println("Which user stories are you demoing today? Enter None to stop. ");
 
@@ -71,10 +71,10 @@ public class ReviewDashboard implements Command {
 		for(String dUS: demoUS){
 			System.out.println("Please add demo comments for the user stories that are being demoed, else enter No");
 			System.out.println("Do you want to add any demo comments to user story no. "+ dUS);
-			demoComment = sc.next();
+			demoComment = sc.nextLine();
 			if(!Objects.equals(demoComment, "No")) {
 				System.out.println("Enter demo comment:");
-				demoComment = sc.next();
+				demoComment = sc.nextLine();
 				if (Finder.UserStories.getAllNames(sprint).contains("US-"+dUS)) {
 					UserStory us = Finder.UserStories.find(sprint, "US-"+dUS);
 					userStories.add(us);
