@@ -108,7 +108,7 @@ public abstract class View {
 					System.out.println("invalid command!");
 				}
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (Exception e) {

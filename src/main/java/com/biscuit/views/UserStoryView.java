@@ -35,7 +35,7 @@ public class UserStoryView extends View {
 
 
 	@Override
-	boolean executeCommand(String[] words) throws IOException {
+	boolean executeCommand(String[] words) throws Exception {
 		if (words.length == 1) {
 			return execute1Keyword(words);
 		} else if (words.length == 2) {
@@ -87,7 +87,7 @@ public class UserStoryView extends View {
 	}
 
 
-	private boolean execute1Keyword(String[] words) throws IOException {
+	private boolean execute1Keyword(String[] words) throws Exception {
 		if (words[0].equals("show")) {
 			(new ShowUserStory(userStory)).execute();
 			return true;

@@ -51,6 +51,7 @@ public class ProjectHelp extends UniversalHelp {
 		at.addRow("add release", "Add new release").setAlignment(new char[] { 'l', 'l' });
 		at.addRow("add sprint", "Add new sprint").setAlignment(new char[] { 'l', 'l' });
 		at.addRow("add user_story", "Add new user story to the backlog").setAlignment(new char[] { 'l', 'l' });
+		at.addRow("add epic", "Add new epic").setAlignment(new char[] { 'l', 'l' });
 	}
 
 }
