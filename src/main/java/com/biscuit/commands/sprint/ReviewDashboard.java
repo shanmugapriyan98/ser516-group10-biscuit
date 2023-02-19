@@ -52,10 +52,6 @@ public class ReviewDashboard implements Command {
 
 		Scanner sc = new Scanner(System.in);
 
-		if (sprint != null) {
-			userStories.addAll(sprint.userStories);
-		}
-
 		System.out.println("Enter the sprint goal:  ");
 		sprGoal = sc.next();
 		sprGoal = "Sprint Goal : "+ sprGoal;
@@ -81,6 +77,7 @@ public class ReviewDashboard implements Command {
 				demoComment = sc.next();
 				if (Finder.UserStories.getAllNames(sprint).contains("US-"+dUS)) {
 					UserStory us = Finder.UserStories.find(sprint, "US-"+dUS);
+					userStories.add(us);
 					if (us == null) {
 						System.out.println("User story not found");
 					}
