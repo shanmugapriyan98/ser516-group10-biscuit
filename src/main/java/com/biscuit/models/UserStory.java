@@ -13,26 +13,27 @@ import java.util.List;
 
 public class UserStory {
 
-	public transient Project project;
+    public transient Project project;
 	public Epic epic = new Epic();
-	public String title;
-	public String description;
-	public Status state;
-	public BusinessValue businessValue;
-	public Date initiatedDate = null;
-	public Date plannedDate = null;
-	public Date dueDate = null;
-	public int points;
+    public String title;
+    public String description;
+    public Status state;
+    public BusinessValue businessValue;
+    public Date initiatedDate = null;
+    public Date plannedDate = null;
+    public Date dueDate = null;
+    public int points;
 
 	public static String[] fields;
 
-	public List<Task> tasks = new ArrayList<>();
-	public List<Bug> bugs = new ArrayList<>();
-	public List<Test> tests = new ArrayList<>();
+    public List<Task> tasks = new ArrayList<>();
+    public List<Bug> bugs = new ArrayList<>();
+    public List<Test> tests = new ArrayList<>();
+    public List<String> comments;
 
-	static {
-		fields = new String[] { "title", "epic", "description", "state", "business_value", "initiated_date", "planned_date", "due_date", "tasks", "points" };
-	}
+    static {
+        fields = new String[]{"title", "description", "state", "business_value", "initiated_date", "planned_date", "due_date", "tasks", "points", "comments"};
+    }
 
 
 	public void save() {

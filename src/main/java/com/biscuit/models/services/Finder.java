@@ -232,13 +232,15 @@ public class Finder {
 		public static List<Epic> getAll(Project p) {
 			List<Epic> epics = new ArrayList<>();
 
+			
+
 			return epics;
 		}
 
 		public static List<String> getAllNames(Project p) {
 			return p.epics.stream().map(e -> e.name).collect(Collectors.toList());
 		}
-		
+
 		public static Epic find(Project p, String name) {
 			return p.epics.stream().filter(s -> s.name.equals(name)).findAny().orElse(null);
 		}

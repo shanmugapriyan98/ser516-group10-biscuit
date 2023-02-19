@@ -108,7 +108,7 @@ public abstract class View {
 					System.out.println("invalid command!");
 				}
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -155,7 +155,7 @@ public abstract class View {
 		}
 	}
 
-	abstract boolean executeCommand(String[] words) throws IOException;
+	abstract boolean executeCommand(String[] words) throws Exception;
 
 	void addPromptViews() {
 		promptViews.add(name);

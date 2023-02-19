@@ -45,6 +45,7 @@ public class EditUserStory implements Command {
 		setPlannedDate();
 		setDueDate();
 		setPoints();
+		setComments();
 
 		reader.setPrompt(prompt);
 
@@ -52,7 +53,6 @@ public class EditUserStory implements Command {
 
 		return true;
 	}
-
 
 	private void setPoints() throws IOException {
 
@@ -362,5 +362,26 @@ public class EditUserStory implements Command {
 
 		userStory.title = reader.readLine();
 	}
+
+	private void setComments() throws IOException {
+		StringBuilder comment = new StringBuilder();
+		String line;
+		String prompt = ColorCodes.BLUE + "comments: " + ColorCodes.YELLOW + "(\\q to end writing) "
+				+ ColorCodes.RESET;
+
+		reader.resetPromptLine(prompt, "", 0);
+		reader.print("\r");
+
+		while ((line = reader.readLine()) != null) {
+			if (line.equals("\\q")) {
+				break;
+			}
+			comment.append(line).append("\n");
+			reader.setPrompt("");
+		}
+
+		userStory.comments.add(comment.toString().replace("<newline>", "\n").replace("<exclamation-mark>", "!"));
+	}
+
 
 }

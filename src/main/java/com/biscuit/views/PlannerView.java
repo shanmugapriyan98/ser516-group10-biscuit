@@ -1,16 +1,20 @@
 package com.biscuit.views;
 
-import com.biscuit.commands.epic.ListEpics;
+import java.io.IOException;
+import java.util.List;
+
 import com.biscuit.commands.help.PlannerHelp;
 import com.biscuit.commands.planner.*;
 import com.biscuit.commands.release.ListReleases;
 import com.biscuit.commands.sprint.ListSprints;
+import com.biscuit.commands.epic.ListEpics;
 import com.biscuit.commands.userStory.ListUserStories;
 import com.biscuit.factories.PlannerCompleterFactory;
 import com.biscuit.models.Project;
 import com.biscuit.models.services.Finder.Releases;
 import com.biscuit.models.services.Finder.Sprints;
 import com.biscuit.models.services.Finder.UserStories;
+
 import jline.console.completer.Completer;
 
 import java.io.IOException;
@@ -138,6 +142,13 @@ public class PlannerView extends View {
 					return true;
 				}
 			}
+		} else if (words[0].equals("view")) {
+			if (words[1].equals("user_story")) {
+				if (isNumeric(words[2])) {
+					(new ShowUserStory(new UserStory())).fetchUserStoryByNumber(project.name, Integer.parseInt(words[2]));
+					return true;
+				}
+			}
 		}
 		return false;
 	}
@@ -176,8 +187,17 @@ public class PlannerView extends View {
 					return false;
 				}
 			}
-			System.out.println("out");
 		}
+
 		return false;
+	}
+
+	private Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
+
+	public boolean isNumeric(String strNum) {
+		if (strNum == null) {
+			return false;
+		}
+		return pattern.matcher(strNum).matches();
 	}
 }
