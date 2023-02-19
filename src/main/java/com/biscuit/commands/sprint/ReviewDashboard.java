@@ -58,12 +58,12 @@ public class ReviewDashboard implements Command {
 		System.out.println("Was the sprint goal achieved? Enter yes or no. : ");
 		wasSprGoalAchieved = sc.next();
 		wasSprGoalAchieved = "Was the sprint goal achieved: "+ wasSprGoalAchieved;
-		System.out.println("Which user stories are you demoing today? Enter -1 to stop. ");
+		System.out.println("Which user stories are you demoing today? Enter None to stop. ");
 
-		while(num!="None"){
-			System.out.println("Enter user story number: ");
+		while(!Objects.equals(num, "None")){
+			System.out.println("Enter user story number or enter none : ");
 			num = sc.next();
-			if(num!="None"){
+			if(!Objects.equals(num, "None")){
 				demoUS.add(num);
 			}
 		}
@@ -72,7 +72,7 @@ public class ReviewDashboard implements Command {
 			System.out.println("Please add demo comments for the user stories that are being demoed, else enter No");
 			System.out.println("Do you want to add any demo comments to user story no. "+ dUS);
 			demoComment = sc.next();
-			if(demoComment!="No") {
+			if(!Objects.equals(demoComment, "No")) {
 				System.out.println("Enter demo comment:");
 				demoComment = sc.next();
 				if (Finder.UserStories.getAllNames(sprint).contains("US-"+dUS)) {
@@ -99,7 +99,7 @@ public class ReviewDashboard implements Command {
 			at.addRow(null, null, null, null, null, null, null, null, null, this.wasSprGoalAchieved).setAlignment(new char[] { 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c' });
 			at.addRule();
 		}
-		at.addRow("Title", "Description", "State", "Business Value", "Initiated Date", "Planned Date", "Due Date", "Tasks #", "Points", "Demo Comments")
+		at.addRow("Title", "Description", "State", "Business Value", "Initiated Date", "Planned Date", "Due Date", "Tasks #", "Points", "Review Comments")
 				.setAlignment(new char[] { 'l', 'l', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c' });
 
 
