@@ -18,7 +18,7 @@ public class UserStory {
 	public String title;
 	public String description;
 	public Status state;
-	public String demoComments;
+	public String reviewDemoComments="";
 	public BusinessValue businessValue;
 	public Date initiatedDate = null;
 	public Date plannedDate = null;
@@ -32,7 +32,7 @@ public class UserStory {
 	public List<Test> tests = new ArrayList<>();
 
 	static {
-		fields = new String[] { "title", "description", "state", "business_value", "initiated_date", "planned_date", "due_date", "tasks", "points" };
+		fields = new String[] { "title", "description", "state", "business_value", "initiated_date", "planned_date", "due_date", "tasks", "points", "review demo comments" };
 	}
 
 

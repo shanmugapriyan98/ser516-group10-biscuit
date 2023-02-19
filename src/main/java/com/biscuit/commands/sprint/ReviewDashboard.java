@@ -2,11 +2,14 @@ package com.biscuit.commands.sprint;
 
 import com.biscuit.ColorCodes;
 import com.biscuit.commands.Command;
+import com.biscuit.commands.userStory.EditUserStory;
 import com.biscuit.models.Project;
 import com.biscuit.models.Release;
 import com.biscuit.models.Sprint;
 import com.biscuit.models.UserStory;
 import com.biscuit.models.services.DateService;
+import com.biscuit.models.services.Finder;
+import com.biscuit.views.UserStoryView;
 import de.vandermeer.asciitable.v2.RenderedTable;
 import de.vandermeer.asciitable.v2.V2_AsciiTable;
 import de.vandermeer.asciitable.v2.render.V2_AsciiTableRenderer;
@@ -41,9 +44,9 @@ public class ReviewDashboard implements Command {
 
 		V2_AsciiTable at = new V2_AsciiTable();
 		String tableString;
-		int num = 0;
+		String num = "";
 		String demoComment;
-		List<Integer> demoUS = new ArrayList<>();
+		List<String> demoUS = new ArrayList<>();
 
 		List<UserStory> userStories = new ArrayList<>();
 
@@ -61,22 +64,29 @@ public class ReviewDashboard implements Command {
 		wasSprGoalAchieved = "Was the sprint goal achieved: "+ wasSprGoalAchieved;
 		System.out.println("Which user stories are you demoing today? Enter -1 to stop. ");
 
-		while(num!=-1){
+		while(num!="None"){
 			System.out.println("Enter user story number: ");
-			num = sc.nextInt();
-			demoUS.add(num);
+			num = sc.next();
+			if(num!="None"){
+				demoUS.add(num);
+			}
 		}
 
-		for(int dUS: demoUS){
+		for(String dUS: demoUS){
 			System.out.println("Please add demo comments for the user stories that are being demoed, else enter No");
 			System.out.println("Do you want to add any demo comments to user story no. "+ dUS);
 			demoComment = sc.next();
-			if(demoComment!="No"){
+			if(demoComment!="No") {
 				System.out.println("Enter demo comment:");
 				demoComment = sc.next();
-
+				if (Finder.UserStories.getAllNames(sprint).contains("US-"+dUS)) {
+					UserStory us = Finder.UserStories.find(sprint, "US-"+dUS);
+					if (us == null) {
+						System.out.println("User story not found");
+					}
+					new EditUserStory(reader, us).setReviewDemoComments(demoComment);
+				}
 			}
-
 		}
 
 		at.addRule();
@@ -92,7 +102,7 @@ public class ReviewDashboard implements Command {
 			at.addRow(null, null, null, null, null, null, null, null, null, this.wasSprGoalAchieved).setAlignment(new char[] { 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c' });
 			at.addRule();
 		}
-		at.addRow("Title", "Description", "State", "Business Value", "Initiated Date", "Planned Date", "Due Date", "Tasks #", "Points", "Comments")
+		at.addRow("Title", "Description", "State", "Business Value", "Initiated Date", "Planned Date", "Due Date", "Tasks #", "Points", "Demo Comments")
 				.setAlignment(new char[] { 'l', 'l', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c' });
 
 
@@ -105,7 +115,7 @@ public class ReviewDashboard implements Command {
 				at.addRule();
 
 				at.addRow(us.title, us.description, us.state, us.businessValue, DateService.getDateAsString(us.initiatedDate),
-								DateService.getDateAsString(us.plannedDate), DateService.getDateAsString(us.dueDate), us.tasks.size(), us.points, "hello")
+								DateService.getDateAsString(us.plannedDate), DateService.getDateAsString(us.dueDate), us.tasks.size(), us.points, us.reviewDemoComments)
 						.setAlignment(new char[] { 'l', 'l', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c' });
 			} // for
 		}

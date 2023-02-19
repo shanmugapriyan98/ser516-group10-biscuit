@@ -363,4 +363,8 @@ public class EditUserStory implements Command {
 		userStory.title = reader.readLine();
 	}
 
+	public void setReviewDemoComments(String demoComments) throws IOException {
+		userStory.reviewDemoComments = demoComments;
+	}
+
 }
