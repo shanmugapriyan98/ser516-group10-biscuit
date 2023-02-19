@@ -15,10 +15,7 @@ import de.vandermeer.asciitable.v2.themes.V2_E_TableThemes;
 import jline.console.ConsoleReader;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ReviewDashboard implements Command {
@@ -27,12 +24,15 @@ public class ReviewDashboard implements Command {
 	String sprintName = "";
 	ConsoleReader reader = null;
 	String title = "";
+	String sprGoal;
+	String wasSprGoalAchieved;
 
-	public ReviewDashboard(ConsoleReader reader, Sprint sprint, String s) {
+	public ReviewDashboard(ConsoleReader reader, Sprint sprint, String s, String title) {
 		super();
 		this.sprint = sprint;
 		this.sprintName = s;
 		this.reader = reader;
+		this.title = title;
 	}
 
 
@@ -41,34 +41,77 @@ public class ReviewDashboard implements Command {
 
 		V2_AsciiTable at = new V2_AsciiTable();
 		String tableString;
+		int num = 0;
+		String demoComment;
+		List<Integer> demoUS = new ArrayList<>();
 
 		List<UserStory> userStories = new ArrayList<>();
+
+		Scanner sc = new Scanner(System.in);
 
 		if (sprint != null) {
 			userStories.addAll(sprint.userStories);
 		}
 
+		System.out.println("Enter the sprint goal:  ");
+		sprGoal = sc.next();
+		sprGoal = "Sprint Goal : "+ sprGoal;
+		System.out.println("Was the sprint goal achieved? Enter yes or no. : ");
+		wasSprGoalAchieved = sc.next();
+		wasSprGoalAchieved = "Was the sprint goal achieved: "+ wasSprGoalAchieved;
+		System.out.println("Which user stories are you demoing today? Enter -1 to stop. ");
+
+		while(num!=-1){
+			System.out.println("Enter user story number: ");
+			num = sc.nextInt();
+			demoUS.add(num);
+		}
+
+		for(int dUS: demoUS){
+			System.out.println("Please add demo comments for the user stories that are being demoed, else enter No");
+			System.out.println("Do you want to add any demo comments to user story no. "+ dUS);
+			demoComment = sc.next();
+			if(demoComment!="No"){
+				System.out.println("Enter demo comment:");
+				demoComment = sc.next();
+
+			}
+
+		}
+
 		at.addRule();
 		if (!this.title.isEmpty()) {
-			at.addRow(null, null, null, null, null, null, this.title).setAlignment(new char[] { 'c', 'c', 'c', 'c', 'c', 'c', 'c' });
+			at.addRow(null, null, null, null, null, null, null, null, null, this.title).setAlignment(new char[] { 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c' });
 			at.addRule();
 		}
-		at.addRow("User Story", "Comments")
-				.setAlignment(new char[] { 'l', 'l' });
+		if (!this.sprGoal.isEmpty()) {
+			at.addRow(null, null, null, null, null, null, null, null, null, this.sprGoal).setAlignment(new char[] { 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c' });
+			at.addRule();
+		}
+		if (!this.wasSprGoalAchieved.isEmpty()) {
+			at.addRow(null, null, null, null, null, null, null, null, null, this.wasSprGoalAchieved).setAlignment(new char[] { 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c' });
+			at.addRule();
+		}
+		at.addRow("Title", "Description", "State", "Business Value", "Initiated Date", "Planned Date", "Due Date", "Tasks #", "Points", "Comments")
+				.setAlignment(new char[] { 'l', 'l', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c' });
+
 
 		if (userStories.size() == 0) {
+			String message = "There are no user stories!";
 			at.addRule();
-			at.addRow(null, null);
+			at.addRow(null, null, null, null, null, null, null, null, null, message);
 		} else {
-			for (UserStory s : userStories) {
+			for (UserStory us : userStories) {
 				at.addRule();
 
-				at.addRow(s.title, s.description).setAlignment(new char[] { 'l', 'l'});
+				at.addRow(us.title, us.description, us.state, us.businessValue, DateService.getDateAsString(us.initiatedDate),
+								DateService.getDateAsString(us.plannedDate), DateService.getDateAsString(us.dueDate), us.tasks.size(), us.points, "hello")
+						.setAlignment(new char[] { 'l', 'l', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c' });
 			} // for
 		}
 
 		at.addRule();
-		at.addRow(null, null);
+		at.addRow(null, null, null, null, null, null, null, null, null, "Total: " + userStories.size());
 		at.addRule();
 
 		V2_AsciiTableRenderer rend = new V2_AsciiTableRenderer();

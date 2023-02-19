@@ -22,6 +22,7 @@ public class Sprint {
 	public Date dueDate;
 	public int assignedEffort;
 	public int velocity;
+	public Boolean sprintGoalAchieved;
 
 	public List<UserStory> userStories = new ArrayList<>();
 	public List<Bug> bugs;

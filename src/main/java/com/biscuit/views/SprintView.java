@@ -97,7 +97,7 @@ public class SprintView extends View {
 			}
 		} else if (words[0].equals("review")) {
 			if (words[1].equals("dashboard")) {
-				(new ReviewDashboard(reader, sprint, sprint.name + " Review")).execute();
+				(new ReviewDashboard(reader, sprint, sprint.name + " Review", "Sprint Review Dashboard")).execute();
 				return true;
 			}
 		}

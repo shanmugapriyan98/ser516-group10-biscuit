@@ -18,6 +18,7 @@ public class UserStory {
 	public String title;
 	public String description;
 	public Status state;
+	public String demoComments;
 	public BusinessValue businessValue;
 	public Date initiatedDate = null;
 	public Date plannedDate = null;
