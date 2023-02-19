@@ -1,6 +1,7 @@
 package com.biscuit.commands.project;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import com.biscuit.ColorCodes;
 import com.biscuit.Login;
@@ -9,6 +10,7 @@ import com.biscuit.models.Project;
 import com.biscuit.models.Dashboard;
 import jline.console.ConsoleReader;
 import okhttp3.*;
+import com.biscuit.models.services.apiUtility;
 import org.json.JSONObject;
 
 public class AddProject implements Command {
@@ -21,32 +23,6 @@ public class AddProject implements Command {
 	public AddProject(ConsoleReader reader) throws Exception {
 		super();
 		this.reader = reader;
-	}
-
-	public void sendPost(String projectName, String description){
-		RequestBody formBody = new FormBody.Builder()
-				.add("description", description)
-				.add("is_backlog_activated", "true")
-				.add("name", projectName)
-				.build();
-
-		Request request = new Request.Builder()
-				.url("https://api.taiga.io/api/v1/projects")
-				.addHeader("Content-Type", "application/json")
-				.addHeader("Authorization", "Bearer "+authToken)
-				.post(formBody)
-				.build();
-
-		try (Response response = httpClient.newCall(request).execute()) {
-			if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-			JSONObject jsonObject = new JSONObject(response.body().string());
-			System.out.println("Project: was " + projectName +" created successfully on Taiga ");
-
-		} catch (IOException ioException){
-			System.out.println("Creation of project on Taiga was unsuccessful");
-			System.exit(1);
-		}
-
 	}
 	public boolean execute() throws IOException {
 
@@ -79,8 +55,15 @@ public class AddProject implements Command {
 
 		reader.println();
 		reader.println(ColorCodes.GREEN + "Project \"" + project.name + "\" has been added!" + ColorCodes.RESET);
-		sendPost(project.name,project.description);
-
+		String requestDescription = "create project";
+		HashMap<String,String > body = new HashMap<>();
+		body.put("description",project.description);
+		body.put("name",project.name);
+		String endpoint = "projects";
+		String method = "POST";
+		apiUtility utility = new apiUtility(method,endpoint,requestDescription,body);
+		JSONObject jsonObject = utility.apiCall();
+		System.out.println(project.name + "created successfully");
 		return false;
 	}
 

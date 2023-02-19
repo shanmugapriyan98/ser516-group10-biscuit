@@ -111,8 +111,6 @@ public abstract class View {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (Exception e) {
-			throw new RuntimeException(e);
 		}
 	}
 
