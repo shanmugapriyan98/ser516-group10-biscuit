@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.biscuit.ColorCodes;
+import com.biscuit.Login;
 import com.biscuit.commands.Command;
 import com.biscuit.models.Project;
 import com.biscuit.models.Release;
@@ -19,6 +20,11 @@ import de.vandermeer.asciitable.v2.V2_AsciiTable;
 import de.vandermeer.asciitable.v2.render.V2_AsciiTableRenderer;
 import de.vandermeer.asciitable.v2.render.WidthLongestLine;
 import de.vandermeer.asciitable.v2.themes.V2_E_TableThemes;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import org.json.JSONObject;
 
 public class ListSprints implements Command {
 
@@ -31,6 +37,11 @@ public class ListSprints implements Command {
 	private String filterBy;
 	private String sortBy;
 	private static String lastSortBy = "";
+
+	Login login =  Login.getInstance();
+	String authToken = login.authToken;
+
+	private final OkHttpClient httpClient = new OkHttpClient();
 
 
 	public ListSprints(Project project, String title) {
@@ -201,6 +212,36 @@ public class ListSprints implements Command {
 		}
 
 		return tableString;
+	}
+
+	public void fetchAllSprints() {
+
+		HttpUrl httpUrl = new HttpUrl.Builder()
+				.scheme("https")
+				.host("api.taiga.io")
+				.addPathSegment("api")
+				.addPathSegment("v1")
+				.addPathSegment("milestones")
+				.addQueryParameter("project", String.valueOf(this.project.projectId))
+				.build();
+
+		Request request = new Request.Builder()
+				.url(httpUrl)
+				.addHeader("Authorization", "Bearer " + authToken)
+				.addHeader("Content-Type", "application/json")
+				.get()
+				.build();
+
+		try (Response response = httpClient.newCall(request).execute()) {
+			if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+			if (response.body() == null) {
+				throw new IOException("Response body is empty" + response);
+			}
+			JSONObject jsonObject = new JSONObject(response.body().string());
+		} catch (Exception exception) {
+			exception.printStackTrace();
+			System.out.println("Error while fetching sprint/milestone details from Taiga");
+		}
 	}
 
 }

@@ -10,6 +10,7 @@ import java.util.List;
 public class Project {
 
 	public String name;
+	public int projectId;
 	public String description;
 	public Backlog backlog = new Backlog();
 	public List<Release> releases = new ArrayList<>();
