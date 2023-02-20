@@ -2,23 +2,31 @@ package com.biscuit.views;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import com.biscuit.commands.help.PlannerHelp;
-import com.biscuit.commands.planner.*;
+import com.biscuit.commands.planner.MoveSprintToRelease;
+import com.biscuit.commands.planner.MoveUserStoryToSprint;
+import com.biscuit.commands.planner.MoveUserStoryToEpic;
+import com.biscuit.commands.planner.ShowPlan;
+import com.biscuit.commands.planner.ShowPlanDetails;
+import com.biscuit.commands.planner.UnplanAll;
+import com.biscuit.commands.planner.UnplanSprint;
+import com.biscuit.commands.planner.UnplanUserStory;
 import com.biscuit.commands.release.ListReleases;
 import com.biscuit.commands.sprint.ListSprints;
 import com.biscuit.commands.epic.ListEpics;
 import com.biscuit.commands.userStory.ListUserStories;
+import com.biscuit.commands.userStory.ShowUserStory;
 import com.biscuit.factories.PlannerCompleterFactory;
 import com.biscuit.models.Project;
+import com.biscuit.models.UserStory;
 import com.biscuit.models.services.Finder.Releases;
 import com.biscuit.models.services.Finder.Sprints;
 import com.biscuit.models.services.Finder.UserStories;
 
 import jline.console.completer.Completer;
 
-import java.io.IOException;
-import java.util.List;
 
 public class PlannerView extends View {
 
@@ -38,7 +46,7 @@ public class PlannerView extends View {
 
 
 	@Override
-	boolean executeCommand(String[] words) throws IOException {
+	boolean executeCommand(String[] words) throws Exception {
 		if (words.length == 1) {
 			return execute1Keywords(words);
 		} else if (words.length == 2) {
@@ -134,7 +142,7 @@ public class PlannerView extends View {
 	}
 
 
-	private boolean execute3Keywords(String[] words) throws IOException {
+	private boolean execute3Keywords(String[] words) throws Exception {
 		if (words[0].equals("show")) {
 			if (words[1].equals("plan")) {
 				if (words[2].equals("details")) {

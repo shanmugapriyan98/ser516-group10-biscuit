@@ -2,6 +2,7 @@ package com.biscuit.commands.planner;
 
 import com.biscuit.ColorCodes;
 import com.biscuit.commands.Command;
+import com.biscuit.commands.userStory.ShowUserStory;
 import com.biscuit.models.Epic;
 import com.biscuit.models.Project;
 import com.biscuit.models.UserStory;
@@ -56,26 +57,10 @@ public class MoveUserStoryToEpic implements Command {
         project.backlog.userStories.remove(us);
 
         // add it to sprint
-        e.userStories.add(us);
-
-        // change state to planned
-        us.state = Status.PLANNED;
-
-        // make planned date = today
-        us.plannedDate = new Date();
-
-        // update sprint assigned effort
-        //s.assignedEffort += us.points;
-
-        // update release assigned effort
-      //  if (r != null) {
-        //    r.assignedEffort += us.points;
-        //}
-
-        // save project
+        e.addUserStory(userStoryName);
         project.save();
 
-        reader.println(ColorCodes.GREEN + "User Story \"" + userStoryName + "\" has been moved to epic " + epicName + "!" + ColorCodes.RESET);
+        reader.println(ColorCodes.GREEN + "User Story \"" + userStoryName + "\" has been added to epic " + epicName + "!" + ColorCodes.RESET);
 
         return true;
     }
