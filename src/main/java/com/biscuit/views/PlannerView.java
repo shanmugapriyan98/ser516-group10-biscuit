@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 import com.biscuit.commands.help.PlannerHelp;
 import com.biscuit.commands.planner.MoveSprintToRelease;
 import com.biscuit.commands.planner.MoveUserStoryToSprint;
+import com.biscuit.commands.planner.MoveUserStoryToEpic;
 import com.biscuit.commands.planner.ShowPlan;
 import com.biscuit.commands.planner.ShowPlanDetails;
 import com.biscuit.commands.planner.UnplanAll;
@@ -25,6 +26,7 @@ import com.biscuit.models.services.Finder.Sprints;
 import com.biscuit.models.services.Finder.UserStories;
 
 import jline.console.completer.Completer;
+
 
 public class PlannerView extends View {
 
@@ -85,7 +87,7 @@ public class PlannerView extends View {
 	}
 
 
-	private boolean execute2Keywords(String[] words) throws Exception {
+	private boolean execute2Keywords(String[] words) throws IOException {
 		if (words[0].equals("show")) {
 			if (words[1].equals("releases")) {
 				(new ListReleases(project, "Releases")).execute();
@@ -171,6 +173,22 @@ public class PlannerView extends View {
 				}
 			} else if (Sprints.getAllNames(project).contains(words[1]) && Releases.getAllNames(project).contains(words[3])) {
 				if ((new MoveSprintToRelease(reader, project, words[1], words[3])).execute()) {
+					resetCompleters();
+					return true;
+				} else {
+					return false;
+				}
+			} /*else if (Epics.getAllNames(project).contains(words[3]) && UserStories.getAllNames(project.backlog).contains(words[1])){
+				if((new MoveUserStoryToEpic(reader, project, words[1], words[3]).execute())) {
+					System.out.println("here");
+					resetCompleters();
+					return true;
+				} else {
+					return false;
+				}
+			}*/
+			else if(words[2].equals("epic")  && UserStories.getAllNames(project.backlog).contains(words[1])){
+				if((new MoveUserStoryToEpic(reader, project, words[1], words[3]).execute())) {
 					resetCompleters();
 					return true;
 				} else {

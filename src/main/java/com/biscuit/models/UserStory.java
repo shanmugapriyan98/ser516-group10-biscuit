@@ -1,11 +1,15 @@
+/*
+	Author: Hamad Al Marri;
+ */
+
 package com.biscuit.models;
+
+import com.biscuit.models.enums.BusinessValue;
+import com.biscuit.models.enums.Status;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import com.biscuit.models.enums.BusinessValue;
-import com.biscuit.models.enums.Status;
 
 public class UserStory {
 
@@ -13,7 +17,7 @@ public class UserStory {
      * Project object to store current project details.
      */
     public transient Project project;
-
+	public Epic epic = new Epic();
 	  public String reviewDemoComments="";
     
     /**
@@ -55,6 +59,7 @@ public class UserStory {
      * Story points per user story.
      */
     public int points;
+
 
     /**
      * Array for fields.
