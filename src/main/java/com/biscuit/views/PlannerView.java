@@ -151,7 +151,8 @@ public class PlannerView extends View {
 		} else if (words[0].equals("view")) {
 			if (words[1].equals("user_story")) {
 				if (isNumeric(words[2])) {
-					(new ShowUserStory(new UserStory())).fetchUserStoryByNumber(project.name, Integer.parseInt(words[2]));
+					UserStory userStory = (new ShowUserStory(new UserStory())).fetchUserStoryByNumber(project.name, Integer.parseInt(words[2]));
+					(new ShowUserStory(new UserStory())).displayUserStory(userStory);
 					return true;
 				}
 			}

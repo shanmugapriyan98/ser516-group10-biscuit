@@ -1,6 +1,7 @@
 package com.biscuit.commands.sprint;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -10,9 +11,12 @@ import java.util.stream.Collectors;
 import com.biscuit.ColorCodes;
 import com.biscuit.Login;
 import com.biscuit.commands.Command;
+import com.biscuit.commands.userStory.ShowUserStory;
 import com.biscuit.models.Project;
 import com.biscuit.models.Release;
 import com.biscuit.models.Sprint;
+import com.biscuit.models.UserStory;
+import com.biscuit.models.enums.Status;
 import com.biscuit.models.services.DateService;
 
 import de.vandermeer.asciitable.v2.RenderedTable;
@@ -24,6 +28,7 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class ListSprints implements Command {
@@ -48,6 +53,7 @@ public class ListSprints implements Command {
 		super();
 		this.project = project;
 		this.title = title;
+		this.project.sprints = fetchAllSprints();
 	}
 
 
@@ -214,8 +220,8 @@ public class ListSprints implements Command {
 		return tableString;
 	}
 
-	public void fetchAllSprints() {
-
+	public List<Sprint> fetchAllSprints() {
+		List<Sprint> sprints = new ArrayList<>();
 		HttpUrl httpUrl = new HttpUrl.Builder()
 				.scheme("https")
 				.host("api.taiga.io")
@@ -237,10 +243,35 @@ public class ListSprints implements Command {
 			if (response.body() == null) {
 				throw new IOException("Response body is empty" + response);
 			}
-			JSONObject jsonObject = new JSONObject(response.body().string());
+			JSONArray sprintsArray = new JSONArray(response.body().string());
+			setSprintsData(sprints, sprintsArray);
 		} catch (Exception exception) {
 			exception.printStackTrace();
 			System.out.println("Error while fetching sprint/milestone details from Taiga");
+		}
+		return sprints;
+	}
+
+	private static void setSprintsData(List<Sprint> sprints, JSONArray sprintsArray) throws Exception {
+		for(int i = 0; i < sprintsArray.length(); i++){
+			JSONObject jsonObject = sprintsArray.getJSONObject(i);
+			Sprint sprint = new Sprint();
+			sprint.name = String.valueOf(jsonObject.get("name"));
+			sprint.description =  String.valueOf(jsonObject.get("slug"));
+			sprint.startDate = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("estimated_start"));
+			sprint.dueDate = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("estimated_finish"));
+			sprint.state = Status.valueOf(jsonObject.getBoolean("closed") ? "DONE" : "OPEN");
+			sprint.assignedEffort = jsonObject.getInt("total_points");
+			JSONArray userStoryArray = jsonObject.getJSONArray("user_stories");
+			for(int j = 0; j < userStoryArray.length(); j++){
+				JSONObject usObject = userStoryArray.getJSONObject(j);
+				UserStory userStory = new ShowUserStory(null).fetchUserStoryByNumber(usObject.getJSONObject("project_extra_info").getString("slug"), usObject.getInt("ref"));
+				sprint.userStories.add(userStory);
+				if(usObject.getBoolean("is_closed")){
+					sprint.velocity += usObject.getInt("total_points");
+				}
+			}
+			sprints.add(sprint);
 		}
 	}
 
