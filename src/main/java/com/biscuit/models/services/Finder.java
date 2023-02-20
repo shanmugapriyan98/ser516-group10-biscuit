@@ -231,9 +231,7 @@ public class Finder {
 
 		public static List<Epic> getAll(Project p) {
 			List<Epic> epics = new ArrayList<>();
-
-			
-
+			epics.addAll(p.epics);
 			return epics;
 		}
 
@@ -245,9 +243,6 @@ public class Finder {
 			return p.epics.stream().filter(s -> s.name.equals(name)).findAny().orElse(null);
 		}
 
-
-
-
 	}
 
 
@@ -256,8 +251,6 @@ public class Finder {
 		public static List<String> getAllNames(UserStory us) {
 			return us.tasks.stream().map(t -> t.title).collect(Collectors.toList());
 		}
-
-
 		public static Task find(UserStory us, String title) {
 			return us.tasks.stream().filter(t -> t.title.equals(title)).findAny().orElse(null);
 		}

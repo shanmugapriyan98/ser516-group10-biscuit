@@ -76,9 +76,9 @@ public class ShowUserStory implements Command {
 			}
 			JSONObject jsonObject = new JSONObject(response.body().string());
 			setUserStoryData(jsonObject);
-		} catch (Exception exception){
+		} catch (Exception exception) {
 			exception.printStackTrace();
-			System.out.println("Error while fetching US details from Taiga. Please enter valid US number in project: " + project );
+			System.out.println("Error while fetching US details from Taiga. Please enter valid US number in project: " + project);
 		}
 	}
 
@@ -86,7 +86,6 @@ public class ShowUserStory implements Command {
 		UserStory userStory = new UserStory();
 		userStory.title = jsonObject.getString("subject");
 		userStory.description = jsonObject.getString("description");
-
 		String status = jsonObject.getJSONObject("status_extra_info").getString("name").toUpperCase();
 		userStory.state = Status.valueOf(status); // Enum and Taiga's US status should match, else an exception will be thrown
 

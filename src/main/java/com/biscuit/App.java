@@ -20,7 +20,7 @@ public class App {
 	private static void initialize(){
 
 		try {
-			Login.setInstance(new Login());
+			Login.getInstance();
 			System.out.println("Welcome:"+Login.getInstance().fullName);
 			Dashboard.setInstance(Dashboard.load());
 			if (Dashboard.getInstance() == null) {

@@ -16,6 +16,7 @@ public class DashboardHelp extends UniversalHelp {
 		at.addRow("add project", "Create a new project").setAlignment(new char[] { 'l', 'l' });
 		at.addRow("edit project", "Edit project (followed by a project name)").setAlignment(new char[] { 'l', 'l' });
 		at.addRow("remove project", "Remove or delete project (followed by a project name)").setAlignment(new char[] { 'l', 'l' });
+		at.addRow("list", "List the stories in the project backlog (followed by a project name)").setAlignment(new char[] { 'l', 'l' });
 
 	}
 
