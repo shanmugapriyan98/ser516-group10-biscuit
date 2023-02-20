@@ -26,10 +26,6 @@ public class Login {
      */
     private String password;
 
-    /**
-     * Json array.
-     */
-    private JSONArray jsonProjectsArray;
 
     /**
      * Request object for http req.
@@ -132,7 +128,7 @@ public class Login {
         }
     }
 
-}
+
     public void getBackLogDataFromProject(String projectName){
         JSONObject jsonObject;
         int len;
