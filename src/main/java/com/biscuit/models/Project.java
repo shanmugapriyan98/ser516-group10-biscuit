@@ -15,11 +15,6 @@ public class Project {
 	public String name;
 
 	/**
-	 * Taiga ID of project.
-	 */
-	public int projectId;
-
-	/**
 	 * Description of project.
 	 */
 	public String description;

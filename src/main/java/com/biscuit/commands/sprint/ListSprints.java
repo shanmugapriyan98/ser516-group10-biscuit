@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import com.biscuit.ColorCodes;
 import com.biscuit.Login;
 import com.biscuit.commands.Command;
+import com.biscuit.commands.userStory.AddUserStoryToBacklog;
 import com.biscuit.commands.userStory.ShowUserStory;
 import com.biscuit.models.Project;
 import com.biscuit.models.Release;
@@ -222,13 +223,14 @@ public class ListSprints implements Command {
 
 	public List<Sprint> fetchAllSprints() {
 		List<Sprint> sprints = new ArrayList<>();
+		String projectId = new AddUserStoryToBacklog(null, this.project).getProjectId();
 		HttpUrl httpUrl = new HttpUrl.Builder()
 				.scheme("https")
 				.host("api.taiga.io")
 				.addPathSegment("api")
 				.addPathSegment("v1")
 				.addPathSegment("milestones")
-				.addQueryParameter("project", String.valueOf(this.project.projectId))
+				.addQueryParameter("project", projectId)
 				.build();
 
 		Request request = new Request.Builder()
