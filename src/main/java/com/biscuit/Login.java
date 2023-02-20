@@ -26,7 +26,7 @@ public class Login {
      */
     private String password;
 
-    /**
+   /**
      * Request object for http req.
      */
     private JSONArray jsonProjectsArray, jsonUserStoriesArray;

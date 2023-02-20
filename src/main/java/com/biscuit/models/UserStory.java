@@ -14,6 +14,8 @@ public class UserStory {
      */
     public transient Project project;
 
+	  public String reviewDemoComments="";
+    
     /**
      * Title of the project.
      */
@@ -69,8 +71,7 @@ public class UserStory {
     public List<String> comments;
 
     static {
-        fields = new String[]{"title", "description", "state", "business_value",
-                "initiated_date", "planned_date", "due_date", "tasks", "points", "comments"};
+        fields = new String[]{"title", "description", "state", "business_value", "initiated_date", "planned_date", "due_date", "tasks", "points", "comments", "review demo comments"};
     }
 
 

@@ -49,6 +49,7 @@ public class Sprint {
 	 * Sprint velocity.
 	 */
 	public int velocity;
+	public Boolean sprintGoalAchieved;
 
 	/**
 	 * List of user stories.
