@@ -11,16 +11,52 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 public class Login {
+    /**
+     * Login instance variable.
+     */
     private static Login instance = null;
+
+    /**
+     * Username of user.
+     */
     private String userName;
+
+    /**
+     * Password for username.
+     */
     private String password;
+
+    /**
+     * Json array.
+     */
+    private JSONArray jsonProjectsArray;
+
+    /**
+     * Request object for http req.
+     */
     private JSONArray jsonProjectsArray, jsonUserStoriesArray;
     public List<List<String>> userStoriesList = new ArrayList<>();
     public HashMap<String, Integer> projectMap = new HashMap<>();
     private Request request;
+
+    /**
+     * RequestBody for hhtp request.
+     */
     private RequestBody formBody;
+
+    /**
+     * Authentication token.
+     */
     public String authToken;
+
+    /**
+     * Fetched full name of user.
+     */
     public String fullName;
+
+    /**
+     * Member ID of user.
+     */
     public int memberId;
     private final OkHttpClient httpClient = new OkHttpClient();
 
@@ -96,6 +132,7 @@ public class Login {
         }
     }
 
+}
     public void getBackLogDataFromProject(String projectName){
         JSONObject jsonObject;
         int len;

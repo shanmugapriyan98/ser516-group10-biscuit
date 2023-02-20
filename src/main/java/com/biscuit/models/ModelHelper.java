@@ -19,6 +19,11 @@ public class ModelHelper {
 	static Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
 
+	/**
+	 * Save json object.
+	 * @param o
+	 * @param name
+	 */
 	static public void save(Object o, String name) {
 		try {
 			FileWriter fw = new FileWriter(Config.projectsDir + "/" + name + ".json");
@@ -31,6 +36,11 @@ public class ModelHelper {
 	}
 
 
+	/**
+	 * Load dashboard from JSON.
+	 * @param name
+	 * @return
+	 */
 	static public Dashboard loadDashboard(String name) {
 		try {
 			FileReader fr = new FileReader(Config.projectsDir + "/" + name + ".json");
@@ -48,6 +58,11 @@ public class ModelHelper {
 	}
 
 
+	/**
+	 * Load Project from JSON.
+	 * @param name
+	 * @return
+	 */
 	static public Project loadProject(String name) {
 		try {
 			FileReader fr = new FileReader(Config.projectsDir + "/" + name + ".json");
@@ -66,6 +81,10 @@ public class ModelHelper {
 	}
 
 
+	/**
+	 * Delete Project.
+	 * @param name
+	 */
 	public static void delete(String name) {
 		try {
 			File file = new File(Config.projectsDir + "/" + name + ".json");
@@ -82,6 +101,12 @@ public class ModelHelper {
 	}
 
 
+	/**
+	 * Rename project.
+	 * @param oldName
+	 * @param newName
+	 * @throws IOException
+	 */
 	public static void rename(String oldName, String newName) throws IOException {
 		File file = new File(Config.projectsDir + "/" + oldName + ".json");
 		File file2 = new File(Config.projectsDir + "/" + newName + ".json");
