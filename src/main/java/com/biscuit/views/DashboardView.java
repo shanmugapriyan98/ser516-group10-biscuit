@@ -5,16 +5,25 @@
 package com.biscuit.views;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.biscuit.Login;
 import com.biscuit.commands.help.DashboardHelp;
 import com.biscuit.commands.project.AddProject;
 import com.biscuit.commands.project.EditProject;
 import com.biscuit.commands.project.RemoveProject;
 import com.biscuit.factories.DashboardCompleterFactory;
 import com.biscuit.models.Project;
+import com.biscuit.models.UserStory;
+import com.biscuit.models.services.DateService;
 import com.biscuit.models.services.Finder.Projects;
 
+import de.vandermeer.asciitable.v2.RenderedTable;
+import de.vandermeer.asciitable.v2.V2_AsciiTable;
+import de.vandermeer.asciitable.v2.render.V2_AsciiTableRenderer;
+import de.vandermeer.asciitable.v2.render.WidthLongestLine;
+import de.vandermeer.asciitable.v2.themes.V2_E_TableThemes;
 import jline.console.completer.Completer;
 
 public class DashboardView extends View {
@@ -31,7 +40,7 @@ public class DashboardView extends View {
 
 
 	@Override
-	boolean executeCommand(String[] words) throws IOException {
+	boolean executeCommand(String[] words) throws Exception {
 
 		if (words.length == 1) {
 			return execute1Keyword(words);
@@ -83,7 +92,7 @@ public class DashboardView extends View {
 	}
 
 
-	private boolean execute2Keyword(String[] words) throws IOException {
+	private boolean execute2Keyword(String[] words) throws Exception {
 		if (words[0].equals("go_to")) {
 			// "project#1", "users", "contacts", "groups"
 
@@ -97,8 +106,9 @@ public class DashboardView extends View {
 			return false;
 
 		} else if (words[0].equals("list")) {
-			// projects
-			// "filter", "sort"
+			Login.getInstance().getBackLogDataFromProject(words[1]);
+			displayBacklog();
+			return true;
 		} else if (words[1].equals("project")) {
 			if (words[0].equals("add")) {
 				(new AddProject(reader)).execute();
@@ -122,6 +132,32 @@ public class DashboardView extends View {
 		}
 
 		return false;
+	}
+
+	public void displayBacklog(){
+		String tableString;
+		V2_AsciiTable at = new V2_AsciiTable();
+		V2_AsciiTableRenderer rend = new V2_AsciiTableRenderer();
+		List<List<String>> userStories = Login.getInstance().userStoriesList;
+
+		at.addRule();
+		at.addRow("User Story ID", "Description", "Points")
+				.setAlignment(new char[] { 'l', 'l', 'c'});
+		for (List<String> us : userStories) {
+				at.addRule();
+				at.addRow(us.get(0), us.get(1), us.get(2))
+						.setAlignment(new char[] { 'c', 'l', 'c'});
+		}
+		at.addRule();
+
+		rend.setTheme(V2_E_TableThemes.PLAIN_7BIT.get());
+		rend.setWidth(new WidthLongestLine());
+
+		RenderedTable rt = rend.render(at);
+		tableString = rt.toString();
+
+		System.out.println();
+		System.out.println(tableString);
 	}
 
 }

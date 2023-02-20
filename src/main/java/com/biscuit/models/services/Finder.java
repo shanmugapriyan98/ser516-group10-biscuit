@@ -1,16 +1,10 @@
 package com.biscuit.models.services;
 
+import com.biscuit.models.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import com.biscuit.models.Backlog;
-import com.biscuit.models.Dashboard;
-import com.biscuit.models.Project;
-import com.biscuit.models.Release;
-import com.biscuit.models.Sprint;
-import com.biscuit.models.Task;
-import com.biscuit.models.UserStory;
 
 public class Finder {
 
@@ -233,13 +227,30 @@ public class Finder {
 
 	}
 
+	public static class Epics {
+
+		public static List<Epic> getAll(Project p) {
+			List<Epic> epics = new ArrayList<>();
+			epics.addAll(p.epics);
+			return epics;
+		}
+
+		public static List<String> getAllNames(Project p) {
+			return p.epics.stream().map(e -> e.name).collect(Collectors.toList());
+		}
+
+		public static Epic find(Project p, String name) {
+			return p.epics.stream().filter(s -> s.name.equals(name)).findAny().orElse(null);
+		}
+
+	}
+
+
 	public static class Tasks {
 
 		public static List<String> getAllNames(UserStory us) {
 			return us.tasks.stream().map(t -> t.title).collect(Collectors.toList());
 		}
-
-
 		public static Task find(UserStory us, String title) {
 			return us.tasks.stream().filter(t -> t.title.equals(title)).findAny().orElse(null);
 		}

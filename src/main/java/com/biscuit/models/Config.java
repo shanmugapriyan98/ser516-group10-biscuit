@@ -4,7 +4,14 @@ import java.io.File;
 
 public class Config {
 
+	/**
+	 * Home directory.
+	 */
 	private static String homeDir;
+
+	/**
+	 * Project directory.
+	 */
 	public static String projectsDir;
 
 	static {
