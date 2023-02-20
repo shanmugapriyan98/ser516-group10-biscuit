@@ -49,7 +49,8 @@ public class ShowUserStory implements Command {
 		return true;
 	}
 
-	public void fetchUserStoryByNumber(String project, int usNumber) {
+	public UserStory fetchUserStoryByNumber(String project, int usNumber) {
+		UserStory userStory = null;
 
 		HttpUrl httpUrl = new HttpUrl.Builder()
 				.scheme("https")
@@ -75,14 +76,19 @@ public class ShowUserStory implements Command {
 				throw new IOException("Response body is empty" + response);
 			}
 			JSONObject jsonObject = new JSONObject(response.body().string());
-			setUserStoryData(jsonObject);
+			userStory = setUserStoryData(jsonObject);
 		} catch (Exception exception) {
 			exception.printStackTrace();
 			System.out.println("Error while fetching US details from Taiga. Please enter valid US number in project: " + project);
 		}
+		return userStory;
 	}
 
-	public void setUserStoryData(JSONObject jsonObject) throws Exception {
+	public void displayUserStory(UserStory userStory) throws Exception {
+		new ShowUserStory(userStory).execute();
+	}
+
+	public UserStory setUserStoryData(JSONObject jsonObject) throws Exception {
 		UserStory userStory = new UserStory();
 		userStory.title = jsonObject.getString("subject");
 		userStory.description = jsonObject.getString("description");
@@ -93,7 +99,7 @@ public class ShowUserStory implements Command {
 		userStory.dueDate = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("due_date"));
 		userStory.plannedDate = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("due_date"));
 		userStory.points = jsonObject.getInt("total_points"); // Could be float in Taiga
-		new ShowUserStory(userStory).execute();
+		return userStory;
 	}
 
 }

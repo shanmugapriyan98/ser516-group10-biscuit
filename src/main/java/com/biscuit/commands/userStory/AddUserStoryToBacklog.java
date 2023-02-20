@@ -1,7 +1,6 @@
 package com.biscuit.commands.userStory;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -13,7 +12,6 @@ import com.biscuit.models.UserStory;
 import com.biscuit.models.enums.BusinessValue;
 import com.biscuit.models.enums.Points;
 import com.biscuit.models.enums.Status;
-
 import jline.console.ConsoleReader;
 import jline.console.completer.ArgumentCompleter;
 import jline.console.completer.Completer;
@@ -22,6 +20,11 @@ import jline.console.completer.StringsCompleter;
 import com.biscuit.models.services.apiUtility;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class AddUserStoryToBacklog implements Command {
 
@@ -61,14 +64,13 @@ public class AddUserStoryToBacklog implements Command {
 		setTitle();
 
 		setDescription(description);
-
+		setEpic();
 		userStory.state = Status.OPEN;
 		setBusinessValue();
 		setPoints();
 		userStory.initiatedDate = new Date();
 		userStory.plannedDate = new Date(0);
 		userStory.dueDate = new Date(0);
-		userStory.comments = new ArrayList<>();
 
 		reader.setPrompt(prompt);
 
@@ -177,5 +179,34 @@ public class AddUserStoryToBacklog implements Command {
 		reader.setPrompt(ColorCodes.BLUE + "title: " + ColorCodes.RESET);
 		userStory.title = reader.readLine();
 	}
+
+	private void setEpic() throws IOException {
+		String line;
+		Completer oldCompleter = (Completer) reader.getCompleters().toArray()[0];
+
+		List<String> epicsNames =  new ArrayList<>();
+		for(int i = 0; i< project.epics.size();i++){
+			epicsNames.add(project.epics.get(i).name);
+		}
+		Completer epicCompleter = new ArgumentCompleter(new StringsCompleter(epicsNames), new NullCompleter());
+
+		reader.removeCompleter(oldCompleter);
+		reader.addCompleter(epicCompleter);
+
+		reader.setPrompt(ColorCodes.BLUE + "\nepics:\n" + ColorCodes.YELLOW + "(existing epics are: )\n " + epicsNames + ColorCodes.RESET);
+
+		while ((line = reader.readLine()) != null) {
+			line = line.trim();
+
+
+			userStory.epic.name = line;
+			break;
+		}
+
+		reader.removeCompleter(epicCompleter);
+		reader.addCompleter(oldCompleter);
+		//Epic epic = new Epic();
+	}
+
 
 }
