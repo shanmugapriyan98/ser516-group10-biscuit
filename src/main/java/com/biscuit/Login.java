@@ -83,11 +83,11 @@ public class Login {
         try (Response response = httpClient.newCall(request).execute()) {
             if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
             jsonProjectsArray = new JSONArray(response.body().string());
-            System.out.println("Project Name : Slug Name");
-            System.out.println("-------------------------");
+            System.out.println("Available projects");
+            System.out.println("------------------");
             for(int i = 0; i< jsonProjectsArray.length(); i++){
                 jsonObject = jsonProjectsArray.getJSONObject(i);
-                System.out.println(jsonObject.getString("name")+" : "+jsonObject.getString("slug"));
+                System.out.println(jsonObject.getString("name"));
                 projectMap.put(jsonObject.getString("name"), jsonObject.getInt("id"));
             }
             System.out.println();
@@ -98,6 +98,7 @@ public class Login {
 
     public void getBackLogDataFromProject(String projectName){
         JSONObject jsonObject;
+        userStoriesList = new ArrayList<>();
         int len;
         if(projectMap.get(projectName) == null) {
             System.out.println("Project Name Invalid");
