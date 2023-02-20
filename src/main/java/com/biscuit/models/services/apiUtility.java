@@ -18,7 +18,7 @@ public class apiUtility {
             authToken = Login.getInstance().authToken;
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Error while fetching authToken from Login instance.");
+            System.out.println("Error: Unable to fetch authToken from Login instance.");
         }
     }
 
@@ -69,6 +69,17 @@ public class apiUtility {
             if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
             System.out.println(requestDescription + " processed successfully");
 
+        } catch (Exception e){
+            e.printStackTrace();
+            System.out.println("Error while processing request " + requestDescription);
+        }
+    }
+    public void apiDELETE(){
+        reqBuilder.delete();
+        Request request = reqBuilder.build();
+        try (Response response = httpClient.newCall(request).execute()) {
+            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+            System.out.println(requestDescription + " processed successfully");
         } catch (Exception e){
             e.printStackTrace();
             System.out.println("Error while processing request " + requestDescription);
