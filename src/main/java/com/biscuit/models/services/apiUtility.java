@@ -18,7 +18,7 @@ public class apiUtility {
             authToken = Login.getInstance().authToken;
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Error while fetching authToken from Login instance.");
+            System.out.println("Error: Unable to fetch authToken from Login instance.");
         }
     }
 

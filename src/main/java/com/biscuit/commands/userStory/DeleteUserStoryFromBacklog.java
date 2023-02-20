@@ -54,7 +54,6 @@ public class DeleteUserStoryFromBacklog implements Command {
     }
 
     public boolean execute() throws IOException {
-        StringBuilder description = new StringBuilder();
         String prompt = reader.getPrompt();
 
         userStory.project = project;
@@ -63,7 +62,6 @@ public class DeleteUserStoryFromBacklog implements Command {
         reader.setPrompt(prompt);
         String requestDescription = "Delete UserStory";
         String endpointPath = "userstories/"+getUserStoryId();
-        HashMap<String , String > body = new HashMap<>();
         apiUtility utility = new apiUtility(endpointPath,requestDescription);
         utility.apiDELETE();
         reader.println(ColorCodes.GREEN + "User Story \"" + userStory.title + "\" has been deleted from the backlog in Taiga!" + ColorCodes.RESET);
