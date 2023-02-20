@@ -40,7 +40,7 @@ public class DashboardView extends View {
 
 
 	@Override
-	boolean executeCommand(String[] words) throws IOException {
+	boolean executeCommand(String[] words) throws Exception {
 
 		if (words.length == 1) {
 			return execute1Keyword(words);
@@ -92,7 +92,7 @@ public class DashboardView extends View {
 	}
 
 
-	private boolean execute2Keyword(String[] words) throws IOException {
+	private boolean execute2Keyword(String[] words) throws Exception {
 		if (words[0].equals("go_to")) {
 			// "project#1", "users", "contacts", "groups"
 

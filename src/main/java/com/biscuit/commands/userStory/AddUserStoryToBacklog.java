@@ -3,8 +3,10 @@ package com.biscuit.commands.userStory;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 import com.biscuit.ColorCodes;
+import com.biscuit.Login;
 import com.biscuit.commands.Command;
 import com.biscuit.models.Project;
 import com.biscuit.models.UserStory;
@@ -17,6 +19,9 @@ import jline.console.completer.ArgumentCompleter;
 import jline.console.completer.Completer;
 import jline.console.completer.NullCompleter;
 import jline.console.completer.StringsCompleter;
+import com.biscuit.models.services.apiUtility;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class AddUserStoryToBacklog implements Command {
 
@@ -31,6 +36,22 @@ public class AddUserStoryToBacklog implements Command {
 		this.project = project;
 	}
 
+	public String getProjectId(){
+		String memberId = String.valueOf(Login.getInstance().memberId);
+		String projectId = "";
+		String requestDescription = "Get ProjectID of current Project";
+		String endpointPath = "projects?member="+memberId;
+		apiUtility utility = new apiUtility(endpointPath,requestDescription);
+		JSONArray jsonArray = utility.apiGET();
+		for(int i = 0; i< jsonArray.length(); i++){
+			JSONObject jsonObject = jsonArray.getJSONObject(i);
+			if(jsonObject.getString("name").equals(project.name))  projectId= String.valueOf(jsonObject.getInt("id"));
+		}
+		if(projectId==""){
+			throw new RuntimeException("project Id for "+project.name+" is not found");
+		}
+		return projectId;
+	}
 
 	public boolean execute() throws IOException {
 		StringBuilder description = new StringBuilder();
@@ -55,8 +76,17 @@ public class AddUserStoryToBacklog implements Command {
 		project.save();
 
 		reader.println();
-		reader.println(ColorCodes.GREEN + "User Story \"" + userStory.title + "\" has been added to the backlog!" + ColorCodes.RESET);
-
+		reader.println(ColorCodes.GREEN + "User Story \"" + userStory.title + "\" has been added to the backlog!" + ColorCodes.RESET );
+		String requestType = "POST";
+		String requestDescription = "Create UserStory";
+		String endpointPath = "userstories";
+		HashMap<String , String > body = new HashMap<>();
+		body.put("project",getProjectId());
+		body.put("subject",userStory.title);
+		body.put("description",userStory.description);
+		apiUtility utility = new apiUtility(endpointPath,requestDescription,body);
+		utility.apiPOST();
+		reader.println(ColorCodes.GREEN + "User Story \"" + userStory.title + "\" has been created to the backlog in Taiga!" + ColorCodes.RESET);
 		return false;
 	}
 
