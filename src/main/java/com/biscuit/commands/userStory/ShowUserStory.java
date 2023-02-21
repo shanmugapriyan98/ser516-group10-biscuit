@@ -96,9 +96,11 @@ public class ShowUserStory implements Command {
 		userStory.state = Status.valueOf(status); // Enum and Taiga's US status should match, else an exception will be thrown
 
 		userStory.initiatedDate = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("created_date"));
-		userStory.dueDate = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("due_date"));
-		userStory.plannedDate = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("due_date"));
-		userStory.points = jsonObject.getInt("total_points"); // Could be float in Taiga
+		//userStory.dueDate = new SimpleDateFormat("yyyy-MM-dd").parse((String) jsonObject.get("due_date"));
+		userStory.dueDate = jsonObject.get("due_date") == JSONObject.NULL ? null : new SimpleDateFormat("yyyy-MM-dd").parse((String) jsonObject.get("due_date"));
+
+		userStory.plannedDate = jsonObject.get("due_date") == JSONObject.NULL ? null : new SimpleDateFormat("yyyy-MM-dd").parse((String) jsonObject.get("due_date"));
+		userStory.points = jsonObject.get("total_points") == JSONObject.NULL ? 0 : (int) jsonObject.get("total_points");
 		return userStory;
 	}
 
