@@ -4,8 +4,15 @@
 
 package com.biscuit.models;
 
+import com.biscuit.Login;
+import com.biscuit.models.services.apiUtility;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 public class Project {
 
@@ -13,6 +20,17 @@ public class Project {
 	 * Name of Project.
 	 */
 	public String name;
+
+	public int id;
+
+	public String slug_name;
+
+	public HashMap<String,Integer> sprintDetails = new HashMap<>();
+
+	public HashMap<String,Integer> userStoryDetails = new HashMap<>();
+
+	public List<Integer> memberIDs =  new ArrayList<>();
+
 
 	/**
 	 * Description of project.
@@ -34,6 +52,56 @@ public class Project {
 	 */
 	public List<Sprint> sprints = new ArrayList<>();
 	public List<Epic> epics = new ArrayList<>();
+
+	public void populateDetails() {
+		if(!name.isEmpty()){
+			populateProjectDetails();
+			populateSprintDetails();
+			populateUserStoryDetails();
+		}
+	}
+
+	private void populateUserStoryDetails() {
+		String requestDescription = "Get userstory details by project ID";
+		String endpointPath = "userstories?project=" + id;
+		apiUtility utility = new apiUtility(endpointPath,requestDescription);
+		JSONArray jsonArray = utility.apiGET();
+		for(int i=0;i< jsonArray.length();i++){
+			JSONObject jsonObject = jsonArray.getJSONObject(i);
+			String userStoryName = jsonObject.getString("subject");
+			Integer userstoryId = jsonObject.getInt("id");
+			sprintDetails.put(userStoryName,userstoryId);
+		}
+	}
+
+	private void populateSprintDetails() {
+		String requestDescription = "Get sprint details by project ID";
+		String endpointPath = "milestones?project=" + id;
+		apiUtility utility = new apiUtility(endpointPath,requestDescription);
+		JSONArray jsonArray = utility.apiGET();
+		for(int i=0;i< jsonArray.length();i++){
+			JSONObject jsonObject = jsonArray.getJSONObject(i);
+			String sprintName = jsonObject.getString("name");
+			Integer sprintId = jsonObject.getInt("id");
+			sprintDetails.put(sprintName,sprintId);
+		}
+	}
+
+	public void populateProjectDetails() {
+		String requestDescription = "Get Project details by member ID";
+		String endpointPath = "projects?member=" + Login.getInstance().memberId;
+		apiUtility utility = new apiUtility(endpointPath,requestDescription);
+		JSONArray jsonArray = utility.apiGET();
+		for(int i=0;i< jsonArray.length();i++){
+			JSONObject jsonObject = jsonArray.getJSONObject(i);
+			if(jsonObject.getString("name")==name) {
+				description = jsonObject.getString(description);
+				id = jsonObject.getInt("id");
+				slug_name = jsonObject.getString("slug");
+			}
+		}
+	}
+
 
 	/**
 	 * Save project.
