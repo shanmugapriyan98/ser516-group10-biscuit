@@ -1,8 +1,14 @@
 package com.biscuit.models;
 
+//import jdk.jpackage.internal.Log;
+
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import com.biscuit.Login;
 
 public class Dashboard {
 
@@ -15,6 +21,13 @@ public class Dashboard {
 	 */
 	private static transient Dashboard thisInstance = null;
 
+	public Dashboard() {
+		HashMap<String,Integer> projectMap = Login.getInstance().projectMap;
+		for(Map.Entry<String,Integer > mmap : projectMap.entrySet()) {
+			thisInstance.projectsNames.add(mmap.getKey());
+			System.out.println(projectsNames);
+		}
+	}
 
 	/**
 	 * Get Dashboard instance.
