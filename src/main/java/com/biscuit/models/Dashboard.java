@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.biscuit.Login;
+import com.biscuit.models.services.apiUtility;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class Dashboard {
 
@@ -21,14 +24,20 @@ public class Dashboard {
 	 */
 	private static transient Dashboard thisInstance = null;
 
-	public Dashboard() {
-		HashMap<String,Integer> projectMap = Login.getInstance().projectMap;
-		for(Map.Entry<String,Integer > mmap : projectMap.entrySet()) {
-			thisInstance.projectsNames.add(mmap.getKey());
-			System.out.println(projectsNames);
-		}
+/*	public Dashboard() {
+		getProjectNames();
 	}
-
+ 	public void getProjectNames(){
+		String requestDescription = "Get project names";
+		String endpointPath = "projects?member="+ Login.getInstance().memberId;
+		apiUtility utility = new apiUtility(endpointPath,requestDescription);
+		JSONArray jsonArray = utility.apiGET();
+		for(int i = 0; i< jsonArray.length();i++){
+			JSONObject jsonObject = jsonArray.getJSONObject(i);
+			String name = jsonObject.getString("name");
+			projectsNames.add(name);
+		}
+	}*/
 	/**
 	 * Get Dashboard instance.
 	 * @return Dashboard object.
