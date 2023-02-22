@@ -12,7 +12,7 @@ public class Finder {
 
 		public static Project getProject(String projectName) {
 			Project p = null;
-
+			System.out.println(Dashboard.getInstance().projectsNames);
 			if (Dashboard.getInstance().projectsNames.contains(projectName)) {
 				p = Project.load(projectName);
 				p.updateChildrenReferences();
