@@ -70,7 +70,7 @@ public class Project {
 			JSONObject jsonObject = jsonArray.getJSONObject(i);
 			String userStoryName = jsonObject.getString("subject");
 			Integer userstoryId = jsonObject.getInt("id");
-			sprintDetails.put(userStoryName,userstoryId);
+			userStoryDetails.put(userStoryName,userstoryId);
 		}
 	}
 
@@ -94,8 +94,8 @@ public class Project {
 		JSONArray jsonArray = utility.apiGET();
 		for(int i=0;i< jsonArray.length();i++){
 			JSONObject jsonObject = jsonArray.getJSONObject(i);
-			if(jsonObject.getString("name")==name) {
-				description = jsonObject.getString(description);
+			if(jsonObject.getString("name").equals(name)) {
+				description = jsonObject.getString("description");
 				id = jsonObject.getInt("id");
 				slug_name = jsonObject.getString("slug");
 			}
