@@ -16,7 +16,6 @@ public class Finder {
 				p = Project.load(projectName);
 				p.updateChildrenReferences();
 			}
-
 			return p;
 		}
 	}

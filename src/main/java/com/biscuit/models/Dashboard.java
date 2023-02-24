@@ -24,20 +24,17 @@ public class Dashboard {
 	 */
 	private static transient Dashboard thisInstance = null;
 
-/*	public Dashboard() {
-		getProjectNames();
-	}
- 	public void getProjectNames(){
-		String requestDescription = "Get project names";
-		String endpointPath = "projects?member="+ Login.getInstance().memberId;
-		apiUtility utility = new apiUtility(endpointPath,requestDescription);
+	public static void getProjectNames(){
+		String requestDescription = "Get project names by member";
+		String endPointPath = "projects?member="+ Login.getInstance().memberId;
+		apiUtility utility = new apiUtility(endPointPath,requestDescription);
 		JSONArray jsonArray = utility.apiGET();
 		for(int i = 0; i< jsonArray.length();i++){
 			JSONObject jsonObject = jsonArray.getJSONObject(i);
 			String name = jsonObject.getString("name");
 			projectsNames.add(name);
 		}
-	}*/
+	}
 	/**
 	 * Get Dashboard instance.
 	 * @return Dashboard object.
@@ -45,7 +42,6 @@ public class Dashboard {
 	public static Dashboard getInstance() {
 		return thisInstance;
 	}
-
 
 	/**
 	 * Set dashboard instance.
@@ -63,7 +59,7 @@ public class Dashboard {
 	/**
 	 * List of Projects in system.
 	 */
-	public List<String> projectsNames = new ArrayList<String>();
+	public static List<String> projectsNames = new ArrayList<String>();
 
 
 	/**
