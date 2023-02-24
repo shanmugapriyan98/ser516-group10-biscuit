@@ -15,51 +15,61 @@ public class AddProject implements Command {
 
 	Dashboard dashboard = Dashboard.getInstance();
 	Project project = new Project();
+	boolean local = false;
+	boolean remote = false;
 	ConsoleReader reader = null;
 	String authToken = Login.getInstance().authToken;
-	public AddProject(ConsoleReader reader) throws Exception {
+	public AddProject(ConsoleReader reader, boolean local, boolean remote, String name) throws Exception {
 		super();
 		this.reader = reader;
+		this.local = local;
+		this.remote = remote;
+		project.name = name;
 	}
 	public boolean execute() throws IOException {
 
 		StringBuilder description = new StringBuilder();
-		String line;
-		String prompt = reader.getPrompt();
-		
-		project.backlog.project = project;
-		
-		reader.setPrompt(ColorCodes.BLUE + "project name: " + ColorCodes.RESET);
-		project.name = reader.readLine();
-		reader.setPrompt(ColorCodes.BLUE + "\ndescription: " + ColorCodes.YELLOW + "\n(\\q to end writing)\n" + ColorCodes.RESET);
+		if (!local) {
+			String line;
+			String prompt = reader.getPrompt();
 
-		while ((line = reader.readLine()) != null) {
-			if (line.equals("\\q")) {
-				break;
+			project.backlog.project = project;
+
+			if (project.name == null) {
+				reader.setPrompt(ColorCodes.BLUE + "project name: " + ColorCodes.RESET);
+				project.name = reader.readLine();
+				reader.setPrompt(ColorCodes.BLUE + "\ndescription: " + ColorCodes.YELLOW + "\n(\\q to end writing)\n" + ColorCodes.RESET);
+
+				while ((line = reader.readLine()) != null) {
+					if (line.equals("\\q")) {
+						break;
+					}
+					description.append(line).append("\n");
+					reader.setPrompt("");
+				}
+
+				project.description = description.toString();
 			}
-			description.append(line).append("\n");
-			reader.setPrompt("");
+			reader.setPrompt(prompt);
+
+			dashboard.addProject(project);
+
+			dashboard.save();
+			project.save();
+
+			reader.println();
+			reader.println(ColorCodes.GREEN + "Project \"" + project.name + "\" has been added!" + ColorCodes.RESET);
 		}
-
-		project.description = description.toString();
-
-		reader.setPrompt(prompt);
-
-		dashboard.addProject(project);
-
-		dashboard.save();
-		project.save();
-
-		reader.println();
-		reader.println(ColorCodes.GREEN + "Project \"" + project.name + "\" has been added!" + ColorCodes.RESET);
-		String requestDescription = "create project";
-		HashMap<String,String > body = new HashMap<>();
-		body.put("description",project.description);
-		body.put("name",project.name);
-		String endpoint = "projects";
-		apiUtility utility = new apiUtility(endpoint,requestDescription,body);
-	    utility.apiPOST();
-		System.out.println(project.name + "created successfully");
+		if (!remote) {
+			String requestDescription = "create project";
+			HashMap<String,String > body = new HashMap<>();
+			body.put("description",project.description);
+			body.put("name",project.name);
+			String endpoint = "projects";
+			apiUtility utility = new apiUtility(endpoint,requestDescription,body);
+			utility.apiPOST();
+			System.out.println(project.name + "created successfully on Taiga");
+		}
 		return false;
 	}
 
