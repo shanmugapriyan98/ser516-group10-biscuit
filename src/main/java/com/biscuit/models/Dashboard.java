@@ -23,21 +23,6 @@ public class Dashboard {
 	 * Initializing dashboard instance.
 	 */
 	private static transient Dashboard thisInstance = null;
-
-/*	public Dashboard() {
-		getProjectNames();
-	}
- 	public void getProjectNames(){
-		String requestDescription = "Get project names";
-		String endpointPath = "projects?member="+ Login.getInstance().memberId;
-		apiUtility utility = new apiUtility(endpointPath,requestDescription);
-		JSONArray jsonArray = utility.apiGET();
-		for(int i = 0; i< jsonArray.length();i++){
-			JSONObject jsonObject = jsonArray.getJSONObject(i);
-			String name = jsonObject.getString("name");
-			projectsNames.add(name);
-		}
-	}*/
 	/**
 	 * Get Dashboard instance.
 	 * @return Dashboard object.
