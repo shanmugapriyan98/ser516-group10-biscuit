@@ -106,7 +106,7 @@ public class DashboardView extends View {
 			}
 			else{
 				Dashboard.getInstance().getProjectNames();
-				if(Dashboard.getInstance().projectsNames.contains(words[1])){
+				if(Dashboard.getInstance().projectsOnTaiga.contains(words[1])){
 					System.out.println("Caching project " +words[1]+" to local");
 					boolean local = false;
 					boolean taiga = true;

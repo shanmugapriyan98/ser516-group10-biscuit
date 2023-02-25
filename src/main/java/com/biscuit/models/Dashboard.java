@@ -32,7 +32,7 @@ public class Dashboard {
 		for(int i = 0; i< jsonArray.length();i++){
 			JSONObject jsonObject = jsonArray.getJSONObject(i);
 			String name = jsonObject.getString("name");
-			projectsNames.add(name);
+			projectsOnTaiga.add(name);
 		}
 	}
 	/**
@@ -61,6 +61,7 @@ public class Dashboard {
 	 */
 	public static List<String> projectsNames = new ArrayList<String>();
 
+	public static List<String> projectsOnTaiga = new ArrayList<>();
 
 	/**
 	 * Add a project.
