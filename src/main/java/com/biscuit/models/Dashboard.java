@@ -43,6 +43,7 @@ public class Dashboard {
 		return thisInstance;
 	}
 
+
 	/**
 	 * Set dashboard instance.
 	 * @param r Dashboard object.
@@ -59,9 +60,8 @@ public class Dashboard {
 	/**
 	 * List of Projects in system.
 	 */
-	public static List<String> projectsNames = new ArrayList<String>();
+	public List<String> projectsNames = new ArrayList<String>();
 
-	public static List<String> projectsOnTaiga = new ArrayList<>();
 
 	/**
 	 * Add a project.
