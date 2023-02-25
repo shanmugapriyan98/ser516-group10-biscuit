@@ -43,6 +43,9 @@ public class ReviewDashboard implements Command {
 	public boolean execute() throws IOException {
 
 		V2_AsciiTable at = new V2_AsciiTable();
+		String prompt = reader.getPrompt();
+		reader.setPrompt(prompt);
+
 		String tableString;
 		String num = "";
 		String demoComment;
@@ -50,19 +53,17 @@ public class ReviewDashboard implements Command {
 
 		List<UserStory> userStories = new ArrayList<>();
 
-		Scanner sc = new Scanner(System.in);
-
-		System.out.println("Enter the sprint goal:  ");
-		sprGoal = sc.nextLine();
+		reader.setPrompt(ColorCodes.BLUE + "Enter the sprint goal: " + ColorCodes.RESET);
+		sprGoal = reader.readLine();
 		sprGoal = "Sprint Goal : "+ sprGoal;
-		System.out.println("Was the sprint goal achieved? Enter yes or no. : ");
-		wasSprGoalAchieved = sc.nextLine();
+		reader.setPrompt(ColorCodes.BLUE + "Was the sprint goal achieved? Enter yes or no. : " + ColorCodes.RESET);
+		wasSprGoalAchieved = reader.readLine();
 		wasSprGoalAchieved = "Was the sprint goal achieved: "+ wasSprGoalAchieved;
-		System.out.println("Which user stories are you demoing today? Enter None to stop. ");
+		reader.setPrompt(ColorCodes.BLUE + "Which user stories are you demoing today? Enter None to stop. " + ColorCodes.RESET);
 
 		while(!Objects.equals(num, "None")){
-			System.out.println("Enter user story number or enter none : ");
-			num = sc.next();
+			reader.setPrompt(ColorCodes.BLUE + "Enter user story number or enter none : " + ColorCodes.RESET);
+			num = reader.readLine();
 			if(!Objects.equals(num, "None")){
 				demoUS.add(num);
 			}
@@ -70,11 +71,11 @@ public class ReviewDashboard implements Command {
 
 		for(String dUS: demoUS){
 			System.out.println("Please add demo comments for the user stories that are being demoed, else enter No");
-			System.out.println("Do you want to add any demo comments to user story no. "+ dUS);
-			demoComment = sc.nextLine();
+			reader.setPrompt(ColorCodes.BLUE + "Do you want to add any demo comments to user story no. " + ColorCodes.RESET);
+			demoComment = reader.readLine();
 			if(!Objects.equals(demoComment, "No")) {
-				System.out.println("Enter demo comment:");
-				demoComment = sc.nextLine();
+				reader.setPrompt(ColorCodes.BLUE + "Enter demo comment: " + ColorCodes.RESET);
+				demoComment = reader.readLine();
 				if (Finder.UserStories.getAllNames(sprint).contains("US-"+dUS)) {
 					UserStory us = Finder.UserStories.find(sprint, "US-"+dUS);
 					userStories.add(us);
