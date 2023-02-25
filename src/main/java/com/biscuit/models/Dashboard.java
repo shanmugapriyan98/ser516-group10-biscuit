@@ -62,6 +62,8 @@ public class Dashboard {
 	 */
 	public List<String> projectsNames = new ArrayList<String>();
 
+	public static List<String> projectsOnTaiga = new ArrayList<>();
+
 
 	/**
 	 * Add a project.
