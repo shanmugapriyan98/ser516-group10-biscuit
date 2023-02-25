@@ -26,8 +26,8 @@ public class Dashboard {
 
 	public static void getProjectNames(){
 		String requestDescription = "Get project names by member";
-		String endPointPath = "projects?member="+ Login.getInstance().memberId;
-		apiUtility utility = new apiUtility(endPointPath,requestDescription);
+		String endpointPath = "projects?member="+ Login.getInstance().memberId;
+		apiUtility utility = new apiUtility(endpointPath,requestDescription);
 		JSONArray jsonArray = utility.apiGET();
 		for(int i = 0; i< jsonArray.length();i++){
 			JSONObject jsonObject = jsonArray.getJSONObject(i);
