@@ -134,6 +134,7 @@ public class ReviewDashboard implements Command {
 		System.out.println();
 		System.out.println(tableString);
 
+		reader.setPrompt(prompt);
 		return false;
 	}
 
