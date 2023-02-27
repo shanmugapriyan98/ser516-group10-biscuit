@@ -10,6 +10,7 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -90,15 +91,22 @@ public class ShowUserStory implements Command {
 
 	public UserStory setUserStoryData(JSONObject jsonObject) throws Exception {
 		UserStory userStory = new UserStory();
-		userStory.title = jsonObject.getString("subject");
-		userStory.description = jsonObject.getString("description");
-		String status = jsonObject.getJSONObject("status_extra_info").getString("name").toUpperCase();
-		userStory.state = Status.valueOf(status); // Enum and Taiga's US status should match, else an exception will be thrown
-
-		userStory.initiatedDate = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("created_date"));
-		userStory.dueDate = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("due_date"));
-		userStory.plannedDate = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("due_date"));
-		userStory.points = jsonObject.getInt("total_points"); // Could be float in Taiga
+		userStory.title = jsonObject.get("subject") == JSONObject.NULL ? null : jsonObject.getString("subject");
+		userStory.description = jsonObject.get("description") == JSONObject.NULL ? null : jsonObject.getString("description");
+		if(jsonObject.getJSONObject("status_extra_info") != JSONObject.NULL && jsonObject.getJSONObject("status_extra_info").getString("name") != JSONObject.NULL){
+			try {
+				userStory.state = Status.valueOf(jsonObject.getJSONObject("status_extra_info").getString("name").toUpperCase());
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+				System.out.println("Please make sure that Taiga US status and Biscuit CLI status enum key are in sync");
+			}
+		} else{
+			userStory.state = Status.valueOf("CREATED");
+		}
+		userStory.initiatedDate = jsonObject.get("created_date") == JSONObject.NULL ? null : new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("created_date"));
+		userStory.dueDate = jsonObject.get("due_date") == JSONObject.NULL ? null : new SimpleDateFormat("yyyy-MM-dd").parse((String) jsonObject.get("due_date"));
+		userStory.plannedDate = jsonObject.get("due_date") == JSONObject.NULL ? null : new SimpleDateFormat("yyyy-MM-dd").parse((String) jsonObject.get("due_date"));
+		userStory.points = jsonObject.get("total_points") == JSONObject.NULL ? 0 : jsonObject.getInt("total_points");
 		return userStory;
 	}
 
