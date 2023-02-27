@@ -74,6 +74,21 @@ public class apiUtility {
             System.out.println("Error while processing request " + requestDescription);
         }
     }
+    public void apiPATCH(){
+        FormBody.Builder builder = new FormBody.Builder();
+        for(Map.Entry<String,String > mmap : body.entrySet())  builder.add(mmap.getKey(), mmap.getValue());
+        RequestBody formBody = builder.build();
+        reqBuilder.patch(formBody);
+        Request request = reqBuilder.build();
+        try (Response response = httpClient.newCall(request).execute()) {
+            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+            System.out.println(requestDescription + " processed successfully");
+
+        } catch (Exception e){
+            e.printStackTrace();
+            System.out.println("Error while processing request " + requestDescription);
+        }
+    }
     public void apiDELETE(){
         reqBuilder.delete();
         Request request = reqBuilder.build();
