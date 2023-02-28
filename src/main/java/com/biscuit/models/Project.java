@@ -52,6 +52,7 @@ public class Project {
 	 */
 	public List<Sprint> sprints = new ArrayList<>();
 	public List<Epic> epics = new ArrayList<>();
+	public String projectId;
 
 	public void populateDetails() {
 		if(!name.isEmpty()){
