@@ -12,7 +12,6 @@ public class Finder {
 
 		public static Project getProject(String projectName) {
 			Project p = null;
-
 			if (Dashboard.getInstance().projectsNames.contains(projectName)) {
 				p = Project.load(projectName);
 				p.updateChildrenReferences();

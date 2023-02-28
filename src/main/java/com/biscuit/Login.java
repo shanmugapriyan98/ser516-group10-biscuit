@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
+import com.biscuit.models.Dashboard;
 import okhttp3.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
