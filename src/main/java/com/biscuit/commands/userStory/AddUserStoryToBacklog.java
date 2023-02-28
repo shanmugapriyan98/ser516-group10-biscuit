@@ -65,7 +65,7 @@ public class AddUserStoryToBacklog implements Command {
 
 		setDescription(description);
 		setEpic();
-		userStory.state = Status.OPEN;
+		userStory.state = Status.READY;
 		setBusinessValue();
 		setPoints();
 		userStory.initiatedDate = new Date();

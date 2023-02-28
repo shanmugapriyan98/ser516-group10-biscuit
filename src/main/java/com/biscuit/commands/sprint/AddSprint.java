@@ -39,7 +39,7 @@ public class AddSprint implements Command {
 
 		setDescription(description);
 
-		sprint.state = Status.CREATED;
+		sprint.state = Status.NEW;
 		sprint.startDate = new Date(0);
 		sprint.dueDate = new Date(0);
 

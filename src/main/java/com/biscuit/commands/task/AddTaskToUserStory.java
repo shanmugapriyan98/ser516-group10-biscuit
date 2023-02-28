@@ -39,7 +39,7 @@ public class AddTaskToUserStory implements Command {
 		task.project = project;
 		setTitle();
 		setDescription(description);
-		task.state = Status.OPEN;
+		task.state = Status.READY;
 		setTime();
 		task.initiatedDate = new Date();
 		task.plannedDate = new Date(0);

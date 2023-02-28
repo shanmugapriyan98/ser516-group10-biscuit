@@ -41,7 +41,7 @@ public class AddUserStoryToSprint implements Command {
 
 		setDescription(description);
 
-		userStory.state = Status.OPEN;
+		userStory.state = Status.READY;
 		setBusinessValue();
 		setPoints();
 		userStory.initiatedDate = new Date();
