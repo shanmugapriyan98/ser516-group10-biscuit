@@ -56,7 +56,25 @@ public class EditUserStory implements Command {
 	}
 
 	private void setTags() throws IOException{
-		//implement this after discussion
+		String line;
+		String prompt = ColorCodes.BLUE + "tags: " + ColorCodes.YELLOW + "(\\q to end writing) "
+				+ ColorCodes.RESET;
+		//change to tags
+		String preload = userStory.description.replace("\n", "<newline>").replace("!", "<exclamation-mark>");
+
+		reader.resetPromptLine(prompt, preload, 0);
+		reader.print("\r");
+
+		while ((line = reader.readLine()) != null) {
+			if (line.equals("\\q")) {
+				break;
+			}
+			userStory.tags.add(line);
+			reader.setPrompt("");
+		}
+
+		userStory.description = description.toString().replace("<newline>", "\n").replace("<exclamation-mark>", "!");
+
 	}
 
 	private void setPoints() throws IOException {
