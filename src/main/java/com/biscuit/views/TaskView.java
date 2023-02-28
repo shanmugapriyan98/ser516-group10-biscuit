@@ -43,8 +43,8 @@ public class TaskView extends View {
 
 	private boolean execute2Keywords(String[] words) throws IOException {
 		if (words[0].equals("change_status_to")) {
-			if (Status.values.contains(words[1])) {
-				(new ChangeStatusTask(task, Status.valueOf(words[1].toUpperCase()))).execute();
+			if (task.statusNames.contains(words[1])) {
+				(new ChangeStatusTask(task, words[1].toUpperCase())).execute();
 				return true;
 			}
 		}

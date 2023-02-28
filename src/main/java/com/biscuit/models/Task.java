@@ -4,10 +4,12 @@
 
 package com.biscuit.models;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import com.biscuit.models.enums.Status;
+import com.biscuit.models.services.apiUtility;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class Task {
 
@@ -29,7 +31,7 @@ public class Task {
 	/**
 	 * State of task.
 	 */
-	public Status state;
+	public String state;
 
 	/**
 	 * Initiated date of Task.
@@ -57,6 +59,13 @@ public class Task {
 	public static String[] fields;
 
 	/**
+	 * Map of status.
+	 */
+	HashMap<String,String> taskStatuses =  new HashMap<>();
+
+	public Set<String> statusNames = new HashSet<String>();
+
+	/**
 	 * List of bugs.
 	 */
 	List<Bug> bugs;
@@ -65,7 +74,6 @@ public class Task {
 	 * List of Tests.
 	 */
 	List<Test> tests;
-
 	static {
 		fields = new String[8];
 		fields[0] = "title";
@@ -78,6 +86,17 @@ public class Task {
 	}
 
 
+	public void updateTaskStatuses(){
+		String requestDescription = "Get task Statuses for a project ";
+		String endPointPath = "task-statuses";
+		apiUtility utility = new apiUtility(endPointPath,requestDescription);
+		JSONArray jsonArray = utility.apiGET();
+		for(int i = 0; i< jsonArray.length(); i++){
+			JSONObject jsonObject = jsonArray.getJSONObject(i);
+			taskStatuses.put(String.valueOf(jsonObject.getInt("id")),jsonObject.getString("slug"));
+			statusNames.add(jsonObject.getString("slug"));
+		}
+	}
 	/**
 	 * Save tasks to project.
 	 */

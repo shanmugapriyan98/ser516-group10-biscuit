@@ -55,9 +55,7 @@ public class UserStoryView extends View {
 					if (t == null) {
 						return false;
 					}
-
 					t.project = userStory.project;
-
 					TaskView usv = new TaskView(this, t);
 					usv.view();
 					return true;
