@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.biscuit.commands.help.BacklogHelp;
 import com.biscuit.commands.userStory.AddUserStoryToBacklog;
+import com.biscuit.commands.userStory.DeleteUserStoryFromBacklog;
 import com.biscuit.commands.userStory.ListUserStories;
 import com.biscuit.factories.BacklogCompleterFactory;
 import com.biscuit.models.Backlog;
@@ -87,6 +88,9 @@ public class BacklogView extends View {
 				usv.view();
 				return true;
 			}
+		}else if (words[0].equals("delete")&&(words[1].equals("user_story"))) {
+			new DeleteUserStoryFromBacklog(reader,this.backlog.project).execute();
+			return true;
 		}
 
 		return false;

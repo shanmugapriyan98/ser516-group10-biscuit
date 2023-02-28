@@ -6,10 +6,12 @@ import com.biscuit.commands.Command;
 import com.biscuit.models.UserStory;
 import com.biscuit.models.enums.Status;
 import com.biscuit.models.services.DateService;
+import com.biscuit.models.services.apiUtility;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -49,40 +51,21 @@ public class ShowUserStory implements Command {
 		return true;
 	}
 
-	public void fetchUserStoryByNumber(String project, int usNumber) {
-
-		HttpUrl httpUrl = new HttpUrl.Builder()
-				.scheme("https")
-				.host("api.taiga.io")
-				.addPathSegment("api")
-				.addPathSegment("v1")
-				.addPathSegment("userstories")
-				.addPathSegment("by_ref")
-				.addQueryParameter("ref", String.valueOf(usNumber))
-				.addQueryParameter("project__slug", project)
-				.build();
-
-		Request request = new Request.Builder()
-				.url(httpUrl)
-				.addHeader("Authorization", "Bearer " + authToken)
-				.addHeader("Content-Type", "application/json")
-				.get()
-				.build();
-
-		try (Response response = httpClient.newCall(request).execute()) {
-			if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-			if (response.body() == null) {
-				throw new IOException("Response body is empty" + response);
-			}
-			JSONObject jsonObject = new JSONObject(response.body().string());
-			setUserStoryData(jsonObject);
-		} catch (Exception exception) {
-			exception.printStackTrace();
-			System.out.println("Error while fetching US details from Taiga. Please enter valid US number in project: " + project);
-		}
+	public UserStory fetchUserStoryByNumber(String project, int usNumber) throws Exception {
+		UserStory userStory = null;
+		String requestDescription = "Show user story";
+		String endpointPath = "userstories/by_ref?ref="+usNumber+"&project_slug="+project;
+		apiUtility utility = new apiUtility(endpointPath,requestDescription);
+		JSONObject jsonObject = utility.apiGET().getJSONObject(0);
+		userStory = setUserStoryData(jsonObject);
+		return userStory;
 	}
 
-	public void setUserStoryData(JSONObject jsonObject) throws Exception {
+	public void displayUserStory(UserStory userStory) throws Exception {
+		new ShowUserStory(userStory).execute();
+	}
+
+	public UserStory setUserStoryData(JSONObject jsonObject) throws Exception {
 		UserStory userStory = new UserStory();
 		userStory.title = jsonObject.getString("subject");
 		userStory.description = jsonObject.getString("description");
@@ -90,10 +73,12 @@ public class ShowUserStory implements Command {
 		userStory.state = Status.valueOf(status); // Enum and Taiga's US status should match, else an exception will be thrown
 
 		userStory.initiatedDate = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("created_date"));
-		userStory.dueDate = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("due_date"));
-		userStory.plannedDate = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("due_date"));
-		userStory.points = jsonObject.getInt("total_points"); // Could be float in Taiga
-		new ShowUserStory(userStory).execute();
+		//userStory.dueDate = new SimpleDateFormat("yyyy-MM-dd").parse((String) jsonObject.get("due_date"));
+		userStory.dueDate = jsonObject.get("due_date") == JSONObject.NULL ? null : new SimpleDateFormat("yyyy-MM-dd").parse((String) jsonObject.get("due_date"));
+
+		userStory.plannedDate = jsonObject.get("due_date") == JSONObject.NULL ? null : new SimpleDateFormat("yyyy-MM-dd").parse((String) jsonObject.get("due_date"));
+		userStory.points = jsonObject.get("total_points") == JSONObject.NULL ? 0 : (int) jsonObject.get("total_points");
+		return userStory;
 	}
 
 }

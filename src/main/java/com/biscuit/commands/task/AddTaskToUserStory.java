@@ -2,19 +2,25 @@ package com.biscuit.commands.task;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 
 import com.biscuit.ColorCodes;
+import com.biscuit.Login;
 import com.biscuit.commands.Command;
+import com.biscuit.commands.userStory.AddUserStoryToBacklog;
 import com.biscuit.models.Project;
 import com.biscuit.models.Task;
 import com.biscuit.models.UserStory;
 import com.biscuit.models.enums.Status;
 
+import com.biscuit.models.services.apiUtility;
 import jline.console.ConsoleReader;
 import jline.console.completer.ArgumentCompleter;
 import jline.console.completer.Completer;
 import jline.console.completer.NullCompleter;
 import jline.console.completer.StringsCompleter;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class AddTaskToUserStory implements Command {
 
@@ -29,6 +35,22 @@ public class AddTaskToUserStory implements Command {
 		this.reader = reader;
 		this.project = project;
 		this.userStory = userStory;
+	}
+
+	public String getUserStoryId(){
+		String userstoryID = "";
+		String requestDescription = "Get userstory of current story";
+		String endpointPath = "userstories?project="+project.projectId;
+		apiUtility utility = new apiUtility(endpointPath,requestDescription);
+		JSONArray jsonArray = utility.apiGET();
+		for(int i = 0; i< jsonArray.length(); i++){
+			JSONObject jsonObject = jsonArray.getJSONObject(i);
+			if(jsonObject.has("subject") && jsonObject.getString("subject").equals(userStory.title))  userstoryID = String.valueOf(jsonObject.getInt("id"));
+		}
+		if(userstoryID==""){
+			throw new RuntimeException("User Story Id for "+userStory.title+" is not found");
+		}
+		return userstoryID;
 	}
 
 
@@ -52,7 +74,16 @@ public class AddTaskToUserStory implements Command {
 
 		reader.println();
 		reader.println(ColorCodes.GREEN + "Task \"" + task.title + "\" has been added!" + ColorCodes.RESET);
-
+		String requestDescription = "Create Tasks";
+		String endpointPath = "tasks";
+		HashMap<String,String> body = new HashMap<>();
+		body.put("project" ,project.projectId);
+		body.put("user_story",getUserStoryId());
+		body.put("subject", task.title);
+		body.put("description",task.description);
+		apiUtility utility = new apiUtility(endpointPath,requestDescription,body);
+		utility.apiPOST();
+		reader.println(ColorCodes.GREEN + "Task \"" + userStory.title + "\" has been added to the user story in Taiga!" + ColorCodes.RESET);
 		return false;
 	}
 
