@@ -60,6 +60,8 @@ public class UserStory {
      */
     public int points;
 
+    public List<String> tags = new ArrayList<>();
+
 
     /**
      * Array for fields.
@@ -76,7 +78,7 @@ public class UserStory {
     public List<String> comments;
 
     static {
-        fields = new String[]{"title", "description", "state", "business_value", "initiated_date", "planned_date", "due_date", "tasks", "points", "comments", "review demo comments"};
+        fields = new String[]{"title", "description", "state", "business_value", "initiated_date", "planned_date", "due_date", "tags", "tasks", "points", "comments", "review demo comments"};
     }
 
 

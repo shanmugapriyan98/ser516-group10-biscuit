@@ -171,6 +171,7 @@ public class ListUserStories implements Command {
 		Comparator<UserStory> byInitiatedDate = (us1, us2) -> us1.initiatedDate.compareTo(us2.initiatedDate);
 		Comparator<UserStory> byPlannedDate = (us1, us2) -> us1.plannedDate.compareTo(us2.plannedDate);
 		Comparator<UserStory> byDueDate = (us1, us2) -> us1.dueDate.compareTo(us2.dueDate);
+		Comparator<UserStory> byTags = (us1, us2) -> Integer.compare(us1.tags.size(), us2.tags.size());
 		Comparator<UserStory> byTasks = (us1, us2) -> Integer.compare(us1.tasks.size(), us2.tasks.size());
 		Comparator<UserStory> byPoints = (us1, us2) -> Integer.compare(us1.points, us2.points);
 		Comparator<UserStory> byFiled = null;
@@ -190,8 +191,10 @@ public class ListUserStories implements Command {
 		} else if (sortBy.equals(UserStory.fields[6])) {
 			byFiled = byDueDate;
 		} else if (sortBy.equals(UserStory.fields[7])) {
-			byFiled = byTasks;
+			byFiled = byTags;
 		} else if (sortBy.equals(UserStory.fields[8])) {
+				byFiled = byTasks;
+		} else if (sortBy.equals(UserStory.fields[9])) {
 			byFiled = byPoints;
 		} else {
 			return;
@@ -235,6 +238,7 @@ public class ListUserStories implements Command {
 		tableString = tableString.replaceFirst("Initiated Date", ColorCodes.BLUE + "Initiated Date" + ColorCodes.RESET);
 		tableString = tableString.replaceFirst("Planned Date", ColorCodes.BLUE + "Planned Date" + ColorCodes.RESET);
 		tableString = tableString.replaceFirst("Due Date", ColorCodes.BLUE + "Due Date" + ColorCodes.RESET);
+		tableString = tableString.replaceFirst("Tags", ColorCodes.BLUE + "Tags" + ColorCodes.RESET);
 		tableString = tableString.replaceFirst("Tasks #", ColorCodes.BLUE + "Tasks #" + ColorCodes.RESET);
 		tableString = tableString.replaceFirst("Points", ColorCodes.BLUE + "Points" + ColorCodes.RESET);
 		tableString = tableString.replaceFirst("Comments", ColorCodes.BLUE + "Comments" + ColorCodes.RESET);

@@ -44,6 +44,7 @@ public class EditUserStory implements Command {
 		setInitiatedDate();
 		setPlannedDate();
 		setDueDate();
+		setTags();
 		setPoints();
 		setComments();
 
@@ -52,6 +53,10 @@ public class EditUserStory implements Command {
 		userStory.save();
 
 		return true;
+	}
+
+	private void setTags() throws IOException{
+		//implement this after discussion
 	}
 
 	private void setPoints() throws IOException {
