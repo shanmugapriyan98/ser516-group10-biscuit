@@ -50,9 +50,15 @@ public class apiUtility {
         Request request = reqBuilder.build();
         try (Response response = httpClient.newCall(request).execute()) {
             if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-            JSONArray jsonArray= new JSONArray(response.body().string());
+            String responseString = response.body().string();
+            if(responseString.charAt(0)=='['){
+                JSONArray jsonArray= new JSONArray(responseString);
+                return  jsonArray;
+            } else if(responseString.charAt(0)=='{'){
+                JSONObject jsonObject = new JSONObject(responseString);
+                return new JSONArray().put(jsonObject);
+            }
             System.out.println(requestDescription + " processed successfully");
-            return  jsonArray;
         } catch (Exception e){
             e.printStackTrace();
             System.out.println("Error while processing request " + requestDescription);
