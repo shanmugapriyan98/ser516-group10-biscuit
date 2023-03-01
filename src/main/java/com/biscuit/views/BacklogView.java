@@ -76,14 +76,14 @@ public class BacklogView extends View {
 				return true;
 			}
 		} else if (words[0].equals("go_to")) {
+			backlog.project.populateDetails();
 			if (UserStories.getAllNames(backlog).contains(words[1])) {
 				UserStory us = UserStories.find(backlog, words[1]);
 				if (us == null) {
 					return false;
 				}
-
 				us.project = backlog.project;
-
+				us.usId = String.valueOf(us.project.userStoryDetails.get(words[1]));
 				UserStoryView usv = new UserStoryView(this, us);
 				usv.view();
 				return true;

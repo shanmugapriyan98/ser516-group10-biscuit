@@ -37,6 +37,7 @@ public class Task {
 	 * Initiated date of Task.
 	 */
 	public Date initiatedDate = null;
+	public String version;
 
 	/**
 	 * Planned date of Task.
@@ -58,10 +59,12 @@ public class Task {
 	 */
 	public static String[] fields;
 
+	public String taskId;
+
 	/**
 	 * Map of status.
 	 */
-	HashMap<String,String> taskStatuses =  new HashMap<>();
+	public HashMap<String,String> taskStatuses =  new HashMap<>();
 
 	public Set<String> statusNames = new HashSet<String>();
 
@@ -88,14 +91,26 @@ public class Task {
 
 	public void updateTaskStatuses(){
 		String requestDescription = "Get task Statuses for a project ";
-		String endPointPath = "task-statuses";
+		String endPointPath = "task-statuses?project="+project.projectId;
 		apiUtility utility = new apiUtility(endPointPath,requestDescription);
 		JSONArray jsonArray = utility.apiGET();
 		for(int i = 0; i< jsonArray.length(); i++){
 			JSONObject jsonObject = jsonArray.getJSONObject(i);
-			taskStatuses.put(String.valueOf(jsonObject.getInt("id")),jsonObject.getString("slug"));
+			taskStatuses.put(jsonObject.getString("slug"),String.valueOf(jsonObject.getInt("id")));
 			statusNames.add(jsonObject.getString("slug"));
 		}
+	}
+	public Integer getTaskVersion(){
+		String requestDescription = "Get version  for a task ";
+		String endPointPath = "tasks/"+taskId;
+		apiUtility utility = new apiUtility(endPointPath,requestDescription);
+		JSONArray jsonArray = utility.apiGET();
+		Integer version = null;
+		for(int i = 0; i< jsonArray.length(); i++){
+			JSONObject jsonObject = jsonArray.getJSONObject(i);
+			version = jsonObject.getInt("version");
+		}
+		return version;
 	}
 	/**
 	 * Save tasks to project.

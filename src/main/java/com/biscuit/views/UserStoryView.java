@@ -56,6 +56,8 @@ public class UserStoryView extends View {
 						return false;
 					}
 					t.project = userStory.project;
+					userStory.populateTaskDetails();
+					t.taskId = userStory.taskDetails.get(words[2]);
 					TaskView usv = new TaskView(this, t);
 					usv.view();
 					return true;
