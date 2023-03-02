@@ -37,11 +37,8 @@ public class EditTask implements Command {
 		String prompt = reader.getPrompt();
 
 		setTitle();
-		System.out.println(t.title );
 		setDescription();
-		System.out.println(t.description);
 		setState();
-		System.out.println(t.taskStatuses.get(t.state.toLowerCase()));
 		setInitiatedDate();
 		setPlannedDate();
 		setDueDate();
@@ -50,7 +47,6 @@ public class EditTask implements Command {
 		String endpointPath = "tasks/"+ t.taskId;
 		HashMap<String,String> body = new HashMap<>();
 		body.put("subject" ,t.title);
-		System.out.println(t.title + " " + t.taskId+ " " +t.description);
 		body.put("status", t.taskStatuses.get(t.state.toLowerCase()));
 		body.put("description",t.description);
 		body.put("version", String.valueOf(t.getTaskVersion()));
@@ -287,8 +283,6 @@ public class EditTask implements Command {
 
 		reader.removeCompleter(oldCompleter);
 		reader.addCompleter(stateCompleter);
-		String prePrompt = ColorCodes.BLUE + "Available Statuses: " + ColorCodes.RESET;
-		reader.resetPromptLine(prePrompt, t.statusNames.toString(),0);
 		reader.resetPromptLine(prompt, preload, 0);
 		reader.print("\r");
 		state = reader.readLine().trim();
