@@ -25,8 +25,8 @@ public class ShowSprint implements Command {
 		System.out.println(ColorCodes.RESET + s.description);
 		System.out.println(ColorCodes.BLUE + "state: " + ColorCodes.RESET + s.state);
 		System.out.println(
-				ColorCodes.BLUE + "Start date: " + ColorCodes.RESET + DateService.getDateAsString(s.startDate));
-		System.out.println(ColorCodes.BLUE + "due date: " + ColorCodes.RESET + DateService.getDateAsString(s.dueDate));
+				ColorCodes.BLUE + "Start date: " + ColorCodes.RESET + ((s.startDate) == null ? "NULL" : DateService.getDateAsString(s.startDate)));
+		System.out.println(ColorCodes.BLUE + "due date: " + ColorCodes.RESET + ((s.dueDate) == null ? "NULL" : DateService.getDateAsString(s.dueDate)));
 		System.out.println(ColorCodes.BLUE + "Assigned Effort: " + ColorCodes.RESET + s.assignedEffort);
 		System.out.println(ColorCodes.BLUE + "Velocity: " + ColorCodes.RESET + s.velocity);
 

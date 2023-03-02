@@ -22,11 +22,18 @@ public class AddSprint implements Command {
 	Project project = null;
 	Sprint sprint = new Sprint();
 
+	boolean local = false;
+	boolean remote = false;
 
-	public AddSprint(ConsoleReader reader, Project project) {
+
+
+	public AddSprint(ConsoleReader reader, boolean local, boolean remote, String name, Project project) {
 		super();
 		this.reader = reader;
 		this.project = project;
+		this.local = local;
+		this.remote = remote;
+		sprint.name = name;
 	}
 
 
@@ -35,24 +42,27 @@ public class AddSprint implements Command {
 		String prompt = reader.getPrompt();
 
 		sprint.project = project;
-		setName();
+		if(sprint.name.isEmpty()) {
+			setName();
+			setDescription(description);
+			sprint.state = Status.CREATED;
+			sprint.startDate = new Date(0);
+			sprint.dueDate = new Date(0);
 
-		setDescription(description);
-
-		sprint.state = Status.CREATED;
-		sprint.startDate = new Date(0);
-		sprint.dueDate = new Date(0);
-
-		if (setStartDate()) {
-			if (!setDuration()) {
-				setDueDate();
+			if (setStartDate()) {
+				if (!setDuration()) {
+					setDueDate();
+				}
 			}
+
+			sprint.assignedEffort = 0;
+			setVelocity();
+
+
 		}
 
-		sprint.assignedEffort = 0;
-		setVelocity();
-
 		reader.setPrompt(prompt);
+
 
 		project.addSprint(sprint);
 		project.save();

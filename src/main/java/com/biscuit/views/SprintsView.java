@@ -63,7 +63,7 @@ public class SprintsView extends View {
 	private boolean execute2Keywords(String[] words) throws IOException {
 		if (words[0].equals("add")) {
 			if (words[1].equals("sprint")) {
-				(new AddSprint(reader, project)).execute();
+				(new AddSprint(reader, false,false,null, project)).execute();
 				resetCompleters();
 
 				return true;

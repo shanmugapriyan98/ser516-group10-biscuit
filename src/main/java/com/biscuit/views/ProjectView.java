@@ -9,6 +9,7 @@ import com.biscuit.commands.epic.ListEpics;
 import com.biscuit.commands.help.ProjectHelp;
 import com.biscuit.commands.planner.ShowPlan;
 import com.biscuit.commands.planner.ShowPlanDetails;
+import com.biscuit.commands.project.AddProject;
 import com.biscuit.commands.project.ShowProject;
 import com.biscuit.commands.release.AddRelease;
 import com.biscuit.commands.release.ListReleases;
@@ -19,6 +20,7 @@ import com.biscuit.commands.userStory.AddUserStoryToBacklog;
 import com.biscuit.commands.userStory.ListUserStories;
 import com.biscuit.factories.ProjectCompleterFactory;
 import com.biscuit.models.*;
+import com.biscuit.models.services.Finder;
 import com.biscuit.models.services.Finder.Epics;
 import com.biscuit.models.services.Finder.Releases;
 import com.biscuit.models.services.Finder.Sprints;
@@ -110,7 +112,7 @@ public class ProjectView extends View {
     }
 
 
-    private boolean execute3Keywords(String[] words) {
+    private boolean execute3Keywords(String[] words) throws IOException {
         if (words[0].equals("go_to")) {
             if (words[1].equals("release")) {
                 if (Releases.getAllNames(project).contains(words[2])) {
@@ -126,13 +128,42 @@ public class ProjectView extends View {
                     return true;
                 }
             } else if (words[1].equals("sprint")) {
+
+                project.populateDetails();
+
+                if(project.sprintDetails.containsKey(words[2])) {
+
+                    Sprint s = Sprints.find(project, words[2]);
+                    if (s!= null) {
+                        SprintView sv = new SprintView(this, s);
+                        sv.view();
+                        return true;
+                    }
+
+                    else {
+
+                        if(project.sprintDetails.containsKey(words[2])){
+                            System.out.println("Caching sprint name " +words[1]+" to local");
+                            boolean local = false;
+                            boolean taiga = true;
+                            new AddSprint(reader,local,taiga,words[2],project).execute();
+                            //new AddProject(reader,local,taiga,words[1]).execute();
+                            s = Sprints.find(project, words[2]);
+                            SprintView sv = new SprintView(this, s);
+                            sv.view();
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+
                 if (Sprints.getAllNames(project).contains(words[2])) {
                     Sprint s = Sprints.find(project, words[2]);
                     if (s == null) {
                         return false;
                     }
 
-                    // s.project = project;
+                     //s.project = project;
 
                     SprintView sv = new SprintView(this, s);
                     sv.view();
@@ -182,7 +213,7 @@ public class ProjectView extends View {
                 return true;
 
             } else if (words[1].equals("sprint")) {
-                (new AddSprint(reader, project)).execute();
+                (new AddSprint(reader,false,false,null, project)).execute();
                 resetCompleters();
 
                 return true;
