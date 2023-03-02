@@ -1,9 +1,11 @@
 package com.biscuit.commands.sprint;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 
 import com.biscuit.ColorCodes;
 import com.biscuit.commands.Command;
@@ -12,6 +14,7 @@ import com.biscuit.models.Project;
 import com.biscuit.models.Sprint;
 import com.biscuit.models.enums.Status;
 
+import com.biscuit.models.services.apiUtility;
 import jline.console.ConsoleReader;
 import jline.console.completer.AggregateCompleter;
 import jline.console.completer.Completer;
@@ -39,36 +42,58 @@ public class AddSprint implements Command {
 
 	public boolean execute() throws IOException {
 		StringBuilder description = new StringBuilder();
-		String prompt = reader.getPrompt();
 
-		sprint.project = project;
-		if(sprint.name.isEmpty()) {
-			setName();
-			setDescription(description);
-			sprint.state = Status.CREATED;
-			sprint.startDate = new Date(0);
-			sprint.dueDate = new Date(0);
+		if(!local) {
+			String line;
+			String prompt = reader.getPrompt();
 
-			if (setStartDate()) {
-				if (!setDuration()) {
-					setDueDate();
+			sprint.project = project;
+			if(sprint.name == null) {
+				setName();
+				//setDescription(description);
+				sprint.state = Status.CREATED;
+				sprint.startDate = new Date(0);
+				sprint.dueDate = new Date(0);
+
+				if (setStartDate()) {
+					if (!setDuration()) {
+						setDueDate();
+					}
 				}
+
+				sprint.assignedEffort = 0;
+				//setVelocity();
+
+				reader.setPrompt(prompt);
+
+
+				project.addSprint(sprint);
+				project.save();
+
+				reader.println();
+				reader.println(ColorCodes.GREEN + "Sprint \"" + sprint.name + "\" has been added!" + ColorCodes.RESET);
+
 			}
-
-			sprint.assignedEffort = 0;
-			setVelocity();
-
-
 		}
 
-		reader.setPrompt(prompt);
+		if (!remote) {
+			String requestDescription = "Create Sprint";
+			HashMap<String,String > body = new HashMap<>();
+			project.populateDetails();
+			body.put("project",Integer.toString(project.id));
+			body.put("name",sprint.name);
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+			String startDate = formatter.format(sprint.startDate);
+			String dueDate = formatter.format(sprint.dueDate);
+			body.put("estimated_start", startDate);
+			body.put("estimated_finish", dueDate);
+			//body.put("estimated_finish", String.valueOf(sprint.dueDate));
+			String endpoint = "milestones";
+			apiUtility utility = new apiUtility(endpoint,requestDescription,body);
+			utility.apiPOST();
+			System.out.println(sprint.name + "created successfully on Taiga");
+		}
 
-
-		project.addSprint(sprint);
-		project.save();
-
-		reader.println();
-		reader.println(ColorCodes.GREEN + "Sprint \"" + sprint.name + "\" has been added!" + ColorCodes.RESET);
 
 		return false;
 	}
@@ -83,8 +108,11 @@ public class AddSprint implements Command {
 		reader.removeCompleter(oldCompleter);
 		reader.addCompleter(dateCompleter);
 
-		reader.setPrompt(ColorCodes.BLUE + "\ndue date:\n" + ColorCodes.YELLOW + "(hit Tab to see examples)\n(optional: leave it blank and hit enter)\n"
+		reader.setPrompt(ColorCodes.BLUE + "\ndue date:\n" + ColorCodes.YELLOW + "Format example: may 20 2023\n"
 				+ ColorCodes.RESET);
+
+//		reader.setPrompt(ColorCodes.BLUE + "\ndue date:\n" + ColorCodes.YELLOW + "(hit Tab to see examples)\n(optional: leave it blank and hit enter)\n"
+//				+ ColorCodes.RESET);
 
 		while ((line = reader.readLine()) != null) {
 			line = line.trim();
@@ -133,7 +161,10 @@ public class AddSprint implements Command {
 	private boolean setDuration() throws IOException {
 		String line;
 		int duration;
-		reader.setPrompt(ColorCodes.BLUE + "duration: " + ColorCodes.YELLOW + "(optional: leave it blank and hit enter)\n" + ColorCodes.RESET);
+
+		reader.setPrompt(ColorCodes.BLUE + "duration: " + ColorCodes.YELLOW + "(no of days)\n" + ColorCodes.RESET);
+
+//		reader.setPrompt(ColorCodes.BLUE + "duration: " + ColorCodes.YELLOW + "(optional: leave it blank and hit enter)\n" + ColorCodes.RESET);
 
 		while ((line = reader.readLine()) != null) {
 			line = line.trim();
@@ -171,8 +202,11 @@ public class AddSprint implements Command {
 		reader.removeCompleter(oldCompleter);
 		reader.addCompleter(dateCompleter);
 
-		reader.setPrompt(ColorCodes.BLUE + "\nstart date:\n" + ColorCodes.YELLOW + "(hit Tab to see examples)\n(optional: leave it blank and hit enter)\n"
+		reader.setPrompt(ColorCodes.BLUE + "\nstart date:\n" + ColorCodes.YELLOW + "Format example: may 20 2023\n"
 				+ ColorCodes.RESET);
+
+//		reader.setPrompt(ColorCodes.BLUE + "\nstart date:\n" + ColorCodes.YELLOW + "(hit Tab to see examples)\n(optional: leave it blank and hit enter)\n"
+//				+ ColorCodes.RESET);
 
 		while ((line = reader.readLine()) != null) {
 			line = line.trim();
