@@ -44,18 +44,18 @@ public class ShowUserStory implements Command {
 		System.out.println(ColorCodes.BLUE + "initiated date: " + ColorCodes.RESET
 				+ DateService.getDateAsString(us.initiatedDate));
 		System.out.println(
-				ColorCodes.BLUE + "planned date: " + ColorCodes.RESET + DateService.getDateAsString(us.plannedDate));
-		System.out.println(ColorCodes.BLUE + "due date: " + ColorCodes.RESET + DateService.getDateAsString(us.dueDate));
+				ColorCodes.BLUE + "planned date: " + ColorCodes.RESET +  ((us.plannedDate == null) ? "NULL" : DateService.getDateAsString(us.plannedDate)));
+		System.out.println(ColorCodes.BLUE + "due date: " + ColorCodes.RESET +  ((us.dueDate == null) ? "NULL" : DateService.getDateAsString(us.dueDate)));
 		System.out.println(ColorCodes.BLUE + "points: " + ColorCodes.RESET + us.points);
 		System.out.println(ColorCodes.BLUE + "comments: " + ColorCodes.RESET + us.comments);
 		System.out.println();
 		return true;
 	}
 
-	public UserStory fetchUserStoryByNumber(String project, int usNumber) throws Exception {
+	public UserStory fetchUserStoryByNumber(int projectID, int usNumber) throws Exception {
 		UserStory userStory = null;
 		String requestDescription = "Show user story";
-		String endpointPath = "userstories/by_ref?ref="+usNumber+"&project_slug="+project;
+		String endpointPath = "userstories/by_ref?ref="+usNumber+"&project="+projectID;
 		apiUtility utility = new apiUtility(endpointPath,requestDescription);
 		JSONObject jsonObject = utility.apiGET().getJSONObject(0);
 		userStory = setUserStoryData(jsonObject);
@@ -74,9 +74,7 @@ public class ShowUserStory implements Command {
 		userStory.state = Status.valueOf(status); // Enum and Taiga's US status should match, else an exception will be thrown
 
 		userStory.initiatedDate = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("created_date"));
-		//userStory.dueDate = new SimpleDateFormat("yyyy-MM-dd").parse((String) jsonObject.get("due_date"));
 		userStory.dueDate = jsonObject.get("due_date") == JSONObject.NULL ? null : new SimpleDateFormat("yyyy-MM-dd").parse((String) jsonObject.get("due_date"));
-
 		userStory.plannedDate = jsonObject.get("due_date") == JSONObject.NULL ? null : new SimpleDateFormat("yyyy-MM-dd").parse((String) jsonObject.get("due_date"));
 		if(jsonObject.get("total_points") instanceof BigDecimal){
 			userStory.points = ((BigDecimal) jsonObject.get("total_points")).intValue();

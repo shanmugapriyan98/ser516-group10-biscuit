@@ -270,7 +270,7 @@ public class ListSprints implements Command {
 			JSONArray userStoryArray = jsonObject.getJSONArray("user_stories");
 			for(int j = 0; j < userStoryArray.length(); j++){
 				JSONObject usObject = userStoryArray.getJSONObject(j);
-				UserStory userStory = new ShowUserStory(null).fetchUserStoryByNumber(usObject.getJSONObject("project_extra_info").getString("slug"), usObject.getInt("ref"));
+				UserStory userStory = new ShowUserStory(null).fetchUserStoryByNumber(usObject.getInt("project"), usObject.getInt("ref"));
 				sprint.userStories.add(userStory);
 				if(usObject.getBoolean("is_closed")){
 					sprint.velocity += usObject.getInt("total_points");

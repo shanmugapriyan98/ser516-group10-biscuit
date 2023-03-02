@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import com.biscuit.Login;
 import com.biscuit.commands.help.PlannerHelp;
 import com.biscuit.commands.planner.MoveSprintToRelease;
 import com.biscuit.commands.planner.MoveUserStoryToSprint;
@@ -153,7 +154,7 @@ public class PlannerView extends View {
 		} else if (words[0].equals("view")) {
 			if (words[1].equals("user_story")) {
 				if (isNumeric(words[2])) {
-					UserStory userStory = (new ShowUserStory(new UserStory())).fetchUserStoryByNumber(project.name, Integer.parseInt(words[2]));
+					UserStory userStory = (new ShowUserStory(new UserStory())).fetchUserStoryByNumber(Login.getInstance().projectMap.get(project.name), Integer.parseInt(words[2]));
 					(new ShowUserStory(new UserStory())).displayUserStory(userStory);
 					return true;
 				}
