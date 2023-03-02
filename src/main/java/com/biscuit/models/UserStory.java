@@ -78,6 +78,7 @@ public class UserStory {
     public List<Bug> bugs = new ArrayList<>();
     public List<Test> tests = new ArrayList<>();
     public HashMap<String,String> taskDetails = new HashMap<>();
+    public List<String> tasksNames = new ArrayList<>();
 
     /**
      * List array to store comments.

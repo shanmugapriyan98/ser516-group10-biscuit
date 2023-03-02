@@ -17,6 +17,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ShowUserStory implements Command {
 
@@ -48,17 +50,36 @@ public class ShowUserStory implements Command {
 		System.out.println(ColorCodes.BLUE + "due date: " + ColorCodes.RESET +  ((us.dueDate == null) ? "NULL" : DateService.getDateAsString(us.dueDate)));
 		System.out.println(ColorCodes.BLUE + "points: " + ColorCodes.RESET + us.points);
 		System.out.println(ColorCodes.BLUE + "comments: " + ColorCodes.RESET + us.comments);
+		System.out.println(ColorCodes.BLUE + "Tasks: ");
+		if(us.tasksNames.size()==0) System.out.println(ColorCodes.RESET + "No Tasks Available");
+		else {
+			for(int i=0;i<us.tasksNames.size();i++){
+				System.out.println(ColorCodes.RESET + us.tasksNames.get(i));
+			}
+		}
 		System.out.println();
 		return true;
 	}
 
 	public UserStory fetchUserStoryByNumber(int projectID, int usNumber) throws Exception {
 		UserStory userStory = null;
+		List<String> tasks = new ArrayList<>();
 		String requestDescription = "Show user story";
 		String endpointPath = "userstories/by_ref?ref="+usNumber+"&project="+projectID;
 		apiUtility utility = new apiUtility(endpointPath,requestDescription);
 		JSONObject jsonObject = utility.apiGET().getJSONObject(0);
 		userStory = setUserStoryData(jsonObject);
+		requestDescription = "Get tasks for userstory";
+		endpointPath = "tasks?project=" + projectID;
+		apiUtility utility2 = new apiUtility(endpointPath, requestDescription);
+		JSONArray jsonArray = utility2.apiGET();
+		for(int i=0;i<jsonArray.length();i++){
+			JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+			if(String.valueOf(jsonObject1.get("user_story")).equals(userStory.usId)){
+				tasks.add(jsonObject1.get("subject").toString());
+			}
+		}
+		userStory.tasksNames.addAll(tasks);
 		return userStory;
 	}
 
@@ -79,6 +100,7 @@ public class ShowUserStory implements Command {
 		if(jsonObject.get("total_points") instanceof BigDecimal){
 			userStory.points = ((BigDecimal) jsonObject.get("total_points")).intValue();
 		} else userStory.points = jsonObject.get("total_points") == JSONObject.NULL ? 0 : (int) jsonObject.get("total_points");
+		userStory.usId = String.valueOf(jsonObject.get("id"));
 		return userStory;
 	}
 
