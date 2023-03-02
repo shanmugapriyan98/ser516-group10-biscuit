@@ -116,7 +116,7 @@ public class ListTasks implements Command {
 
 		Comparator<Task> byTitle = (t1, t2) -> t1.title.compareTo(t2.title);
 		Comparator<Task> byDescription = (t1, t2) -> t1.description.compareTo(t2.description);
-		Comparator<Task> byState = (t1, t2) -> Integer.compare(t1.state.getValue(), t2.state.getValue());
+		//Comparator<Task> byState = (t1, t2) -> Integer.compare(t1.state.getValue(), t2.state.getValue());
 		Comparator<Task> byInitiatedDate = (t1, t2) -> t1.initiatedDate.compareTo(t2.initiatedDate);
 		Comparator<Task> byPlannedDate = (t1, t2) -> t1.plannedDate.compareTo(t2.plannedDate);
 		Comparator<Task> byDueDate = (t1, t2) -> t1.dueDate.compareTo(t2.dueDate);
@@ -127,9 +127,9 @@ public class ListTasks implements Command {
 			byFiled = byTitle;
 		} else if (sortBy.equals(Task.fields[1])) {
 			byFiled = byDescription;
-		} else if (sortBy.equals(Task.fields[2])) {
+		} /*else if (sortBy.equals(Task.fields[2])) {
 			byFiled = byState;
-		} else if (sortBy.equals(Task.fields[3])) {
+		}*/ else if (sortBy.equals(Task.fields[3])) {
 			byFiled = byInitiatedDate;
 		} else if (sortBy.equals(Task.fields[4])) {
 			byFiled = byPlannedDate;
