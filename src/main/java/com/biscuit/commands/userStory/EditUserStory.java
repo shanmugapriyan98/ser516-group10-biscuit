@@ -1,10 +1,7 @@
 package com.biscuit.commands.userStory;
 
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
 import com.biscuit.ColorCodes;
 import com.biscuit.commands.Command;
@@ -15,6 +12,7 @@ import com.biscuit.models.enums.Points;
 import com.biscuit.models.enums.Status;
 import com.biscuit.models.services.DateService;
 
+import com.biscuit.models.services.apiUtility;
 import jline.console.ConsoleReader;
 import jline.console.completer.AggregateCompleter;
 import jline.console.completer.ArgumentCompleter;
@@ -48,6 +46,18 @@ public class EditUserStory implements Command {
 		setTags();
 		setPoints();
 		setComments();
+
+		String requestDescription = "Edit UserStory";
+		String endpointPath = "userstories";
+		HashMap<String , String > body = new HashMap<>();
+		body.put("project",getProjectId());
+		body.put("subject",userStory.title);
+		body.put("total_points", String.valueOf(userStory.points));
+		body.put("tags", String.valueOf(new ArrayList<String>(Arrays.asList(userStory.tags.split(","))))); //remove wrapping with String.valueOf
+		body.put("description",userStory.description);
+		apiUtility utility = new apiUtility(endpointPath,requestDescription,body);
+		utility.apiPOST(); // needs to be changed to patch
+		reader.println(ColorCodes.GREEN + "User Story \"" + userStory.title + "\" has been edited!" + ColorCodes.RESET);
 
 		reader.setPrompt(prompt);
 
