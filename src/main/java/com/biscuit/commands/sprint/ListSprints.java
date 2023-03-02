@@ -1,6 +1,7 @@
 package com.biscuit.commands.sprint;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -263,7 +264,9 @@ public class ListSprints implements Command {
 			sprint.startDate = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("estimated_start"));
 			sprint.dueDate = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("estimated_finish"));
 			sprint.state = Status.valueOf(jsonObject.getBoolean("closed") ? "DONE" : "OPEN");
-			sprint.assignedEffort = jsonObject.getInt("total_points");
+			if(jsonObject.get("total_points") instanceof BigDecimal) {
+				sprint.assignedEffort = ((BigDecimal) jsonObject.get("total_points")).intValue();
+			} else sprint.assignedEffort = jsonObject.get("total_points") == JSONObject.NULL ? 0 : (int) jsonObject.get("total_points");
 			JSONArray userStoryArray = jsonObject.getJSONArray("user_stories");
 			for(int j = 0; j < userStoryArray.length(); j++){
 				JSONObject usObject = userStoryArray.getJSONObject(j);

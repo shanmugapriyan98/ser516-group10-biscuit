@@ -6,6 +6,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -49,17 +50,23 @@ public class apiUtility {
         Request request = reqBuilder.build();
         try (Response response = httpClient.newCall(request).execute()) {
             if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-            JSONArray jsonArray= new JSONArray(response.body().string());
+            String responseString = response.body().string();
+            if(responseString.charAt(0)=='['){
+                JSONArray jsonArray= new JSONArray(responseString);
+                return  jsonArray;
+            } else if(responseString.charAt(0)=='{'){
+                JSONObject jsonObject = new JSONObject(responseString);
+                return new JSONArray().put(jsonObject);
+            }
             System.out.println(requestDescription + " processed successfully");
-            return  jsonArray;
-
         } catch (Exception e){
             e.printStackTrace();
             System.out.println("Error while processing request " + requestDescription);
         }
         return new JSONArray();
     }
-    public void apiPOST(){
+    public JSONObject apiPOST(){
+        JSONObject jsonObject;
         FormBody.Builder builder = new FormBody.Builder();
         for(Map.Entry<String,String > mmap : body.entrySet())  builder.add(mmap.getKey(), mmap.getValue());
         RequestBody formBody = builder.build();
@@ -67,12 +74,14 @@ public class apiUtility {
         Request request = reqBuilder.build();
         try (Response response = httpClient.newCall(request).execute()) {
             if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+            jsonObject = new JSONObject(response.body().string());
             System.out.println(requestDescription + " processed successfully");
-
+            return jsonObject;
         } catch (Exception e){
             e.printStackTrace();
             System.out.println("Error while processing request " + requestDescription);
         }
+        return new JSONObject();
     }
     public void apiPATCH(){
         FormBody.Builder builder = new FormBody.Builder();
