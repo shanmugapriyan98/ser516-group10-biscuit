@@ -51,9 +51,9 @@ public class EditTask implements Command {
 		HashMap<String,String> body = new HashMap<>();
 		body.put("subject" ,t.title);
 		System.out.println(t.title + " " + t.taskId+ " " +t.description);
-		body.put("status", t.state);
+		body.put("status", t.taskStatuses.get(t.state.toLowerCase()));
 		body.put("description",t.description);
-		body.put("version", String.valueOf(t.getTaskVersion()+1));
+		body.put("version", String.valueOf(t.getTaskVersion()));
 		apiUtility utility = new apiUtility(endpointPath,requestDescription,body);
 		utility.apiPATCH();
 		reader.setPrompt(prompt);
