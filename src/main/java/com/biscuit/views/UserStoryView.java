@@ -3,6 +3,7 @@ package com.biscuit.views;
 import java.io.IOException;
 import java.util.List;
 
+import com.biscuit.Login;
 import com.biscuit.commands.help.UserStoryHelp;
 import com.biscuit.commands.task.AddTaskToUserStory;
 import com.biscuit.commands.task.ListTasks;
@@ -17,9 +18,11 @@ import com.biscuit.models.services.Finder.Tasks;
 
 import jline.console.completer.Completer;
 
+import static org.apache.commons.lang3.StringUtils.isNumeric;
+
 public class UserStoryView extends View {
 
-	UserStory userStory = null;
+	UserStory userStory = new UserStory();
 
 
 	public UserStoryView(View previousView, UserStory userStory) {
@@ -47,7 +50,7 @@ public class UserStoryView extends View {
 	}
 
 
-	private boolean execute3Keywords(String[] words) {
+	private boolean execute3Keywords(String[] words) throws Exception {
 		if (words[0].equals("go_to")) {
 			if (words[1].equals("task")) {
 				if (Tasks.getAllNames(userStory).contains(words[2])) {

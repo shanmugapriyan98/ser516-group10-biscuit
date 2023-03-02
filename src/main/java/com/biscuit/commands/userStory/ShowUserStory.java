@@ -19,6 +19,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ShowUserStory implements Command {
 
@@ -51,10 +52,10 @@ public class ShowUserStory implements Command {
 		System.out.println(ColorCodes.BLUE + "points: " + ColorCodes.RESET + us.points);
 		System.out.println(ColorCodes.BLUE + "comments: " + ColorCodes.RESET + us.comments);
 		System.out.println(ColorCodes.BLUE + "Tasks: ");
-		if(us.tasksNames.size()==0) System.out.println(ColorCodes.RESET + "No Tasks Available");
+		if(us.taskDetails.size()==0) System.out.println(ColorCodes.RESET + "No Tasks Available");
 		else {
-			for(int i=0;i<us.tasksNames.size();i++){
-				System.out.println(ColorCodes.RESET + us.tasksNames.get(i));
+			for(Map.Entry<String, String> taskEntry : us.taskDetails.entrySet()){
+				System.out.println(ColorCodes.RESET + taskEntry.getKey());
 			}
 		}
 		System.out.println();

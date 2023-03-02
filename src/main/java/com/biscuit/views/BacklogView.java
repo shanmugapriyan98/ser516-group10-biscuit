@@ -84,6 +84,7 @@ public class BacklogView extends View {
 				}
 				us.project = backlog.project;
 				us.usId = String.valueOf(us.project.userStoryDetails.get(words[1]));
+				us.populateTaskDetails();
 				UserStoryView usv = new UserStoryView(this, us);
 				usv.view();
 				return true;
