@@ -4,14 +4,15 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 
 import com.biscuit.ColorCodes;
 import com.biscuit.commands.Command;
 import com.biscuit.factories.DateCompleter;
 import com.biscuit.models.Task;
-import com.biscuit.models.enums.Status;
 import com.biscuit.models.services.DateService;
 
+import com.biscuit.models.services.apiUtility;
 import jline.console.ConsoleReader;
 import jline.console.completer.AggregateCompleter;
 import jline.console.completer.ArgumentCompleter;
@@ -36,17 +37,27 @@ public class EditTask implements Command {
 		String prompt = reader.getPrompt();
 
 		setTitle();
+		System.out.println(t.title );
 		setDescription();
+		System.out.println(t.description);
 		setState();
+		System.out.println(t.taskStatuses.get(t.state.toLowerCase()));
 		setInitiatedDate();
 		setPlannedDate();
 		setDueDate();
 		setTime();
-
+		String requestDescription = "Edit Tasks";
+		String endpointPath = "tasks/"+ t.taskId;
+		HashMap<String,String> body = new HashMap<>();
+		body.put("subject" ,t.title);
+		System.out.println(t.title + " " + t.taskId+ " " +t.description);
+		body.put("status", t.taskStatuses.get(t.state.toLowerCase()));
+		body.put("description",t.description);
+		body.put("version", String.valueOf(t.getTaskVersion()));
+		apiUtility utility = new apiUtility(endpointPath,requestDescription,body);
+		utility.apiPATCH();
 		reader.setPrompt(prompt);
-
 		t.save();
-
 		return true;
 	}
 
@@ -267,27 +278,25 @@ public class EditTask implements Command {
 
 
 	private void setState() throws IOException {
+		t.updateTaskStatuses();
 		String prompt = ColorCodes.BLUE + "state: " + ColorCodes.RESET;
-		String preload = t.state.toString().toLowerCase();
+		String preload = t.state.toLowerCase();
 		String state;
 		Completer oldCompleter = (Completer) reader.getCompleters().toArray()[0];
-		Completer stateCompleter = new ArgumentCompleter(new StringsCompleter(Status.values), new NullCompleter());
+		Completer stateCompleter = new ArgumentCompleter(new StringsCompleter(t.statusNames), new NullCompleter());
 
 		reader.removeCompleter(oldCompleter);
 		reader.addCompleter(stateCompleter);
-
+		String prePrompt = ColorCodes.BLUE + "Available Statuses: " + ColorCodes.RESET;
+		reader.resetPromptLine(prePrompt, t.statusNames.toString(),0);
 		reader.resetPromptLine(prompt, preload, 0);
 		reader.print("\r");
-
 		state = reader.readLine().trim();
-
-		while (!Status.values.contains(state)) {
+		while (!t.statusNames.contains(state)) {
 			System.out.println(ColorCodes.RED + "invalid state, hit tab for auto-complete" + ColorCodes.RESET);
 			state = reader.readLine().trim();
 		}
-
-		t.state = Status.valueOf(state.toUpperCase());
-
+		t.state = state.toUpperCase();
 		reader.removeCompleter(stateCompleter);
 		reader.addCompleter(oldCompleter);
 	}

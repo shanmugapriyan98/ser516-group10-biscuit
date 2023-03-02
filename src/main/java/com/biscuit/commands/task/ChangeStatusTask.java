@@ -10,10 +10,10 @@ import com.biscuit.models.enums.Status;
 public class ChangeStatusTask implements Command {
 
 	Task t = null;
-	Status state = null;
+	String state = null;
 
 
-	public ChangeStatusTask(Task t, Status state) {
+	public ChangeStatusTask(Task t, String state) {
 		super();
 		this.t = t;
 		this.state = state;
@@ -23,7 +23,7 @@ public class ChangeStatusTask implements Command {
 	@Override
 	public boolean execute() throws IOException {
 
-		Status oldState = t.state;
+		String oldState = t.state;
 
 		t.state = state;
 
