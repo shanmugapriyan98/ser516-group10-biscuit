@@ -48,7 +48,10 @@ public class AddUserStoryToBacklog implements Command {
 		JSONArray jsonArray = utility.apiGET();
 		for(int i = 0; i< jsonArray.length(); i++){
 			JSONObject jsonObject = jsonArray.getJSONObject(i);
-			if(jsonObject.getString("name").equals(project.name))  projectId= String.valueOf(jsonObject.getInt("id"));
+			if(jsonObject.getString("name").equals(project.name))  {
+				projectId= String.valueOf(jsonObject.getInt("id"));
+				project.projectId = projectId;
+			}
 		}
 		if(projectId==""){
 			throw new RuntimeException("project Id for "+project.name+" is not found");

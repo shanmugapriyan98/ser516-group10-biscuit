@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
+import com.biscuit.models.services.apiUtility;
 import okhttp3.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -105,26 +106,19 @@ public class Login {
     public void displayProjects(){
         JSONObject jsonObject;
         System.out.println();
-        request = new Request.Builder()
-                .url("https://api.taiga.io/api/v1/projects?member="+memberId)
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Authorization", "Bearer "+authToken)
-                .get()
-                .build();
-        try (Response response = httpClient.newCall(request).execute()) {
-            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-            jsonProjectsArray = new JSONArray(response.body().string());
-            System.out.println("Available projects");
-            System.out.println("------------------");
-            for(int i = 0; i< jsonProjectsArray.length(); i++){
-                jsonObject = jsonProjectsArray.getJSONObject(i);
-                System.out.println(jsonObject.getString("name"));
-                projectMap.put(jsonObject.getString("name"), jsonObject.getInt("id"));
-            }
-            System.out.println();
-        } catch (IOException ioException){
-            ioException.printStackTrace();
+        String requestDescription = "Display all projects of member";
+        String endpointPath = "projects?member="+memberId;
+        apiUtility utility = new apiUtility(endpointPath, requestDescription);
+        jsonProjectsArray = utility.apiGET();
+        System.out.println();
+        System.out.println("Available projects");
+        System.out.println("------------------");
+        for(int i = 0; i< jsonProjectsArray.length(); i++){
+            jsonObject = jsonProjectsArray.getJSONObject(i);
+            System.out.println(jsonObject.getString("name"));
+            projectMap.put(jsonObject.getString("name"), jsonObject.getInt("id"));
         }
+        System.out.println();
     }
 
 
@@ -136,29 +130,19 @@ public class Login {
             System.out.println("Project Name Invalid");
             System.exit(1);
         }
-        String requestUrl = "https://api.taiga.io/api/v1/userstories?project="+projectMap.get(projectName);
-        request = new Request.Builder()
-                .url(requestUrl)
-                .addHeader("Content-Type", "application/json")
-                .addHeader("Authorization", "Bearer "+authToken)
-                .get()
-                .build();
-        try (Response response = httpClient.newCall(request).execute()) {
-            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-            jsonUserStoriesArray = new JSONArray(response.body().string());
-            for(int i = 0; i< jsonUserStoriesArray.length(); i++){
-                jsonObject = jsonUserStoriesArray.getJSONObject(i);
-                if(jsonObject.has("subject") && String.valueOf(jsonObject.get("milestone_name")).equals("null")){
-                    userStoriesList.add(new ArrayList<>());
-                    len = userStoriesList.size()-1;
-                    userStoriesList.get(len).add(String.valueOf(jsonObject.get("ref")));
-                    userStoriesList.get(len).add((String) jsonObject.get("subject"));
-                    userStoriesList.get(len).add(String.valueOf(jsonObject.get("total_points")));
-                }
+        String requestDescription = "Get backlog data from project";
+        String endpointPath = "userstories?project="+projectMap.get(projectName);
+        apiUtility utility = new apiUtility(endpointPath, requestDescription);
+        jsonUserStoriesArray = utility.apiGET();
+        for(int i = 0; i< jsonUserStoriesArray.length(); i++){
+            jsonObject = jsonUserStoriesArray.getJSONObject(i);
+            if(jsonObject.has("subject") && String.valueOf(jsonObject.get("milestone_name")).equals("null")){
+                userStoriesList.add(new ArrayList<>());
+                len = userStoriesList.size()-1;
+                userStoriesList.get(len).add(String.valueOf(jsonObject.get("ref")));
+                userStoriesList.get(len).add((String) jsonObject.get("subject"));
+                userStoriesList.get(len).add(String.valueOf(jsonObject.get("total_points")));
             }
-        } catch (IOException ioException){
-            ioException.printStackTrace();
         }
     }
-
 }

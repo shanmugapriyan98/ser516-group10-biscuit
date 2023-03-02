@@ -6,14 +6,15 @@ import com.biscuit.commands.Command;
 import com.biscuit.models.UserStory;
 import com.biscuit.models.enums.Status;
 import com.biscuit.models.services.DateService;
+import com.biscuit.models.services.apiUtility;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 
 public class ShowUserStory implements Command {
@@ -42,46 +43,21 @@ public class ShowUserStory implements Command {
 		System.out.println(ColorCodes.BLUE + "initiated date: " + ColorCodes.RESET
 				+ DateService.getDateAsString(us.initiatedDate));
 		System.out.println(
-				ColorCodes.BLUE + "planned date: " + ColorCodes.RESET + DateService.getDateAsString(us.plannedDate));
-		System.out.println(ColorCodes.BLUE + "due date: " + ColorCodes.RESET + DateService.getDateAsString(us.dueDate));
+				ColorCodes.BLUE + "planned date: " + ColorCodes.RESET +  ((us.plannedDate == null) ? "NULL" : DateService.getDateAsString(us.plannedDate)));
+		System.out.println(ColorCodes.BLUE + "due date: " + ColorCodes.RESET +  ((us.dueDate == null) ? "NULL" : DateService.getDateAsString(us.dueDate)));
 		System.out.println(ColorCodes.BLUE + "points: " + ColorCodes.RESET + us.points);
 		System.out.println(ColorCodes.BLUE + "comments: " + ColorCodes.RESET + us.comments);
 		System.out.println();
 		return true;
 	}
 
-	public UserStory fetchUserStoryByNumber(String project, int usNumber) {
+	public UserStory fetchUserStoryByNumber(int projectID, int usNumber) throws Exception {
 		UserStory userStory = null;
-
-		HttpUrl httpUrl = new HttpUrl.Builder()
-				.scheme("https")
-				.host("api.taiga.io")
-				.addPathSegment("api")
-				.addPathSegment("v1")
-				.addPathSegment("userstories")
-				.addPathSegment("by_ref")
-				.addQueryParameter("ref", String.valueOf(usNumber))
-				.addQueryParameter("project__slug", project)
-				.build();
-
-		Request request = new Request.Builder()
-				.url(httpUrl)
-				.addHeader("Authorization", "Bearer " + authToken)
-				.addHeader("Content-Type", "application/json")
-				.get()
-				.build();
-
-		try (Response response = httpClient.newCall(request).execute()) {
-			if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-			if (response.body() == null) {
-				throw new IOException("Response body is empty" + response);
-			}
-			JSONObject jsonObject = new JSONObject(response.body().string());
-			userStory = setUserStoryData(jsonObject);
-		} catch (Exception exception) {
-			exception.printStackTrace();
-			System.out.println("Error while fetching US details from Taiga. Please enter valid US number in project: " + project);
-		}
+		String requestDescription = "Show user story";
+		String endpointPath = "userstories/by_ref?ref="+usNumber+"&project="+projectID;
+		apiUtility utility = new apiUtility(endpointPath,requestDescription);
+		JSONObject jsonObject = utility.apiGET().getJSONObject(0);
+		userStory = setUserStoryData(jsonObject);
 		return userStory;
 	}
 

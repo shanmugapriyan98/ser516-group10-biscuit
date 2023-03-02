@@ -1,6 +1,7 @@
 package com.biscuit.commands.sprint;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -268,7 +269,7 @@ public class ListSprints implements Command {
 			JSONArray userStoryArray = jsonObject.getJSONArray("user_stories");
 			for(int j = 0; j < userStoryArray.length(); j++){
 				JSONObject usObject = userStoryArray.getJSONObject(j);
-				UserStory userStory = new ShowUserStory(null).fetchUserStoryByNumber(usObject.getJSONObject("project_extra_info").getString("slug"), usObject.getInt("ref"));
+				UserStory userStory = new ShowUserStory(null).fetchUserStoryByNumber(usObject.getInt("project"), usObject.getInt("ref"));
 				sprint.userStories.add(userStory);
 				if(usObject.getBoolean("is_closed")){
 					sprint.velocity += usObject.get("total_points") == JSONObject.NULL ? 0 : usObject.getInt("total_points");
