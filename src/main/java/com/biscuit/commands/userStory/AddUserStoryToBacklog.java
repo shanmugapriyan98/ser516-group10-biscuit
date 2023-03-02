@@ -1,8 +1,7 @@
 package com.biscuit.commands.userStory;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 
 import com.biscuit.ColorCodes;
 import com.biscuit.Login;
@@ -22,9 +21,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class AddUserStoryToBacklog implements Command {
 
@@ -68,6 +65,7 @@ public class AddUserStoryToBacklog implements Command {
 		userStory.state = Status.READY;
 		setBusinessValue();
 		setPoints();
+		setTags();
 		userStory.initiatedDate = new Date();
 		userStory.plannedDate = new Date(0);
 		userStory.dueDate = new Date(0);
@@ -79,17 +77,45 @@ public class AddUserStoryToBacklog implements Command {
 
 		reader.println();
 		reader.println(ColorCodes.GREEN + "User Story \"" + userStory.title + "\" has been added to the backlog!" + ColorCodes.RESET );
-		String requestType = "POST";
 		String requestDescription = "Create UserStory";
 		String endpointPath = "userstories";
 		HashMap<String , String > body = new HashMap<>();
 		body.put("project",getProjectId());
 		body.put("subject",userStory.title);
+		body.put("total_points", String.valueOf(userStory.points));
+		body.put("tags", String.valueOf(new ArrayList<String>(Arrays.asList(userStory.tags.split(","))))); //remove wrapping with String.valueOf
 		body.put("description",userStory.description);
 		apiUtility utility = new apiUtility(endpointPath,requestDescription,body);
 		utility.apiPOST();
 		reader.println(ColorCodes.GREEN + "User Story \"" + userStory.title + "\" has been created to the backlog in Taiga!" + ColorCodes.RESET);
 		return false;
+	}
+
+	private void setTags() throws IOException {
+		String line;
+		Completer oldCompleter = (Completer) reader.getCompleters().toArray()[0];
+
+		Completer pointsCompleter = new ArgumentCompleter(new StringsCompleter(Points.values), new NullCompleter());
+
+		reader.removeCompleter(oldCompleter);
+		reader.addCompleter(pointsCompleter);
+
+		reader.setPrompt(ColorCodes.BLUE + "\ntags:\n" + ColorCodes.YELLOW + "(for multiple tags, separate them by commas)\n" + ColorCodes.RESET);
+
+		while ((line = reader.readLine()) != null) {
+			line = line.trim();
+
+			try {
+				userStory.tags = line;
+				break;
+			} catch (NumberFormatException e) {
+				System.out.println(ColorCodes.RED + "invalid value: must be a string value!" + ColorCodes.RESET);
+			}
+		}
+
+		reader.removeCompleter(pointsCompleter);
+		reader.addCompleter(oldCompleter);
+
 	}
 
 

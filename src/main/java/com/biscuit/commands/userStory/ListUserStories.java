@@ -171,7 +171,7 @@ public class ListUserStories implements Command {
 		Comparator<UserStory> byInitiatedDate = (us1, us2) -> us1.initiatedDate.compareTo(us2.initiatedDate);
 		Comparator<UserStory> byPlannedDate = (us1, us2) -> us1.plannedDate.compareTo(us2.plannedDate);
 		Comparator<UserStory> byDueDate = (us1, us2) -> us1.dueDate.compareTo(us2.dueDate);
-		Comparator<UserStory> byTags = (us1, us2) -> Integer.compare(us1.tags.size(), us2.tags.size());
+		Comparator<UserStory> byTags = (us1, us2) -> us1.tags.compareTo(us2.tags);
 		Comparator<UserStory> byTasks = (us1, us2) -> Integer.compare(us1.tasks.size(), us2.tasks.size());
 		Comparator<UserStory> byPoints = (us1, us2) -> Integer.compare(us1.points, us2.points);
 		Comparator<UserStory> byFiled = null;

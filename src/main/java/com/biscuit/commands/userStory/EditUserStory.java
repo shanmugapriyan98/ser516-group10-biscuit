@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import com.biscuit.ColorCodes;
 import com.biscuit.commands.Command;
@@ -57,23 +58,28 @@ public class EditUserStory implements Command {
 
 	private void setTags() throws IOException{
 		String line;
-		String prompt = ColorCodes.BLUE + "tags: " + ColorCodes.YELLOW + "(\\q to end writing) "
-				+ ColorCodes.RESET;
-		//change to tags
-		String preload = userStory.description.replace("\n", "<newline>").replace("!", "<exclamation-mark>");
+		Completer oldCompleter = (Completer) reader.getCompleters().toArray()[0];
 
-		reader.resetPromptLine(prompt, preload, 0);
-		reader.print("\r");
+		Completer pointsCompleter = new ArgumentCompleter(new StringsCompleter(Points.values), new NullCompleter());
+
+		reader.removeCompleter(oldCompleter);
+		reader.addCompleter(pointsCompleter);
+
+		reader.setPrompt(ColorCodes.BLUE + "\ntags:\n" + ColorCodes.YELLOW + "(for multiple tags, separate them by commas)\n" + ColorCodes.RESET);
 
 		while ((line = reader.readLine()) != null) {
-			if (line.equals("\\q")) {
+			line = line.trim();
+
+			try {
+				userStory.tags = line;
 				break;
+			} catch (NumberFormatException e) {
+				System.out.println(ColorCodes.RED + "invalid value: must be a string value!" + ColorCodes.RESET);
 			}
-			userStory.tags.add(line);
-			reader.setPrompt("");
 		}
 
-		userStory.description = description.toString().replace("<newline>", "\n").replace("<exclamation-mark>", "!");
+		reader.removeCompleter(pointsCompleter);
+		reader.addCompleter(oldCompleter);
 
 	}
 

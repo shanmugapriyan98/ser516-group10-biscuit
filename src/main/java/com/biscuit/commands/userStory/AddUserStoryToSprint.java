@@ -44,6 +44,7 @@ public class AddUserStoryToSprint implements Command {
 		userStory.state = Status.READY;
 		setBusinessValue();
 		setPoints();
+		setTags();
 		userStory.initiatedDate = new Date();
 		userStory.plannedDate = new Date(0);
 		userStory.dueDate = new Date(0);
@@ -58,6 +59,33 @@ public class AddUserStoryToSprint implements Command {
 		reader.println(ColorCodes.GREEN + "User Story \"" + userStory.title + "\" has been added to sprint " + sprint.name + "!" + ColorCodes.RESET);
 
 		return false;
+	}
+
+	private void setTags() throws IOException {
+		String line;
+		Completer oldCompleter = (Completer) reader.getCompleters().toArray()[0];
+
+		Completer pointsCompleter = new ArgumentCompleter(new StringsCompleter(Points.values), new NullCompleter());
+
+		reader.removeCompleter(oldCompleter);
+		reader.addCompleter(pointsCompleter);
+
+		reader.setPrompt(ColorCodes.BLUE + "\ntags:\n");
+
+		while ((line = reader.readLine()) != null) {
+			line = line.trim();
+
+			try {
+				userStory.tags = line;
+				break;
+			} catch (NumberFormatException e) {
+				System.out.println(ColorCodes.RED + "invalid value: must be a string value!" + ColorCodes.RESET);
+			}
+		}
+
+		reader.removeCompleter(pointsCompleter);
+		reader.addCompleter(oldCompleter);
+
 	}
 
 

@@ -60,7 +60,7 @@ public class UserStory {
      */
     public int points;
 
-    public List<String> tags = new ArrayList<>();
+    public String tags;
 
 
     /**
