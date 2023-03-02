@@ -85,12 +85,11 @@ public class Login {
 
     public Login(){
         Scanner scanner = new Scanner(System.in);
-//        System.out.print("Enter Username:");
-//        userName = scanner.next();
-//        System.out.print("Enter Password:");
-//        password = scanner.next();
-//        sendPost(userName, password);
-        sendPost("taigauser22", "password");
+        System.out.print("Enter Username:");
+        userName = scanner.next();
+        System.out.print("Enter Password:");
+        password = scanner.next();
+        sendPost(userName, password);
     }
 
     public static Login getInstance(){
