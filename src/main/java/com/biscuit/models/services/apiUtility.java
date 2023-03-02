@@ -53,12 +53,14 @@ public class apiUtility {
             String responseString = response.body().string();
             if(responseString.charAt(0)=='['){
                 JSONArray jsonArray= new JSONArray(responseString);
+                System.out.println(requestDescription + " processed successfully");
                 return  jsonArray;
             } else if(responseString.charAt(0)=='{'){
                 JSONObject jsonObject = new JSONObject(responseString);
+                System.out.println(requestDescription + " processed successfully");
                 return new JSONArray().put(jsonObject);
             }
-            System.out.println(requestDescription + " processed successfully");
+
         } catch (Exception e){
             e.printStackTrace();
             System.out.println("Error while processing request " + requestDescription);
