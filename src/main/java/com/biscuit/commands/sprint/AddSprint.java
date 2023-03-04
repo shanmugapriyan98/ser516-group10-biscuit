@@ -1,289 +1,236 @@
 package com.biscuit.commands.sprint;
 
+import com.biscuit.ColorCodes;
+import com.biscuit.commands.Command;
+import com.biscuit.models.Project;
+import com.biscuit.models.Sprint;
+import com.biscuit.models.enums.Status;
+import com.biscuit.models.services.apiUtility;
+import jline.console.ConsoleReader;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 
-import com.biscuit.ColorCodes;
-import com.biscuit.commands.Command;
-import com.biscuit.factories.DateCompleter;
-import com.biscuit.models.Project;
-import com.biscuit.models.Sprint;
-import com.biscuit.models.enums.Status;
-
-import com.biscuit.models.services.apiUtility;
-import jline.console.ConsoleReader;
-import jline.console.completer.AggregateCompleter;
-import jline.console.completer.Completer;
-
 public class AddSprint implements Command {
 
-	ConsoleReader reader = null;
-	Project project = null;
-	Sprint sprint = new Sprint();
+    ConsoleReader reader = null;
+    Project project = null;
+    Sprint sprint = new Sprint();
 
-	boolean local = false;
-	boolean remote = false;
+    boolean local = false;
+    boolean remote = false;
 
 
+    public AddSprint(ConsoleReader reader, boolean local, boolean remote, String name, Project project) {
+        super();
+        this.reader = reader;
+        this.project = project;
+        this.local = local;
+        this.remote = remote;
+        sprint.name = name;
+    }
 
-	public AddSprint(ConsoleReader reader, boolean local, boolean remote, String name, Project project) {
-		super();
-		this.reader = reader;
-		this.project = project;
-		this.local = local;
-		this.remote = remote;
-		sprint.name = name;
-	}
 
+    public boolean execute() throws IOException {
+        StringBuilder description = new StringBuilder();
 
-	public boolean execute() throws IOException {
-		StringBuilder description = new StringBuilder();
+        if (!local) {
+            String line;
+            String prompt = reader.getPrompt();
 
-		if(!local) {
-			String line;
-			String prompt = reader.getPrompt();
+            sprint.project = project;
+            if (sprint.name == null) {
+                setName();
+                //setDescription(description);
+                sprint.state = Status.CREATED;
+                sprint.startDate = new Date(0);
+                sprint.dueDate = new Date(0);
 
-			sprint.project = project;
-			if(sprint.name == null) {
-				setName();
-				//setDescription(description);
-				sprint.state = Status.CREATED;
-				sprint.startDate = new Date(0);
-				sprint.dueDate = new Date(0);
+                if (setStartDate()) {
+                    if (!setDuration()) {
+                        setDueDate();
+                    }
+                }
 
-				if (setStartDate()) {
-					if (!setDuration()) {
-						setDueDate();
-					}
-				}
+                sprint.assignedEffort = 0;
+                //setVelocity();
 
-				sprint.assignedEffort = 0;
-				//setVelocity();
+                reader.setPrompt(prompt);
 
-				reader.setPrompt(prompt);
 
+                project.addSprint(sprint);
+                project.save();
 
-				project.addSprint(sprint);
-				project.save();
+                reader.println();
+                reader.println(ColorCodes.GREEN + "Sprint \"" + sprint.name + "\" has been added!" + ColorCodes.RESET);
 
-				reader.println();
-				reader.println(ColorCodes.GREEN + "Sprint \"" + sprint.name + "\" has been added!" + ColorCodes.RESET);
+            }
+        }
 
-			}
-		}
+        if (!remote) {
+            String requestDescription = "Create Sprint";
+            HashMap<String, String> body = new HashMap<>();
+            project.populateDetails();
+            body.put("project", Integer.toString(project.id));
+            body.put("name", sprint.name);
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            String startDate = formatter.format(sprint.startDate);
+            String dueDate = formatter.format(sprint.dueDate);
+            body.put("estimated_start", startDate);
+            body.put("estimated_finish", dueDate);
+            //body.put("estimated_finish", String.valueOf(sprint.dueDate));
+            String endpoint = "milestones";
+            apiUtility utility = new apiUtility(endpoint, requestDescription, body);
+            utility.apiPOST();
+            System.out.println(sprint.name + "created successfully on Taiga");
+        }
 
-		if (!remote) {
-			String requestDescription = "Create Sprint";
-			HashMap<String,String > body = new HashMap<>();
-			project.populateDetails();
-			body.put("project",Integer.toString(project.id));
-			body.put("name",sprint.name);
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-			String startDate = formatter.format(sprint.startDate);
-			String dueDate = formatter.format(sprint.dueDate);
-			body.put("estimated_start", startDate);
-			body.put("estimated_finish", dueDate);
-			//body.put("estimated_finish", String.valueOf(sprint.dueDate));
-			String endpoint = "milestones";
-			apiUtility utility = new apiUtility(endpoint,requestDescription,body);
-			utility.apiPOST();
-			System.out.println(sprint.name + "created successfully on Taiga");
-		}
 
+        return false;
+    }
 
-		return false;
-	}
 
+    private void setDueDate() throws IOException {
 
-	private void setDueDate() throws IOException {
-		String line;
-		Completer oldCompleter = (Completer) reader.getCompleters().toArray()[0];
+        String line;
 
-		Completer dateCompleter = new AggregateCompleter(DateCompleter.getDateCompleter());
+        reader.setPrompt(ColorCodes.BLUE + "\ndue date:\n" + ColorCodes.YELLOW + "Format example: yyyy-MM-dd (2023-01-01)\n"
+                + ColorCodes.RESET);
 
-		reader.removeCompleter(oldCompleter);
-		reader.addCompleter(dateCompleter);
 
-		reader.setPrompt(ColorCodes.BLUE + "\ndue date:\n" + ColorCodes.YELLOW + "Format example: may 20 2023\n"
-				+ ColorCodes.RESET);
+        while ((line = reader.readLine()) != null) {
+            line = line.trim();
 
-//		reader.setPrompt(ColorCodes.BLUE + "\ndue date:\n" + ColorCodes.YELLOW + "(hit Tab to see examples)\n(optional: leave it blank and hit enter)\n"
-//				+ ColorCodes.RESET);
 
-		while ((line = reader.readLine()) != null) {
-			line = line.trim();
-			String words[] = line.split("\\s+");
+            try {
 
-			if (line.isEmpty()) {
-				reader.removeCompleter(dateCompleter);
-				reader.addCompleter(oldCompleter);
-				break;
-			}
+                LocalDate date = LocalDate.parse(line, DateTimeFormatter.ISO_DATE);
+                Date dt = Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-			try {
-				int month = DateCompleter.months.indexOf(words[0]);
-				int day = Integer.parseInt(words[1]);
-				int year = Integer.parseInt(words[2]);
+                sprint.dueDate = dt;
 
-				Calendar cal = new GregorianCalendar();
-				cal.clear();
-				cal.set(year, month, 1);
+            } catch (NumberFormatException | NullPointerException | ArrayIndexOutOfBoundsException |
+                     DateTimeParseException e) {
+                System.out.println(ColorCodes.RED + "invalid value" + ColorCodes.RESET);
+                continue;
+            }
 
-				if (day > cal.getActualMaximum(Calendar.DAY_OF_MONTH)) {
-					throw new NullPointerException();
-				}
+            break;
+        }
 
-				cal.set(year, month, day);
 
-				if (cal.getTime().compareTo(sprint.startDate) <= 0) {
-					System.out.println(ColorCodes.RED + "due date must be after start date" + ColorCodes.RESET);
-					continue;
-				}
+    }
 
-				sprint.dueDate = cal.getTime();
 
-			} catch (NumberFormatException | NullPointerException | ArrayIndexOutOfBoundsException e) {
-				System.out.println(ColorCodes.RED + "invalid value" + ColorCodes.RESET);
-				continue;
-			}
+    private boolean setDuration() throws IOException {
+        String line;
+        int duration;
 
-			reader.removeCompleter(dateCompleter);
-			reader.addCompleter(oldCompleter);
-			break;
-		}
-	}
+//        reader.setPrompt(ColorCodes.BLUE + "duration: " + ColorCodes.YELLOW + "(no of days)\n" + ColorCodes.RESET);
 
+        reader.setPrompt(ColorCodes.BLUE + "duration (no of days): " + ColorCodes.YELLOW + "(optional: leave it blank and hit enter)\n" + ColorCodes.RESET);
 
-	private boolean setDuration() throws IOException {
-		String line;
-		int duration;
+        while ((line = reader.readLine()) != null) {
+            line = line.trim();
 
-		reader.setPrompt(ColorCodes.BLUE + "duration: " + ColorCodes.YELLOW + "(no of days)\n" + ColorCodes.RESET);
+            if (line.isEmpty()) {
+                return false;
+            }
 
-//		reader.setPrompt(ColorCodes.BLUE + "duration: " + ColorCodes.YELLOW + "(optional: leave it blank and hit enter)\n" + ColorCodes.RESET);
+            try {
+                duration = Integer.valueOf(line);
+                if (duration <= 0) {
+                    throw new IllegalArgumentException();
+                }
 
-		while ((line = reader.readLine()) != null) {
-			line = line.trim();
+                Calendar cal = new GregorianCalendar();
+                cal.setTime(sprint.startDate);
+                cal.add(Calendar.DAY_OF_YEAR, duration - 1);
+                sprint.dueDate = cal.getTime();
+                break;
+            } catch (IllegalArgumentException e) {
+                System.out.println(ColorCodes.RED + "invalid value: must be a positive integer value!" + ColorCodes.RESET);
+            }
+        }
 
-			if (line.isEmpty()) {
-				return false;
-			}
+        return true;
+    }
 
-			try {
-				duration = Integer.valueOf(line);
-				if (duration <= 0) {
-					throw new IllegalArgumentException();
-				}
 
-				Calendar cal = new GregorianCalendar();
-				cal.setTime(sprint.startDate);
-				cal.add(Calendar.DAY_OF_YEAR, duration - 1);
-				sprint.dueDate = cal.getTime();
-				break;
-			} catch (IllegalArgumentException e) {
-				System.out.println(ColorCodes.RED + "invalid value: must be a positive integer value!" + ColorCodes.RESET);
-			}
-		}
+    private boolean setStartDate() throws IOException {
+        String line;
 
-		return true;
-	}
+        reader.setPrompt(ColorCodes.BLUE + "\nstart date:\n" + ColorCodes.YELLOW + "Format example: yyyy-MM-dd (2023-01-01)\n"
+                + ColorCodes.RESET);
 
 
-	private boolean setStartDate() throws IOException {
-		String line;
-		Completer oldCompleter = (Completer) reader.getCompleters().toArray()[0];
+        while ((line = reader.readLine()) != null) {
+            line = line.trim();
 
-		Completer dateCompleter = new AggregateCompleter(DateCompleter.getDateCompleter());
 
-		reader.removeCompleter(oldCompleter);
-		reader.addCompleter(dateCompleter);
+            try {
 
-		reader.setPrompt(ColorCodes.BLUE + "\nstart date:\n" + ColorCodes.YELLOW + "Format example: may 20 2023\n"
-				+ ColorCodes.RESET);
+                LocalDate date = LocalDate.parse(line, DateTimeFormatter.ISO_DATE);
+                Date dt = Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-//		reader.setPrompt(ColorCodes.BLUE + "\nstart date:\n" + ColorCodes.YELLOW + "(hit Tab to see examples)\n(optional: leave it blank and hit enter)\n"
-//				+ ColorCodes.RESET);
+                sprint.startDate = dt;
 
-		while ((line = reader.readLine()) != null) {
-			line = line.trim();
-			String words[] = line.split("\\s+");
+            } catch (NumberFormatException | NullPointerException | ArrayIndexOutOfBoundsException |
+                     DateTimeParseException e) {
+                System.out.println(ColorCodes.RED + "invalid value" + ColorCodes.RESET);
+                continue;
+            }
 
-			if (line.isEmpty()) {
-				reader.removeCompleter(dateCompleter);
-				reader.addCompleter(oldCompleter);
-				return false;
-			}
+            break;
+        }
+        return true;
+    }
 
-			try {
-				int month = DateCompleter.months.indexOf(words[0]);
-				int day = Integer.parseInt(words[1]);
-				int year = Integer.parseInt(words[2]);
 
-				Calendar cal = new GregorianCalendar();
-				cal.clear();
-				cal.set(year, month, 1);
+    private void setVelocity() throws IOException {
+        String line;
+        reader.setPrompt(ColorCodes.BLUE + "velocity: " + ColorCodes.RESET);
 
-				if (day > cal.getActualMaximum(Calendar.DAY_OF_MONTH)) {
-					throw new NullPointerException();
-				}
+        while ((line = reader.readLine()) != null) {
+            line = line.trim();
 
-				cal.set(year, month, day);
+            try {
+                sprint.velocity = Integer.valueOf(line);
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println(ColorCodes.RED + "invalid value: must be an integer value!" + ColorCodes.RESET);
+            }
+        }
+    }
 
-				sprint.startDate = cal.getTime();
 
-			} catch (NumberFormatException | NullPointerException | ArrayIndexOutOfBoundsException e) {
-				System.out.println(ColorCodes.RED + "invalid value" + ColorCodes.RESET);
-				continue;
-			}
+    private void setDescription(StringBuilder description) throws IOException {
+        String line;
+        reader.setPrompt(ColorCodes.BLUE + "\ndescription:\n" + ColorCodes.YELLOW + "(\\q to end writing)\n" + ColorCodes.RESET);
 
-			reader.removeCompleter(dateCompleter);
-			reader.addCompleter(oldCompleter);
-			break;
-		}
-		return true;
-	}
+        while ((line = reader.readLine()) != null) {
+            if (line.equals("\\q")) {
+                break;
+            }
+            description.append(line).append("\n");
+            reader.setPrompt("");
+        }
 
+        sprint.description = description.toString();
+    }
 
-	private void setVelocity() throws IOException {
-		String line;
-		reader.setPrompt(ColorCodes.BLUE + "velocity: " + ColorCodes.RESET);
 
-		while ((line = reader.readLine()) != null) {
-			line = line.trim();
-
-			try {
-				sprint.velocity = Integer.valueOf(line);
-				break;
-			} catch (NumberFormatException e) {
-				System.out.println(ColorCodes.RED + "invalid value: must be an integer value!" + ColorCodes.RESET);
-			}
-		}
-	}
-
-
-	private void setDescription(StringBuilder description) throws IOException {
-		String line;
-		reader.setPrompt(ColorCodes.BLUE + "\ndescription:\n" + ColorCodes.YELLOW + "(\\q to end writing)\n" + ColorCodes.RESET);
-
-		while ((line = reader.readLine()) != null) {
-			if (line.equals("\\q")) {
-				break;
-			}
-			description.append(line).append("\n");
-			reader.setPrompt("");
-		}
-
-		sprint.description = description.toString();
-	}
-
-
-	private void setName() throws IOException {
-		reader.setPrompt(ColorCodes.BLUE + "name: " + ColorCodes.RESET);
-		sprint.name = reader.readLine();
-	}
+    private void setName() throws IOException {
+        reader.setPrompt(ColorCodes.BLUE + "name: " + ColorCodes.RESET);
+        sprint.name = reader.readLine();
+    }
 
 }
