@@ -29,6 +29,8 @@ import jline.console.completer.Completer;
 
 public class DashboardView extends View {
 
+	public String []dashboardCmdArr = new String[]
+			{};
 	public DashboardView() {
 		super(null, "Dashboard");
 	}
