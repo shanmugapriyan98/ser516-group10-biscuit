@@ -45,6 +45,8 @@ public abstract class View {
 		this.name = name;
 	}
 
+    public View() {}
+
 	public void view() {
 		if (!isViewed) {
 			addPromptViews();

@@ -17,6 +17,7 @@ import com.biscuit.factories.DashboardCompleterFactory;
 import com.biscuit.models.Dashboard;
 import com.biscuit.models.Project;
 import com.biscuit.models.UserStory;
+import com.biscuit.models.services.CommandService;
 import com.biscuit.models.services.DateService;
 import com.biscuit.models.services.Finder.Projects;
 
@@ -29,6 +30,8 @@ import jline.console.completer.Completer;
 
 public class DashboardView extends View {
 
+	public String []dashboardCmdArr = new String[]
+			{"summary", "projects", "alerts", "check_alert", "search", "help", "add project"};
 	public DashboardView() {
 		super(null, "Dashboard");
 	}
@@ -94,6 +97,7 @@ public class DashboardView extends View {
 
 
 	private boolean execute2Keyword(String[] words) throws Exception {
+		if(words[0].equals("add") && !(CommandService.checkCommand(words, dashboardCmdArr))) return true;
 		if (words[0].equals("go_to")) {
 			// "project#1", "users", "contacts", "groups"
 
@@ -136,6 +140,7 @@ public class DashboardView extends View {
 
 
 	private boolean execute1Keyword(String[] words) throws IOException {
+		if(!CommandService.checkCommand(words, dashboardCmdArr)) return true;
 		if (words[0].equals("summary")) {
 		} else if (words[0].equals("projects")) {
 		} else if (words[0].equals("alerts")) {
@@ -144,7 +149,6 @@ public class DashboardView extends View {
 		} else if (words[0].equals("help")) {
 			return (new DashboardHelp().execute());
 		}
-
 		return false;
 	}
 
