@@ -18,6 +18,9 @@ public class BacklogView extends View {
 
 	Backlog backlog = null;
 
+	public BacklogView() {
+		super();
+	}
 
 	public BacklogView(View previousView, Backlog backlog) {
 		super(previousView, "backlog");
@@ -106,6 +109,10 @@ public class BacklogView extends View {
 			return (new BacklogHelp()).execute();
 		}
 
+		return false;
+	}
+
+	public boolean checkCommand(String[] words){
 		return false;
 	}
 
