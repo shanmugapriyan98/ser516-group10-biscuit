@@ -20,6 +20,8 @@ public class Sprint {
 	 */
 	public String name;
 
+	public String sprintId;
+
 	/**
 	 * Description of Sprint.
 	 */
@@ -84,6 +86,7 @@ public class Sprint {
 		fieldsAsHeader = new String[] { "Name", "Description", "State", "Start Date",
 				"Due Date", "Assigned Effort", "Velocity" };
 	}
+
 
 	/**
 	 * Add user story to sprint.
