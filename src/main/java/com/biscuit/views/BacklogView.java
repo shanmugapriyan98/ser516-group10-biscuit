@@ -10,6 +10,7 @@ import com.biscuit.commands.userStory.ListUserStories;
 import com.biscuit.factories.BacklogCompleterFactory;
 import com.biscuit.models.Backlog;
 import com.biscuit.models.UserStory;
+import com.biscuit.models.services.CommandService;
 import com.biscuit.models.services.Finder.UserStories;
 
 import jline.console.completer.Completer;
@@ -17,6 +18,8 @@ import jline.console.completer.Completer;
 public class BacklogView extends View {
 
 	Backlog backlog = null;
+	public String [] backlogCmdArr = new String[]
+			{"list user_stories", "user_stories", "help", "add user_story", "delete user_story"};
 
 	public BacklogView() {
 		super();
@@ -66,6 +69,7 @@ public class BacklogView extends View {
 
 
 	private boolean execute2Keyword(String[] words) throws IOException {
+		if(!words[0].equals("go_to") && !CommandService.checkCommand(words, backlogCmdArr)) return true;
 		if (words[0].equals("add")) {
 			if (words[1].equals("user_story")) {
 				(new AddUserStoryToBacklog(reader, this.backlog.project)).execute();
@@ -96,23 +100,18 @@ public class BacklogView extends View {
 			new DeleteUserStoryFromBacklog(reader,this.backlog.project).execute();
 			return true;
 		}
-
 		return false;
 	}
 
 
 	private boolean execute1Keyword(String[] words) throws IOException {
+		if(!CommandService.checkCommand(words, backlogCmdArr)) return true;
 		if (words[0].equals("user_stories")) {
 			(new ListUserStories(backlog, "Backlog (User Stories)")).execute();
 			return true;
 		} else if (words[0].equals("help")) {
 			return (new BacklogHelp()).execute();
 		}
-
-		return false;
-	}
-
-	public boolean checkCommand(String[] words){
 		return false;
 	}
 
