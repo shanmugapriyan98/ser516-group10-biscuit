@@ -264,7 +264,7 @@ public class ListSprints implements Command {
 			sprint.description =  String.valueOf(jsonObject.get("slug"));
 			sprint.startDate = jsonObject.get("estimated_start") == JSONObject.NULL ? null : new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("estimated_start"));
 			sprint.dueDate = jsonObject.get("estimated_finish") == JSONObject.NULL ? null : new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("estimated_finish"));
-			sprint.state = Status.valueOf(jsonObject.getBoolean("closed") ? "DONE" : "OPEN");
+			sprint.state = Status.valueOf(jsonObject.getBoolean("closed") ? "DONE" : "READY");
 			sprint.assignedEffort = jsonObject.get("total_points") == JSONObject.NULL ? 0 : jsonObject.getInt("total_points");
 			JSONArray userStoryArray = jsonObject.getJSONArray("user_stories");
 			for(int j = 0; j < userStoryArray.length(); j++){
