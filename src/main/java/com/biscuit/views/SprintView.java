@@ -114,7 +114,7 @@ public class SprintView extends View {
         if (words[0].equals("show")) {
             (new ShowSprint(sprint)).execute();
             return true;
-		} else if (words[0].equals("edit")) {
+        } else if (words[0].equals("edit")) {
             (new EditSprint(reader, sprint)).execute();
             this.name = sprint.name;
             updatePromptViews();
