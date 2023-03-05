@@ -263,7 +263,7 @@ public class ListSprints implements Command {
 			sprint.description =  String.valueOf(jsonObject.get("slug"));
 			sprint.startDate = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("estimated_start"));
 			sprint.dueDate = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("estimated_finish"));
-			sprint.state = Status.valueOf(jsonObject.getBoolean("closed") ? "DONE" : "OPEN");
+			sprint.state = Status.valueOf(jsonObject.getBoolean("closed") ? "DONE" : "READY");
 			if(jsonObject.get("total_points") instanceof BigDecimal) {
 				sprint.assignedEffort = ((BigDecimal) jsonObject.get("total_points")).intValue();
 			} else sprint.assignedEffort = jsonObject.get("total_points") == JSONObject.NULL ? 0 : (int) jsonObject.get("total_points");

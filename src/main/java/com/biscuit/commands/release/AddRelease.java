@@ -39,7 +39,7 @@ public class AddRelease implements Command {
 
 		setDescription(description);
 
-		release.state = Status.CREATED;
+		release.state = Status.NEW;
 		release.startDate = new Date(0);
 		release.dueDate = new Date(0);
 

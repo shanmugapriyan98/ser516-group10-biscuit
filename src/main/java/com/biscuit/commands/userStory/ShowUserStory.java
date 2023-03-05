@@ -93,7 +93,7 @@ public class ShowUserStory implements Command {
 		userStory.title = jsonObject.getString("subject");
 		userStory.description = jsonObject.getString("description");
 		String status = jsonObject.getJSONObject("status_extra_info").getString("name").toUpperCase();
-		userStory.state = Status.valueOf(status); // Enum and Taiga's US status should match, else an exception will be thrown
+		userStory.state = status; // Enum and Taiga's US status should match, else an exception will be thrown
 
 		userStory.initiatedDate = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("created_date"));
 		userStory.dueDate = jsonObject.get("due_date") == JSONObject.NULL ? null : new SimpleDateFormat("yyyy-MM-dd").parse((String) jsonObject.get("due_date"));

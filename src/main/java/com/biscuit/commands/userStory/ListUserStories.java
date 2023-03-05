@@ -172,8 +172,8 @@ public class ListUserStories implements Command {
 
         Comparator<UserStory> byTitle = (us1, us2) -> us1.title.compareTo(us2.title);
         Comparator<UserStory> byDescription = (us1, us2) -> us1.description.compareTo(us2.description);
-        Comparator<UserStory> byState = (us1, us2) -> Integer.compare(us1.state.getValue(), us2.state.getValue());
-        Comparator<UserStory> byBusinessValue = (us1, us2) -> Integer.compare(us1.businessValue.getValue(), us2.businessValue.getValue());
+        Comparator<UserStory> byState = (us1, us2) -> us1.state.compareTo(us2.state);
+//        Comparator<UserStory> byBusinessValue = (us1, us2) -> Integer.compare(us1.businessValue, us2.businessValue);
         Comparator<UserStory> byInitiatedDate = (us1, us2) -> us1.initiatedDate.compareTo(us2.initiatedDate);
         Comparator<UserStory> byPlannedDate = (us1, us2) -> us1.plannedDate.compareTo(us2.plannedDate);
         Comparator<UserStory> byDueDate = (us1, us2) -> us1.dueDate.compareTo(us2.dueDate);
@@ -187,9 +187,9 @@ public class ListUserStories implements Command {
             byFiled = byDescription;
         } else if (sortBy.equals(UserStory.fields[2])) {
             byFiled = byState;
-        } else if (sortBy.equals(UserStory.fields[3])) {
+        } /*else if (sortBy.equals(UserStory.fields[3])) {
             byFiled = byBusinessValue;
-        } else if (sortBy.equals(UserStory.fields[4])) {
+        } */else if (sortBy.equals(UserStory.fields[4])) {
             byFiled = byInitiatedDate;
         } else if (sortBy.equals(UserStory.fields[5])) {
             byFiled = byPlannedDate;
@@ -223,7 +223,8 @@ public class ListUserStories implements Command {
     private void doFilter(List<UserStory> userStories) {
         List<UserStory> filtered = userStories.stream()
                 .filter(us -> us.title.toLowerCase().contains(filterBy) || us.description.toLowerCase().contains(filterBy)
-                        || us.state.toString().toLowerCase().contains(filterBy) || us.businessValue.toString().toLowerCase().contains(filterBy)
+                        || us.state.toString().toLowerCase().contains(filterBy)
+                        //|| us.businessValue.toString().toLowerCase().contains(filterBy)
                         || String.valueOf(us.points).contains(filterBy) || DateService.getDateAsString(us.initiatedDate).toLowerCase().contains(filterBy)
                         || DateService.getDateAsString(us.plannedDate).toLowerCase().contains(filterBy)
                         || DateService.getDateAsString(us.dueDate).toLowerCase().contains(filterBy))
@@ -275,13 +276,13 @@ public class ListUserStories implements Command {
 
             if (jsonObject.getJSONObject("status_extra_info") != JSONObject.NULL && jsonObject.getJSONObject("status_extra_info").getString("name") != JSONObject.NULL) {
                 try {
-                    us.state = Status.valueOf(jsonObject.getJSONObject("status_extra_info").getString("name").toUpperCase());
+                    us.state = jsonObject.getJSONObject("status_extra_info").getString("name").toUpperCase();
                 } catch (IllegalArgumentException e) {
                     e.printStackTrace();
                     System.out.println("Please make sure that Taiga US status and Biscuit CLI status enum key are in sync");
                 }
             } else {
-                us.state = Status.valueOf("NEW");
+                us.state = "New";
             }
             us.initiatedDate = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("created_date"));
             us.tasks = null;

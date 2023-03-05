@@ -6,6 +6,7 @@ import java.util.List;
 import com.biscuit.Login;
 import com.biscuit.commands.help.UserStoryHelp;
 import com.biscuit.commands.task.AddTaskToUserStory;
+import com.biscuit.commands.task.ChangeStatusTask;
 import com.biscuit.commands.task.ListTasks;
 import com.biscuit.commands.userStory.ChangeStatusUserStory;
 import com.biscuit.commands.userStory.EditUserStory;
@@ -78,9 +79,8 @@ public class UserStoryView extends View {
 
 	private boolean execute2Keywords(String[] words) throws IOException {
 		if (words[0].equals("change_status_to")) {
-			if (Status.values.contains(words[1])) {
-				(new ChangeStatusUserStory(userStory, Status.valueOf(words[1].toUpperCase()))).execute();
-				return true;
+			if (userStory.statusNames.contains(words[1])) {
+				(new ChangeStatusUserStory(userStory, words[1].toUpperCase())).execute();				return true;
 			}
 		} else if (words[0].equals("add")) {
 			if (words[1].equals("task")) {

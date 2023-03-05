@@ -50,7 +50,7 @@ public class AddSprint implements Command {
             if (sprint.name == null) {
                 setName();
                 //setDescription(description);
-                sprint.state = Status.CREATED;
+                sprint.state = Status.NEW;
                 sprint.startDate = new Date(0);
                 sprint.dueDate = new Date(0);
 
@@ -64,7 +64,6 @@ public class AddSprint implements Command {
                 //setVelocity();
 
                 reader.setPrompt(prompt);
-
 
                 project.addSprint(sprint);
                 project.save();
