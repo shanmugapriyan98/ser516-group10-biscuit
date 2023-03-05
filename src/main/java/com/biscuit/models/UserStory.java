@@ -9,14 +9,18 @@ import com.biscuit.models.enums.Status;
 import com.biscuit.models.services.apiUtility;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 public class UserStory {
 
     /**
      * Project object to store current project details.
      */
+
     public transient Project project;
 	public Epic epic = new Epic();
 	  public String reviewDemoComments="";
@@ -47,6 +51,7 @@ public class UserStory {
 
     public Set<String> statusNames = new HashSet<String>();
 
+
     /**
      * Business value per user story.
      */
@@ -68,6 +73,8 @@ public class UserStory {
     public Date dueDate = null;
 
     public HashMap<String,String> userStoryStatuses =  new HashMap<>();
+    public String usId;
+
     /**
      * Story points per user story.
      */
@@ -84,6 +91,8 @@ public class UserStory {
     public List<Task> tasks = new ArrayList<>();
     public List<Bug> bugs = new ArrayList<>();
     public List<Test> tests = new ArrayList<>();
+    public HashMap<String,String> taskDetails = new HashMap<>();
+    public List<String> tasksNames = new ArrayList<>();
 
     /**
      * List array to store comments.
@@ -116,6 +125,19 @@ public class UserStory {
             version = jsonObject.getInt("version");
         }
         return version;
+    }
+
+    public void populateTaskDetails(){
+        String requestDescription = "Get task details by userstory ID";
+        String endpointPath = "tasks?user_story=" + usId;
+        apiUtility utility = new apiUtility(endpointPath,requestDescription);
+        JSONArray jsonArray = utility.apiGET();
+        for(int i=0;i< jsonArray.length();i++){
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            String taskName = jsonObject.getString("subject");
+            Integer taskId = jsonObject.getInt("id");
+            taskDetails.put(taskName, String.valueOf(taskId));
+        }
     }
 
     /**

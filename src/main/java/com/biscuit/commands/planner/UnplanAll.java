@@ -52,7 +52,7 @@ public class UnplanAll implements Command {
 				usItr.remove();
 
 				// change state to unplanned
-				us.state = Status.UNPLANNED;
+				us.state = String.valueOf(Status.UNPLANNED);
 
 				// update sprint assigned effort
 				s.assignedEffort -= us.points;

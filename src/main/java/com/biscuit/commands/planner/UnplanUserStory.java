@@ -57,7 +57,7 @@ public class UnplanUserStory implements Command {
 		s.userStories.remove(us);
 
 		// change state to unplanned
-		us.state = Status.UNPLANNED;
+		us.state = String.valueOf(Status.UNPLANNED);
 
 		// make planned date = unset
 		us.plannedDate = new Date(0);

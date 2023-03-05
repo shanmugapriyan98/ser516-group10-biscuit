@@ -56,7 +56,7 @@ public class MoveUserStoryToSprint implements Command {
 		s.userStories.add(us);
 
 		// change state to planned
-		us.state = Status.PLANNED;
+		us.state = String.valueOf(Status.PLANNED);
 
 		// make planned date = today
 		us.plannedDate = new Date();

@@ -45,7 +45,10 @@ public class AddUserStoryToBacklog implements Command {
 		JSONArray jsonArray = utility.apiGET();
 		for(int i = 0; i< jsonArray.length(); i++){
 			JSONObject jsonObject = jsonArray.getJSONObject(i);
-			if(jsonObject.getString("name").equals(project.name))  projectId= String.valueOf(jsonObject.getInt("id"));
+			if(jsonObject.getString("name").equals(project.name))  {
+				projectId= String.valueOf(jsonObject.getInt("id"));
+				project.projectId = projectId;
+			}
 		}
 		if(projectId==""){
 			throw new RuntimeException("project Id for "+project.name+" is not found");
@@ -84,7 +87,7 @@ public class AddUserStoryToBacklog implements Command {
 		body.put("project",getProjectId());
 		body.put("subject",userStory.title);
 		body.put("total_points", String.valueOf(userStory.points));
-//		body.put("tags", userStory.tags); //remove wrapping with String.valueOf
+		body.put("tags", "\""+userStory.tags+"\"");
 		body.put("description",userStory.description);
 		apiUtility utility = new apiUtility(endpointPath,requestDescription,body);
 		utility.apiPOST();

@@ -1,12 +1,28 @@
 package com.biscuit.models.services;
 
+import com.biscuit.Login;
 import com.biscuit.models.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Finder {
+
+	public static List<String> sprintsOnTaiga = new ArrayList<>();
+	public static void getSprintNames(){
+		String requestDescription = "Get project names by member";
+		String endpointPath = "milestones?project="+ Login.getInstance().memberId;
+		apiUtility utility = new apiUtility(endpointPath,requestDescription);
+		JSONArray jsonArray = utility.apiGET();
+		for(int i = 0; i< jsonArray.length();i++){
+			JSONObject jsonObject = jsonArray.getJSONObject(i);
+			String name = jsonObject.getString("name");
+			sprintsOnTaiga.add(name);
+		}
+	}
 
 	public static class Projects {
 
@@ -16,7 +32,6 @@ public class Finder {
 				p = Project.load(projectName);
 				p.updateChildrenReferences();
 			}
-
 			return p;
 		}
 	}
@@ -135,6 +150,7 @@ public class Finder {
 	public static class Sprints {
 
 		public static List<Sprint> getAll(Project p) {
+
 			List<Sprint> sprints = new ArrayList<>();
 
 			sprints.addAll(getUnplanned(p));
