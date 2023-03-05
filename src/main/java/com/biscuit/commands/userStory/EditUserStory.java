@@ -431,7 +431,7 @@ public class EditUserStory implements Command {
 			reader.setPrompt("");
 		}
 
-		userStory.comments.add(comment.toString().replace("<newline>", "\n").replace("<exclamation-mark>", "!"));
+//		userStory.comments.add(comment.toString().replace("<newline>", "\n").replace("<exclamation-mark>", "!"));
 	}
 
 

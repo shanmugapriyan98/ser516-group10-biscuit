@@ -12,7 +12,6 @@ import com.biscuit.models.Release;
 import com.biscuit.models.services.CommandService;
 import com.biscuit.models.services.Finder.Releases;
 
-import com.sun.scenario.effect.impl.state.AccessHelper;
 import jline.console.completer.Completer;
 
 public class ReleasesView extends View {
