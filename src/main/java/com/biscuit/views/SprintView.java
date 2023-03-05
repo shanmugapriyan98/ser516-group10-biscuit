@@ -110,8 +110,8 @@ public class SprintView extends View {
 
 
     private boolean execute1Keyword(String[] words) throws Exception {
-		if(!(CommandService.checkCommand(words, sprintCmdArr))) return true;
-		if (words[0].equals("show")) {
+        if(!(CommandService.checkCommand(words, sprintCmdArr))) return true;
+        if (words[0].equals("show")) {
 			(new ShowSprint(sprint)).execute();
 			return true;
 		} else if (words[0].equals("edit")) {
