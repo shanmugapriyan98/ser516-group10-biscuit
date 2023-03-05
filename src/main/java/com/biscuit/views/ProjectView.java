@@ -133,7 +133,7 @@ public class ProjectView extends View {
 
                     Sprint s = Sprints.find(project, words[2]);
                     if (s != null) {
-                        String sprintId = String.valueOf(s.project.sprintDetails.get(s.name));
+                        String sprintId = String.valueOf(project.sprintDetails.get(s.name));
                         s.sprintId = sprintId;
                         SprintView sv = new SprintView(this, s);
                         sv.view();
