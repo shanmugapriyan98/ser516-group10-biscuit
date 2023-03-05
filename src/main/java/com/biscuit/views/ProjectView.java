@@ -19,6 +19,7 @@ import com.biscuit.commands.userStory.AddUserStoryToBacklog;
 import com.biscuit.commands.userStory.ListUserStories;
 import com.biscuit.factories.ProjectCompleterFactory;
 import com.biscuit.models.*;
+import com.biscuit.models.services.CommandService;
 import com.biscuit.models.services.Finder.Epics;
 import com.biscuit.models.services.Finder.Releases;
 import com.biscuit.models.services.Finder.Sprints;
@@ -32,6 +33,11 @@ public class ProjectView extends View {
 
     Project project = null;
 
+    public String []projectCmdArr= new String[]
+            {"info", "releases", "sprints", "epics", "backlog", "user_stories", "tasks", "plan", "show", "help"};
+
+
+    public ProjectView(){}
 
     public ProjectView(View previousView, Project p) {
         super(previousView, p.name);
@@ -288,6 +294,7 @@ public class ProjectView extends View {
 
 
     private boolean execute1Keyword(String[] words) throws IOException {
+        if(!(CommandService.checkCommand(words, projectCmdArr))) return true;
         if (words[0].equals("info")) {
             reader.println(project.toString());
             return true;

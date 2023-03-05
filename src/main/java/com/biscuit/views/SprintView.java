@@ -11,6 +11,7 @@ import com.biscuit.factories.SprintCompleterFactory;
 import com.biscuit.models.Sprint;
 import com.biscuit.models.UserStory;
 import com.biscuit.models.enums.Status;
+import com.biscuit.models.services.CommandService;
 import com.biscuit.models.services.Finder.UserStories;
 import jline.console.completer.Completer;
 
@@ -21,6 +22,9 @@ public class SprintView extends View {
 
     Sprint sprint = null;
 
+	public String []sprintCmdArr= new String[] {"show", "edit", "user_stories", "help"};
+
+	public SprintView(){}
 
     public SprintView(View previousView, Sprint sprint) {
         super(previousView, sprint.name);
@@ -106,6 +110,7 @@ public class SprintView extends View {
 
 
     private boolean execute1Keyword(String[] words) throws Exception {
+        if(!(CommandService.checkCommand(words, sprintCmdArr))) return true;
         if (words[0].equals("show")) {
             (new ShowSprint(sprint)).execute();
             return true;
@@ -113,7 +118,6 @@ public class SprintView extends View {
             (new EditSprint(reader, sprint)).execute();
             this.name = sprint.name;
             updatePromptViews();
-
             return true;
         } else if (words[0].equals("user_stories")) {
             (new ListUserStories(sprint, "List of user stories for sprint " + sprint.name)).execute();

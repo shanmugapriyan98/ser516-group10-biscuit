@@ -12,6 +12,7 @@ import com.biscuit.factories.ReleaseCompleterFactory;
 import com.biscuit.models.Release;
 import com.biscuit.models.Sprint;
 import com.biscuit.models.enums.Status;
+import com.biscuit.models.services.CommandService;
 import com.biscuit.models.services.Finder.Sprints;
 
 import jline.console.completer.Completer;
@@ -19,7 +20,9 @@ import jline.console.completer.Completer;
 public class ReleaseView extends View {
 
 	Release release = null;
+	public String []releaseCmdArr= new String[] {"show", "edit", "sprints", "help"};
 
+	public ReleaseView(){}
 
 	public ReleaseView(View previousView, Release release) {
 		super(previousView, release.name);
@@ -91,6 +94,7 @@ public class ReleaseView extends View {
 
 
 	private boolean execute1Keyword(String[] words) throws IOException {
+		if(!(CommandService.checkCommand(words, releaseCmdArr))) return true;
 		if (words[0].equals("show")) {
 			(new ShowRelease(release)).execute();
 			return true;

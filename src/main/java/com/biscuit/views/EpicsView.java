@@ -6,6 +6,7 @@ import com.biscuit.commands.help.EpicsHelp;
 import com.biscuit.factories.EpicsCompleterFactory;
 import com.biscuit.models.Epic;
 import com.biscuit.models.Project;
+import com.biscuit.models.services.CommandService;
 import com.biscuit.models.services.Finder.Epics;
 import jline.console.completer.Completer;
 
@@ -16,6 +17,10 @@ public class EpicsView extends View {
 
     Project project = null;
 
+    public String []epicsCmdArr= new String[] {"add epic", "epics", "help"};
+
+
+    public EpicsView(){}
 
     public EpicsView(View previousView, Project p) {
         super(previousView, "epics");
@@ -41,6 +46,7 @@ public class EpicsView extends View {
 
 
     private boolean execute1Keywords(String[] words) throws IOException {
+        if(!(CommandService.checkCommand(words, epicsCmdArr))) return true;
         if (words[0].equals("epics")) {
 
             (new ListEpics(project, "Epics")).execute();
@@ -54,6 +60,7 @@ public class EpicsView extends View {
 
 
     private boolean execute2Keywords(String[] words) throws IOException {
+        if(words[0].equals("add") && !(CommandService.checkCommand(words, epicsCmdArr))) return true;
         if (words[0].equals("add")) {
             if (words[1].equals("epic")) {
                 (new AddEpic(reader, project)).execute();
