@@ -46,6 +46,7 @@ public class EpicsView extends View {
 
 
     private boolean execute1Keywords(String[] words) throws IOException {
+        if(!(CommandService.checkCommand(words, epicsCmdArr))) return true;
         if (words[0].equals("epics")) {
 
             (new ListEpics(project, "Epics")).execute();
@@ -59,7 +60,7 @@ public class EpicsView extends View {
 
 
     private boolean execute2Keywords(String[] words) throws IOException {
-        if(words.equals("add") && !(CommandService.checkCommand(words, epicsCmdArr)))
+        if(words[0].equals("add") && !(CommandService.checkCommand(words, epicsCmdArr))) return true;
         if (words[0].equals("add")) {
             if (words[1].equals("epic")) {
                 (new AddEpic(reader, project)).execute();
