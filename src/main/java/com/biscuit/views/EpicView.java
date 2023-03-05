@@ -5,6 +5,7 @@ import com.biscuit.commands.epic.ShowEpic;
 import com.biscuit.commands.help.EpicHelp;
 import com.biscuit.factories.EpicCompleterFactory;
 import com.biscuit.models.Epic;
+import com.biscuit.models.services.CommandService;
 import jline.console.completer.Completer;
 
 import java.io.IOException;
@@ -14,7 +15,7 @@ public class EpicView extends View {
 
     Epic epic = null;
 
-    public String []epicCmdArr= new String[] {""};
+    public String []epicCmdArr= new String[] {"show", "edit", "help"};
 
 
     public EpicView(){}
@@ -42,6 +43,7 @@ public class EpicView extends View {
 
 
     private boolean execute1Keyword(String[] words) throws IOException {
+        if(!(CommandService.checkCommand(words, epicCmdArr))) return true;
         if (words[0].equals("show")) {
             (new ShowEpic(epic)).execute();
             return true;

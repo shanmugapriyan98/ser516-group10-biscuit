@@ -14,6 +14,7 @@ import com.biscuit.factories.UserStoryCompleterFactory;
 import com.biscuit.models.Task;
 import com.biscuit.models.UserStory;
 import com.biscuit.models.enums.Status;
+import com.biscuit.models.services.CommandService;
 import com.biscuit.models.services.Finder.Tasks;
 
 import jline.console.completer.Completer;
@@ -24,7 +25,7 @@ public class UserStoryView extends View {
 
 	UserStory userStory = new UserStory();
 
-	public String []userStoryCmdArr= new String[] {""};
+	public String []userStoryCmdArr= new String[] {"show", "edit", "tasks", "help"};
 
 
 	public UserStoryView(){}
@@ -95,6 +96,7 @@ public class UserStoryView extends View {
 
 
 	private boolean execute1Keyword(String[] words) throws Exception {
+		if(!(CommandService.checkCommand(words, userStoryCmdArr))) return true;
 		if (words[0].equals("show")) {
 			(new ShowUserStory(userStory)).execute();
 			return true;

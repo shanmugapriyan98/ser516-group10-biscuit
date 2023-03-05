@@ -10,13 +10,14 @@ import com.biscuit.commands.task.ShowTask;
 import com.biscuit.factories.TaskCompleterFactory;
 import com.biscuit.models.Task;
 import com.biscuit.models.enums.Status;
+import com.biscuit.models.services.CommandService;
 import jline.console.completer.Completer;
 
 public class TaskView extends View {
 
 	Task task = null;
 
-	public String []taskCmdArr= new String[] {""};
+	public String []taskCmdArr= new String[] {"show", "edit", "help"};
 
 	public TaskView(){}
 
@@ -55,6 +56,7 @@ public class TaskView extends View {
 
 
 	private boolean execute1Keyword(String[] words) throws IOException {
+		if(!(CommandService.checkCommand(words, taskCmdArr))) return true;
 		if (words[0].equals("show")) {
 			(new ShowTask(task)).execute();
 			return true;

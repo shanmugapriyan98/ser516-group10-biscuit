@@ -14,6 +14,7 @@ import com.biscuit.factories.SprintCompleterFactory;
 import com.biscuit.models.Sprint;
 import com.biscuit.models.UserStory;
 import com.biscuit.models.enums.Status;
+import com.biscuit.models.services.CommandService;
 import com.biscuit.models.services.Finder.UserStories;
 
 import jline.console.completer.Completer;
@@ -22,7 +23,7 @@ public class SprintView extends View {
 
 	Sprint sprint = null;
 
-	public String []sprintCmdArr= new String[] {""};
+	public String []sprintCmdArr= new String[] {"show", "edit", "user_stories", "help"};
 
 	public SprintView(){}
 
@@ -109,6 +110,7 @@ public class SprintView extends View {
 
 
 	private boolean execute1Keyword(String[] words) throws IOException {
+		if(!(CommandService.checkCommand(words, sprintCmdArr))) return true;
 		if (words[0].equals("show")) {
 			(new ShowSprint(sprint)).execute();
 			return true;

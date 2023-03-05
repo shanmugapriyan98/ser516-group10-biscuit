@@ -22,6 +22,7 @@ import com.biscuit.commands.userStory.ShowUserStory;
 import com.biscuit.factories.PlannerCompleterFactory;
 import com.biscuit.models.Project;
 import com.biscuit.models.UserStory;
+import com.biscuit.models.services.CommandService;
 import com.biscuit.models.services.Finder.Releases;
 import com.biscuit.models.services.Finder.Sprints;
 import com.biscuit.models.services.Finder.UserStories;
@@ -33,7 +34,8 @@ public class PlannerView extends View {
 
 	Project project = null;
 
-	public String []plannerCmdArr= new String[] {""};
+	public String []plannerCmdArr= new String[]
+			{"releases", "sprints", "epics", "backlog", "user_stories", "plan", "help"};
 
 
 	public PlannerView(){}
@@ -66,6 +68,7 @@ public class PlannerView extends View {
 
 
 	private boolean execute1Keywords(String[] words) throws IOException {
+		if(!(CommandService.checkCommand(words, plannerCmdArr))) return true;
 		if (words[0].equals("releases")) {
 			(new ListReleases(project, "Releases")).execute();
 			return true;

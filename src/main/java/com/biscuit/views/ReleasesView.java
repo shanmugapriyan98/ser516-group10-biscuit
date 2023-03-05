@@ -9,15 +9,17 @@ import com.biscuit.commands.release.ListReleases;
 import com.biscuit.factories.ReleasesCompleterFactory;
 import com.biscuit.models.Project;
 import com.biscuit.models.Release;
+import com.biscuit.models.services.CommandService;
 import com.biscuit.models.services.Finder.Releases;
 
+import com.sun.scenario.effect.impl.state.AccessHelper;
 import jline.console.completer.Completer;
 
 public class ReleasesView extends View {
 
 	Project project = null;
 
-	public String []releasesCmdArr= new String[] {""};
+	public String []releasesCmdArr= new String[] {"releases", "help"};
 
 	public ReleasesView(){}
 
@@ -45,6 +47,7 @@ public class ReleasesView extends View {
 
 
 	private boolean execute1Keywords(String[] words) throws IOException {
+		if(!(CommandService.checkCommand(words, releasesCmdArr))) return true;
 		if (words[0].equals("releases")) {
 			(new ListReleases(project, "Releases")).execute();
 			return true;
