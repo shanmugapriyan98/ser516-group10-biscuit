@@ -18,6 +18,9 @@ public class SprintsView extends View {
 
 	Project project = null;
 
+	public String []sprintsCmdArr= new String[] {""};
+
+	public SprintsView(){}
 
 	public SprintsView(View previousView, Project p) {
 		super(previousView, "sprints");

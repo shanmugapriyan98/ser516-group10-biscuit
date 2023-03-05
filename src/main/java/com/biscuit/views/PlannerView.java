@@ -33,6 +33,10 @@ public class PlannerView extends View {
 
 	Project project = null;
 
+	public String []plannerCmdArr= new String[] {""};
+
+
+	public PlannerView(){}
 
 	public PlannerView(View previousView, Project p) {
 		super(previousView, "planner");

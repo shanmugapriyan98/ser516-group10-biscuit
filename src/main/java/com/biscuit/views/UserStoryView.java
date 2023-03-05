@@ -24,6 +24,10 @@ public class UserStoryView extends View {
 
 	UserStory userStory = new UserStory();
 
+	public String []userStoryCmdArr= new String[] {""};
+
+
+	public UserStoryView(){}
 
 	public UserStoryView(View previousView, UserStory userStory) {
 		super(previousView, userStory.title);

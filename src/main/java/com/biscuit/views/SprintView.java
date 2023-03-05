@@ -22,6 +22,9 @@ public class SprintView extends View {
 
 	Sprint sprint = null;
 
+	public String []sprintCmdArr= new String[] {""};
+
+	public SprintView(){}
 
 	public SprintView(View previousView, Sprint sprint) {
 		super(previousView, sprint.name);

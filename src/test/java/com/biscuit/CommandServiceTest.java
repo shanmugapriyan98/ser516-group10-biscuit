@@ -1,6 +1,5 @@
 import com.biscuit.models.services.CommandService;
-import com.biscuit.views.BacklogView;
-import com.biscuit.views.DashboardView;
+import com.biscuit.views.*;
 import  org.junit.Test;
 import org.junit.Assert;
 public class CommandServiceTest {
@@ -17,6 +16,74 @@ public class CommandServiceTest {
         DashboardView dashboardView = new DashboardView();
         String[] words= new String[]{"add","project"};
         Assert.assertTrue(CommandService.checkCommand(words, dashboardView.dashboardCmdArr));
+    }
+
+    @Test
+    public void testEpicsCheckCommand(){
+        EpicsView epicsView = new EpicsView();
+        String[] words= new String[]{"add","project"};
+        Assert.assertTrue(CommandService.checkCommand(words, epicsView.epicsCmdArr));
+    }
+
+    @Test
+    public void testEpicCheckCommand(){
+        EpicView epicView = new EpicView();
+        String[] words= new String[]{"add","project"};
+        Assert.assertTrue(CommandService.checkCommand(words, epicView.epicCmdArr));
+    }
+
+    @Test
+    public void testPlannerCheckCommand(){
+        PlannerView plannerView = new PlannerView();
+        String[] words= new String[]{"add","project"};
+        Assert.assertTrue(CommandService.checkCommand(words, plannerView.plannerCmdArr));
+    }
+
+    @Test
+    public void testProjectCheckCommand(){
+        ProjectView projectView = new ProjectView();
+        String[] words= new String[]{"add","project"};
+        Assert.assertTrue(CommandService.checkCommand(words, projectView.projectCmdArr));
+    }
+
+    @Test
+    public void testReleasesCheckCommand(){
+        ReleasesView releasesView = new ReleasesView();
+        String[] words= new String[]{"add","project"};
+        Assert.assertTrue(CommandService.checkCommand(words, releasesView.releasesCmdArr));
+    }
+
+    @Test
+    public void testReleaseCheckCommand(){
+        ReleaseView releaseView = new ReleaseView();
+        String[] words= new String[]{"add","project"};
+        Assert.assertTrue(CommandService.checkCommand(words, releaseView.releaseCmdArr));
+    }
+
+    @Test
+    public void testSprintsCheckCommand(){
+        SprintsView sprintsView = new SprintsView();
+        String[] words= new String[]{"add","project"};
+        Assert.assertTrue(CommandService.checkCommand(words, sprintsView.sprintsCmdArr));
+    }
+
+    @Test
+    public void testSprintCheckCommand(){
+        SprintView sprintView = new SprintView();
+        String[] words= new String[]{"add","project"};
+        Assert.assertTrue(CommandService.checkCommand(words, sprintView.sprintCmdArr));
+    }
+    @Test
+    public void testTaskCheckCommand(){
+        TaskView taskView = new TaskView();
+        String[] words= new String[]{"add","project"};
+        Assert.assertTrue(CommandService.checkCommand(words, taskView.taskCmdArr));
+    }
+    @Test
+    public void testUserStoryCheckCommand(){
+        UserStoryView userStoryView = new UserStoryView();
+        String[] words= new String[]{"add","project"};
+        Assert.assertTrue(CommandService.checkCommand(words, userStoryView.userStoryCmdArr));
     }
 
 }

@@ -16,6 +16,10 @@ public class EpicsView extends View {
 
     Project project = null;
 
+    public String []epicsCmdArr= new String[] {""};
+
+
+    public EpicsView(){}
 
     public EpicsView(View previousView, Project p) {
         super(previousView, "epics");

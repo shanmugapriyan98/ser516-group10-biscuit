@@ -17,6 +17,9 @@ public class ReleasesView extends View {
 
 	Project project = null;
 
+	public String []releasesCmdArr= new String[] {""};
+
+	public ReleasesView(){}
 
 	public ReleasesView(View previousView, Project p) {
 		super(previousView, "releases");

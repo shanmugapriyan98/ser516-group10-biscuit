@@ -14,6 +14,10 @@ public class EpicView extends View {
 
     Epic epic = null;
 
+    public String []epicCmdArr= new String[] {""};
+
+
+    public EpicView(){}
 
     public EpicView(View previousView, Epic epic) {
         super(previousView, epic.name);

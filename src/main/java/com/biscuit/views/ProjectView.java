@@ -32,6 +32,10 @@ public class ProjectView extends View {
 
     Project project = null;
 
+    public String []projectCmdArr= new String[] {""};
+
+
+    public ProjectView(){}
 
     public ProjectView(View previousView, Project p) {
         super(previousView, p.name);

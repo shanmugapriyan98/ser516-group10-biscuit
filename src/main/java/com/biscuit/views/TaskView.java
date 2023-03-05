@@ -16,6 +16,10 @@ public class TaskView extends View {
 
 	Task task = null;
 
+	public String []taskCmdArr= new String[] {""};
+
+	public TaskView(){}
+
 	public TaskView(View previousView, Task task) {
 		super(previousView, task.title);
 		this.task = task;

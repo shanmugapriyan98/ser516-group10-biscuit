@@ -19,7 +19,9 @@ import jline.console.completer.Completer;
 public class ReleaseView extends View {
 
 	Release release = null;
+	public String []releaseCmdArr= new String[] {""};
 
+	public ReleaseView(){}
 
 	public ReleaseView(View previousView, Release release) {
 		super(previousView, release.name);
