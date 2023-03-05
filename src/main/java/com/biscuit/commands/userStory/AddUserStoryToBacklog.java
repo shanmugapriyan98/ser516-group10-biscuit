@@ -56,13 +56,14 @@ public class AddUserStoryToBacklog implements Command {
 	public boolean execute() throws IOException {
 		StringBuilder description = new StringBuilder();
 		String prompt = reader.getPrompt();
+		char b = '"';
 
 		userStory.project = project;
 		setTitle();
 
 		setDescription(description);
 		setEpic();
-		userStory.state = Status.READY;
+		userStory.state = "new";
 		setBusinessValue();
 		setPoints();
 		setTags();
@@ -83,7 +84,7 @@ public class AddUserStoryToBacklog implements Command {
 		body.put("project",getProjectId());
 		body.put("subject",userStory.title);
 		body.put("total_points", String.valueOf(userStory.points));
-		body.put("tags", String.valueOf(new ArrayList<String>(Arrays.asList(userStory.tags.split(","))))); //remove wrapping with String.valueOf
+//		body.put("tags", userStory.tags); //remove wrapping with String.valueOf
 		body.put("description",userStory.description);
 		apiUtility utility = new apiUtility(endpointPath,requestDescription,body);
 		utility.apiPOST();
@@ -171,7 +172,7 @@ public class AddUserStoryToBacklog implements Command {
 			line = line.trim().toUpperCase();
 
 			try {
-				userStory.businessValue = BusinessValue.valueOf(line);
+				userStory.businessValue = Integer.valueOf(line);
 			} catch (IllegalArgumentException e) {
 				System.out.println(ColorCodes.RED + "invalid value" + ColorCodes.RESET);
 				continue;

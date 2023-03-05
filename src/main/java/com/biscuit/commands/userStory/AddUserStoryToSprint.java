@@ -41,7 +41,7 @@ public class AddUserStoryToSprint implements Command {
 
 		setDescription(description);
 
-		userStory.state = Status.READY;
+		userStory.state = "new";
 		setBusinessValue();
 		setPoints();
 		setTags();
@@ -122,36 +122,28 @@ public class AddUserStoryToSprint implements Command {
 
 
 	private void setBusinessValue() throws IOException {
-		// List<String> businessValues = new ArrayList<String>();
 		String line;
 		Completer oldCompleter = (Completer) reader.getCompleters().toArray()[0];
-
-		// for (BusinessValue bv : BusinessValue.values()) {
-		// businessValues.add(bv.name().toLowerCase());
-		// }
-
-		Completer businessValuesCompleter = new ArgumentCompleter(new StringsCompleter(BusinessValue.values), new NullCompleter());
+		Completer businessValuesCompleter = new ArgumentCompleter(new StringsCompleter(Points.values), new NullCompleter());
 
 		reader.removeCompleter(oldCompleter);
 		reader.addCompleter(businessValuesCompleter);
 
-		reader.setPrompt(ColorCodes.BLUE + "\nbusiness value:\n" + ColorCodes.YELLOW + "(hit Tab to see valid values)\n" + ColorCodes.RESET);
+		reader.setPrompt(ColorCodes.BLUE + "\nbusiness value:\n" + ColorCodes.YELLOW + "(hit Tab to see an example)\n" + ColorCodes.RESET);
 
 		while ((line = reader.readLine()) != null) {
-			line = line.trim().toUpperCase();
+			line = line.trim();
 
 			try {
-				userStory.businessValue = BusinessValue.valueOf(line);
-			} catch (IllegalArgumentException e) {
-				System.out.println(ColorCodes.RED + "invalid value" + ColorCodes.RESET);
-				continue;
+				userStory.businessValue = Integer.valueOf(line);
+				break;
+			} catch (NumberFormatException e) {
+				System.out.println(ColorCodes.RED + "invalid value: must be an integer value!" + ColorCodes.RESET);
 			}
-
-			reader.removeCompleter(businessValuesCompleter);
-			reader.addCompleter(oldCompleter);
-			break;
 		}
 
+		reader.removeCompleter(businessValuesCompleter);
+		reader.addCompleter(oldCompleter);
 	}
 
 
