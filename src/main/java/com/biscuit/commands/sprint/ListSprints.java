@@ -225,6 +225,7 @@ public class ListSprints implements Command {
 	public List<Sprint> fetchAllSprints() {
 		List<Sprint> sprints = new ArrayList<>();
 		String projectId = new AddUserStoryToBacklog(null, this.project).getProjectId();
+		System.out.println("Fetching the sprint/milestone details from Taiga ...");
 		HttpUrl httpUrl = new HttpUrl.Builder()
 				.scheme("https")
 				.host("api.taiga.io")
@@ -261,19 +262,17 @@ public class ListSprints implements Command {
 			Sprint sprint = new Sprint();
 			sprint.name = String.valueOf(jsonObject.get("name"));
 			sprint.description =  String.valueOf(jsonObject.get("slug"));
-			sprint.startDate = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("estimated_start"));
-			sprint.dueDate = new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("estimated_finish"));
+			sprint.startDate = jsonObject.get("estimated_start") == JSONObject.NULL ? null : new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("estimated_start"));
+			sprint.dueDate = jsonObject.get("estimated_finish") == JSONObject.NULL ? null : new SimpleDateFormat("yyyy-MM-dd").parse(jsonObject.getString("estimated_finish"));
 			sprint.state = Status.valueOf(jsonObject.getBoolean("closed") ? "DONE" : "READY");
-			if(jsonObject.get("total_points") instanceof BigDecimal) {
-				sprint.assignedEffort = ((BigDecimal) jsonObject.get("total_points")).intValue();
-			} else sprint.assignedEffort = jsonObject.get("total_points") == JSONObject.NULL ? 0 : (int) jsonObject.get("total_points");
+			sprint.assignedEffort = jsonObject.get("total_points") == JSONObject.NULL ? 0 : jsonObject.getInt("total_points");
 			JSONArray userStoryArray = jsonObject.getJSONArray("user_stories");
 			for(int j = 0; j < userStoryArray.length(); j++){
 				JSONObject usObject = userStoryArray.getJSONObject(j);
 				UserStory userStory = new ShowUserStory(null).fetchUserStoryByNumber(usObject.getInt("project"), usObject.getInt("ref"));
 				sprint.userStories.add(userStory);
 				if(usObject.getBoolean("is_closed")){
-					sprint.velocity += usObject.getInt("total_points");
+					sprint.velocity += usObject.get("total_points") == JSONObject.NULL ? 0 : usObject.getInt("total_points");
 				}
 			}
 			sprints.add(sprint);
