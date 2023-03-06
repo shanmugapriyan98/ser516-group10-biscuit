@@ -1,11 +1,10 @@
 package com.biscuit.commands.userStory;
 
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.*;
 
 import com.biscuit.ColorCodes;
+import com.biscuit.Login;
 import com.biscuit.commands.Command;
 import com.biscuit.factories.DateCompleter;
 import com.biscuit.models.UserStory;
@@ -14,12 +13,15 @@ import com.biscuit.models.enums.Points;
 import com.biscuit.models.enums.Status;
 import com.biscuit.models.services.DateService;
 
+import com.biscuit.models.services.apiUtility;
 import jline.console.ConsoleReader;
 import jline.console.completer.AggregateCompleter;
 import jline.console.completer.ArgumentCompleter;
 import jline.console.completer.Completer;
 import jline.console.completer.NullCompleter;
 import jline.console.completer.StringsCompleter;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class EditUserStory implements Command {
 
@@ -44,8 +46,22 @@ public class EditUserStory implements Command {
 		setInitiatedDate();
 		setPlannedDate();
 		setDueDate();
+		setTags();
 		setPoints();
 		setComments();
+
+		String requestDescription = "Edit UserStory";
+		String endpointPath = "userstories";
+		HashMap<String , String > body = new HashMap<>();
+		body.put("subject",userStory.title);
+		body.put("status", userStory.userStoryStatuses.get(userStory.state.toLowerCase()));
+		body.put("total_points", String.valueOf(userStory.points));
+		body.put("tags", String.valueOf(new ArrayList<String>(Arrays.asList(userStory.tags.split(","))))); //remove wrapping with String.valueOf
+		body.put("description",userStory.description);
+		body.put("version", String.valueOf(userStory.getUserStoryVersion()));
+		apiUtility utility = new apiUtility(endpointPath,requestDescription,body);
+		utility.apiPATCH(); // needs to be changed to patch
+		reader.println(ColorCodes.GREEN + "User Story \"" + userStory.title + "\" has been edited!" + ColorCodes.RESET);
 
 		reader.setPrompt(prompt);
 
@@ -54,34 +70,35 @@ public class EditUserStory implements Command {
 		return true;
 	}
 
-	private void setPoints() throws IOException {
 
-		String prompt = ColorCodes.BLUE + "points:" + ColorCodes.YELLOW + "(hit Tab to see an example) "
-				+ ColorCodes.RESET;
-		String preload = String.valueOf(userStory.points);	
+
+	private void setTags() throws IOException{
 		String line;
 		Completer oldCompleter = (Completer) reader.getCompleters().toArray()[0];
+
 		Completer pointsCompleter = new ArgumentCompleter(new StringsCompleter(Points.values), new NullCompleter());
+
 		reader.removeCompleter(oldCompleter);
 		reader.addCompleter(pointsCompleter);
 
-		reader.resetPromptLine(prompt, preload, 0);
-		reader.print("\r");
+		reader.setPrompt(ColorCodes.BLUE + "\ntags:\n" + ColorCodes.YELLOW + "(for multiple tags, separate them by commas)\n" + ColorCodes.RESET);
 
 		while ((line = reader.readLine()) != null) {
 			line = line.trim();
 
 			try {
-				userStory.points = Integer.valueOf(line);
+				userStory.tags = line;
 				break;
 			} catch (NumberFormatException e) {
-				System.out.println(ColorCodes.RED + "invalid value: must be an integer value!" + ColorCodes.RESET);
+				System.out.println(ColorCodes.RED + "invalid value: must be a string value!" + ColorCodes.RESET);
 			}
 		}
 
 		reader.removeCompleter(pointsCompleter);
 		reader.addCompleter(oldCompleter);
+
 	}
+
 
 
 	private void setDueDate() throws IOException {
@@ -273,43 +290,73 @@ public class EditUserStory implements Command {
 
 	}
 
+	private void setPoints() throws IOException {
+
+		String prompt = ColorCodes.BLUE + "points:" + ColorCodes.YELLOW + "(hit Tab to see an example) "
+				+ ColorCodes.RESET;
+		String preload = String.valueOf(userStory.points);
+		String line;
+		Completer oldCompleter = (Completer) reader.getCompleters().toArray()[0];
+		Completer pointsCompleter = new ArgumentCompleter(new StringsCompleter(Points.values), new NullCompleter());
+		reader.removeCompleter(oldCompleter);
+		reader.addCompleter(pointsCompleter);
+
+		reader.resetPromptLine(prompt, preload, 0);
+		reader.print("\r");
+
+		while ((line = reader.readLine()) != null) {
+			line = line.trim();
+
+			try {
+				userStory.points = Integer.valueOf(line);
+				break;
+			} catch (NumberFormatException e) {
+				System.out.println(ColorCodes.RED + "invalid value: must be an integer value!" + ColorCodes.RESET);
+			}
+		}
+
+		reader.removeCompleter(pointsCompleter);
+		reader.addCompleter(oldCompleter);
+	}
 
 	private void setBusinessValue() throws IOException {
 
-		String prompt = ColorCodes.BLUE + "business value: " + ColorCodes.RESET;
-		String preload = userStory.businessValue.toString().toLowerCase();
-		String businessValue;
-
+		String prompt = ColorCodes.BLUE + "business value:" + ColorCodes.YELLOW + "(hit Tab to see an example) "
+				+ ColorCodes.RESET;
+		String preload = String.valueOf(userStory.businessValue);
+		String line;
 		Completer oldCompleter = (Completer) reader.getCompleters().toArray()[0];
-		Completer businessValuesCompleter = new ArgumentCompleter(new StringsCompleter(BusinessValue.values),
-				new NullCompleter());
-
+		Completer businessValuesCompleter = new ArgumentCompleter(new StringsCompleter(Points.values), new NullCompleter());
 		reader.removeCompleter(oldCompleter);
 		reader.addCompleter(businessValuesCompleter);
 
 		reader.resetPromptLine(prompt, preload, 0);
 		reader.print("\r");
 
-		businessValue = reader.readLine().trim();
-		while (!BusinessValue.values.contains(businessValue)) {
-			System.out.println(ColorCodes.RED + "invalid business value, hit tab for auto-complete" + ColorCodes.RESET);
-			businessValue = reader.readLine().trim();
-		}
 
-		userStory.businessValue = BusinessValue.valueOf(businessValue.toUpperCase());
+		while ((line = reader.readLine()) != null) {
+			line = line.trim();
+
+			try {
+				userStory.businessValue = Integer.valueOf(line);
+				break;
+			} catch (NumberFormatException e) {
+				System.out.println(ColorCodes.RED + "invalid value: must be an integer value!" + ColorCodes.RESET);
+			}
+		}
 
 		reader.removeCompleter(businessValuesCompleter);
 		reader.addCompleter(oldCompleter);
-
 	}
 
 
 	private void setState() throws IOException {
+		userStory.updateUserStoryStatuses();
 		String prompt = ColorCodes.BLUE + "state: " + ColorCodes.RESET;
-		String preload = userStory.state.toString().toLowerCase();
+		String preload = userStory.state.toLowerCase();
 		String state;
 		Completer oldCompleter = (Completer) reader.getCompleters().toArray()[0];
-		Completer stateCompleter = new ArgumentCompleter(new StringsCompleter(Status.values), new NullCompleter());
+		Completer stateCompleter = new ArgumentCompleter(new StringsCompleter(userStory.statusNames), new NullCompleter());
 
 		reader.removeCompleter(oldCompleter);
 		reader.addCompleter(stateCompleter);
@@ -319,12 +366,12 @@ public class EditUserStory implements Command {
 
 		state = reader.readLine().trim();
 
-		while (!Status.values.contains(state)) {
+		while (!userStory.statusNames.contains(state)) {
 			System.out.println(ColorCodes.RED + "invalid state, hit tab for auto-complete" + ColorCodes.RESET);
 			state = reader.readLine().trim();
 		}
 
-		userStory.state = Status.valueOf(state.toUpperCase());
+		userStory.state = state.toUpperCase();
 
 		reader.removeCompleter(stateCompleter);
 		reader.addCompleter(oldCompleter);
@@ -384,7 +431,7 @@ public class EditUserStory implements Command {
 			reader.setPrompt("");
 		}
 
-		userStory.comments.add(comment.toString().replace("<newline>", "\n").replace("<exclamation-mark>", "!"));
+//		userStory.comments.add(comment.toString().replace("<newline>", "\n").replace("<exclamation-mark>", "!"));
 	}
 
 

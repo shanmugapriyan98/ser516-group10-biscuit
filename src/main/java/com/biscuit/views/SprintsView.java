@@ -10,6 +10,7 @@ import com.biscuit.factories.SprintsCompleterFactory;
 import com.biscuit.models.Project;
 import com.biscuit.models.Release;
 import com.biscuit.models.Sprint;
+import com.biscuit.models.services.CommandService;
 import com.biscuit.models.services.Finder.Sprints;
 
 import jline.console.completer.Completer;
@@ -18,6 +19,9 @@ public class SprintsView extends View {
 
 	Project project = null;
 
+	public String []sprintsCmdArr= new String[] {"sprints", "help"};
+
+	public SprintsView(){}
 
 	public SprintsView(View previousView, Project p) {
 		super(previousView, "sprints");
@@ -43,6 +47,7 @@ public class SprintsView extends View {
 
 
 	private boolean execute1Keywords(String[] words) throws IOException {
+		if (!(CommandService.checkCommand(words, sprintsCmdArr))) return true;
 		if (words[0].equals("sprints")) {
 			for (Release r : project.releases) {
 				if (!r.sprints.isEmpty()) {
@@ -63,7 +68,7 @@ public class SprintsView extends View {
 	private boolean execute2Keywords(String[] words) throws IOException {
 		if (words[0].equals("add")) {
 			if (words[1].equals("sprint")) {
-				(new AddSprint(reader, project)).execute();
+				(new AddSprint(reader, false,false,null, project)).execute();
 				resetCompleters();
 
 				return true;

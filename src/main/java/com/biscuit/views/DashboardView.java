@@ -14,8 +14,10 @@ import com.biscuit.commands.project.AddProject;
 import com.biscuit.commands.project.EditProject;
 import com.biscuit.commands.project.RemoveProject;
 import com.biscuit.factories.DashboardCompleterFactory;
+import com.biscuit.models.Dashboard;
 import com.biscuit.models.Project;
 import com.biscuit.models.UserStory;
+import com.biscuit.models.services.CommandService;
 import com.biscuit.models.services.DateService;
 import com.biscuit.models.services.Finder.Projects;
 
@@ -28,6 +30,8 @@ import jline.console.completer.Completer;
 
 public class DashboardView extends View {
 
+	public String []dashboardCmdArr = new String[]
+			{"summary", "projects", "alerts", "check_alert", "search", "help", "add project"};
 	public DashboardView() {
 		super(null, "Dashboard");
 	}
@@ -93,6 +97,7 @@ public class DashboardView extends View {
 
 
 	private boolean execute2Keyword(String[] words) throws Exception {
+		if(words[0].equals("add") && !(CommandService.checkCommand(words, dashboardCmdArr))) return true;
 		if (words[0].equals("go_to")) {
 			// "project#1", "users", "contacts", "groups"
 
@@ -103,6 +108,19 @@ public class DashboardView extends View {
 				pv.view();
 				return true;
 			}
+			else{
+				Dashboard.getInstance().getProjectNames();
+				if(Dashboard.getInstance().projectsOnTaiga.contains(words[1])){
+					System.out.println("Caching project " +words[1]+" to local");
+					boolean local = false;
+					boolean taiga = true;
+					new AddProject(reader,local,taiga,words[1]).execute();
+					p = Projects.getProject(words[1]);
+					ProjectView pv = new ProjectView(this,p);
+					pv.view();
+					return true;
+				}
+			}
 			return false;
 
 		} else if (words[0].equals("list")) {
@@ -111,7 +129,7 @@ public class DashboardView extends View {
 			return true;
 		} else if (words[1].equals("project")) {
 			if (words[0].equals("add")) {
-				(new AddProject(reader)).execute();
+				(new AddProject(reader,false,false,null)).execute();
 				resetCompleters();
 				return true;
 			}
@@ -122,6 +140,7 @@ public class DashboardView extends View {
 
 
 	private boolean execute1Keyword(String[] words) throws IOException {
+		if(!CommandService.checkCommand(words, dashboardCmdArr)) return true;
 		if (words[0].equals("summary")) {
 		} else if (words[0].equals("projects")) {
 		} else if (words[0].equals("alerts")) {
@@ -130,7 +149,6 @@ public class DashboardView extends View {
 		} else if (words[0].equals("help")) {
 			return (new DashboardHelp().execute());
 		}
-
 		return false;
 	}
 
@@ -144,9 +162,9 @@ public class DashboardView extends View {
 		at.addRow("User Story ID", "Description", "Points")
 				.setAlignment(new char[] { 'l', 'l', 'c'});
 		for (List<String> us : userStories) {
-				at.addRule();
-				at.addRow(us.get(0), us.get(1), us.get(2))
-						.setAlignment(new char[] { 'c', 'l', 'c'});
+			at.addRule();
+			at.addRow(us.get(0), us.get(1), us.get(2))
+					.setAlignment(new char[] { 'c', 'l', 'c'});
 		}
 		at.addRule();
 

@@ -10,13 +10,16 @@ import com.biscuit.commands.task.ShowTask;
 import com.biscuit.factories.TaskCompleterFactory;
 import com.biscuit.models.Task;
 import com.biscuit.models.enums.Status;
-
+import com.biscuit.models.services.CommandService;
 import jline.console.completer.Completer;
 
 public class TaskView extends View {
 
 	Task task = null;
 
+	public String []taskCmdArr= new String[] {"show", "edit", "help"};
+
+	public TaskView(){}
 
 	public TaskView(View previousView, Task task) {
 		super(previousView, task.title);
@@ -43,8 +46,8 @@ public class TaskView extends View {
 
 	private boolean execute2Keywords(String[] words) throws IOException {
 		if (words[0].equals("change_status_to")) {
-			if (Status.values.contains(words[1])) {
-				(new ChangeStatusTask(task, Status.valueOf(words[1].toUpperCase()))).execute();
+			if (task.statusNames.contains(words[1])) {
+				(new ChangeStatusTask(task, words[1].toUpperCase())).execute();
 				return true;
 			}
 		}
@@ -53,6 +56,7 @@ public class TaskView extends View {
 
 
 	private boolean execute1Keyword(String[] words) throws IOException {
+		if(!(CommandService.checkCommand(words, taskCmdArr))) return true;
 		if (words[0].equals("show")) {
 			(new ShowTask(task)).execute();
 			return true;
@@ -60,7 +64,6 @@ public class TaskView extends View {
 			(new EditTask(reader, task)).execute();
 			this.name = task.title;
 			updatePromptViews();
-
 			return true;
 		} else if (words[0].equals("help")) {
 			return (new TaskHelp()).execute();
